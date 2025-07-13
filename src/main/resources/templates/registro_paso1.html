@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Registro - Paso 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="bg-white p-5 rounded-4 shadow" style="width: 100%; max-width: 500px;">
+        <div class="text-center mb-4">
+            <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 60px;" />
+            <h2 class="fw-bold mt-2">Talent<span class="text-primary">Bridge</span></h2>
+            <p class="text-muted mb-0">Connecting skills with needs</p>
+        </div>
+
+        <h4 class="text-center mb-3">Paso 1: Datos personales</h4>
+
+        <form id="registroPaso1Form" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <input type="text" id="nombre" class="form-control" placeholder="Nombre completo" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="email" id="email" class="form-control" placeholder="Correo electrónico" required>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <select class="form-select" id="tipoDocumento" required>
+                        <option value="">Tipo doc.</option>
+                        <option value="RUT">RUT (Chile)</option>
+                        <option value="DNI">DNI (extranjero)</option>
+                    </select>
+                </div>
+                <div class="col-6 mb-3">
+                    <input type="text" id="numeroDocumento" class="form-control" placeholder="N° documento" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <select class="form-select" id="pais" required>
+                    <option value="">Cargando países...</option>
+                </select>
+            </div>
+
+
+            <div class="mb-3">
+                <input type="text" id="ciudad" class="form-control" placeholder="Ciudad" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="text" id="calle" class="form-control" placeholder="Calle" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="text" id="numeroDireccion" class="form-control" placeholder="N° de dirección" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="password" id="password" class="form-control" placeholder="Contraseña" required minlength="6">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Continuar</button>
+
+            <div class="text-center mt-3">
+                <small>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a></small>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    async function cargarPaises() {
+       const select = document.getElementById("pais");
+       try {
+           const res = await fetch('/api/paises');
+           if (!res) return; // ya se redirigió al login
+
+
+           const paises = await res.json();
+
+           // Limpiar opciones
+           select.innerHTML = '<option value="">Seleccione un país</option>';
+
+           // Ordenar alfabéticamente
+           paises.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+           for (const pais of paises) {
+               const nombre = pais.name.common;
+               const codigo = pais.cca2;
+               const option = document.createElement("option");
+               option.value = nombre;
+               option.textContent = nombre;
+               select.appendChild(option);
+           }
+       } catch (error) {
+           console.error("Error al cargar países", error);
+           select.innerHTML = '<option value="">Error al cargar países</option>';
+       }
+   }
+
+   document.addEventListener("DOMContentLoaded", cargarPaises);
+
+   document.getElementById("registroPaso1Form").addEventListener("submit", async function (e) {
+       e.preventDefault();
+       const form = e.target;
+       if (!form.checkValidity()) {
+           form.classList.add('was-validated');
+           return;
+       }
+
+       const data = {
+           nombre: form.nombre.value,
+           email: form.email.value,
+           tipoDocumento: form.tipoDocumento.value,
+           numeroDocumento: form.numeroDocumento.value,
+           pais: form.pais.value,
+           ciudad: form.ciudad.value,
+           calle: form.calle.value,
+           numeroDireccion: form.numeroDireccion.value,
+           password: form.password.value
+       };
+
+       try {
+           const res = await fetch('/api/registro/paso1', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify(data)
+           });
+
+           if (res.ok) {
+               Swal.fire({
+                   icon: 'success',
+                   title: 'Datos registrados',
+                   text: 'Ahora verifica tu correo',
+                   confirmButtonText: 'Continuar'
+               }).then(() => window.location.href = '/registro/paso2');
+           } else {
+               const err = await res.text();
+               Swal.fire({ icon: 'error', title: 'Error', text: err });
+           }
+
+       } catch (error) {
+           Swal.fire({ icon: 'error', title: 'Error de red', text: error.message });
+       }
+   });
+
+</script>
+</body>
+</html>

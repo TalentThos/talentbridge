@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Inicio</title>
+</head>
+<body>
+<div class="text-center py-5">
+    <h1 class="mb-4">Conecta con <span class="bridge-color">el talento</span> que necesitas</h1>
+    <p class="mb-4 fs-5">Encuentra profesionales, técnicos, expertos y ayudantes en un solo lugar.</p>
+    <a class="btn btn-primary btn-lg me-2" th:href="@{/buscar}">Buscar servicios</a>
+    <a class="btn btn-outline-secondary btn-lg" th:href="@{/ofrecer}">Publicar mi servicio</a>
+</div>
+
+<div class="row text-center mt-5">
+    <div class="col-md-4">
+        <h4>Clases</h4>
+        <p>Profesores de música, matemáticas, idiomas y más.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>Servicios técnicos</h4>
+        <p>Electricistas, gasfíteres, reparaciones del hogar.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>Eventos</h4>
+        <p>Coctelería, DJs, fotografía y más para tu ocasión.</p>
+    </div>
+</div>
+</body>
+</html>

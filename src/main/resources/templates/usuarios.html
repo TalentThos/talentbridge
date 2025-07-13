@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+  <title>Usuarios</title>
+</head>
+<body>
+<h2 class="mb-3">Usuarios registrados</h2>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Email</th>
+    <th>Rol</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="usuario : ${usuarios}">
+    <td th:text="${usuario.id}"></td>
+    <td th:text="${usuario.nombre}"></td>
+    <td th:text="${usuario.email}"></td>
+    <td th:text="${usuario.rol}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

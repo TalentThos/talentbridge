@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Publicar servicio</title>
+</head>
+<body>
+<div class="col-md-8 offset-md-2">
+    <h2 class="mb-4">Publicar nuevo servicio</h2>
+    <form th:action="@{/oferente/servicios/crear}" method="post" th:object="${servicio}">
+        <div class="mb-3">
+            <label class="form-label">Título del servicio</label>
+            <input type="text" th:field="*{titulo}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Categoría</label>
+            <input type="text" th:field="*{categoria}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Precio estimado</label>
+            <input type="number" th:field="*{precio}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">Publicar</button>
+    </form>
+</div>
+</body>
+</html>

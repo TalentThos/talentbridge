@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Iniciar sesión - TalentBridge</title>
+</head>
+<body>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="bg-white p-5 rounded-4 shadow" style="width: 100%; max-width: 400px;">
+        <div class="text-center mb-4">
+            <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 60px;" />
+            <h2 class="fw-bold mt-2">Talent<span class="text-primary">Bridge</span></h2>
+            <p class="text-muted mb-0">Connecting skills with needs</p>
+        </div>
+
+        <h4 class="text-center mb-3">Iniciar sesión</h4>
+
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3">
+                <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required />
+            </div>
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <input type="password" name="password" class="form-control" placeholder="Contraseña" required />
+                    <span class="input-group-text"><a href="#" onclick="togglePassword()" class="text-decoration-none">Mostrar</a></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small>¿No tienes cuenta? <a th:href="@{/registro}">Regístrate</a></small>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword() {
+        const input = document.querySelector('input[name="password"]');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+</script>
+</body>
+</html>

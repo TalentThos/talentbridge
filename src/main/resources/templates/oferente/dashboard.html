@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Mi Panel</title>
+</head>
+<body>
+<h2 class="mb-4">¡Hola, <span th:text="${nombre}">Oferente</span>!</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Mis servicios</h5>
+                <p class="card-text">Revisa y edita los servicios que has publicado.</p>
+                <a class="btn btn-outline-primary" th:href="@{/oferente/servicios}">Ver servicios</a>
+                <a class="btn btn-primary ms-2" th:href="@{/oferente/servicios/crear}">Publicar nuevo</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Solicitudes recibidas</h5>
+                <p class="card-text">Consulta las solicitudes de clientes interesados.</p>
+                <a class="btn btn-outline-success" th:href="@{/oferente/solicitudes}">Ver solicitudes</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

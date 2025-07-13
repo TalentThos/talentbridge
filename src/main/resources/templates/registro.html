@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Registro</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="text-center mb-4">Crea tu cuenta en <span class="bridge-color">TalentBridge</span></h2>
+
+        <form id="registroForm" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label class="form-label">Nombre completo</label>
+                <input type="text" id="nombre" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" id="email" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Rol</label>
+                <select class="form-select" id="rol" required>
+                    <option value="">Seleccione</option>
+                    <option value="CLIENTE">Quiero contratar servicios</option>
+                    <option value="OFERENTE">Quiero ofrecer mis servicios</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+            <div class="text-center mt-3">
+                ¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a>
+            </div>
+        </form>
+        <script>
+            // Validación visual Bootstrap
+            (() => {
+                'use strict';
+                const form = document.querySelector('#registroForm');
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            })();
+        </script>
+    </div>
+</div>
+
+<script>
+    document.getElementById('registroForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const data = {
+            nombre: document.getElementById('nombre').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            rol: document.getElementById('rol').value
+        };
+
+        try {
+            const response = await fetch('/api/registro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registro exitoso',
+                    text: 'Puedes iniciar sesión ahora',
+                    confirmButtonText: 'Ir al login'
+                }).then(() => window.location.href = '/login');
+            } else {
+                const err = await response.text();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: err || 'Error desconocido'
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de red',
+                text: error.message
+            });
+        }
+    });
+</script>
+</body>
+</html>

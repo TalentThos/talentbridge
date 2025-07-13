@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:fragment="base (_arg0, _arg1)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${_arg1}">TalentBridge</title>
+
+    <script th:src="@{/js/utils.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+        .bridge-color {
+            color: #246BCE;
+        }
+        footer {
+            font-size: 0.9rem;
+            background-color: #f2f2f2;
+            color: #555B6E;
+            padding: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="/" th:href="@{/}">
+            <span class="text-dark">Talent</span><span class="bridge-color">Bridge</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/buscar}">Buscar servicios</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/ofrecer}">Ofrece tu talento</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/login}">Ingresar</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/registro}">Registrarse</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENIDO DINÁMICO -->
+<main class="container mt-4 mb-5">
+    <div th:replace="${_arg0}"></div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    TalentBridge &copy; [[${#dates.format(#dates.createNow(), 'yyyy')}]] - Connecting skills with needs
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

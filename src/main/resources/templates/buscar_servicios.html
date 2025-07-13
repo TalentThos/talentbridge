@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Buscar servicios</title>
+</head>
+<body>
+<h2 class="mb-4">Buscar servicios disponibles</h2>
+<form class="row mb-4" th:action="@{/buscar}" method="get">
+    <div class="col-md-10">
+        <input type="text" name="q" class="form-control" placeholder="Ej: profesor guitarra, gasfiter, DJ...">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Buscar</button>
+    </div>
+</form>
+
+<div class="row" th:if="${servicios != null}">
+    <div class="col-md-4 mb-3" th:each="s : ${servicios}">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 th:text="${s.titulo}"></h5>
+                <p th:text="${s.descripcion}"></p>
+                <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoria}"></span></p>
+                <p th:if="${s.precio != null}"><strong>Precio:</strong> $<span th:text="${s.precio}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

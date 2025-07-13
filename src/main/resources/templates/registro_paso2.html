@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Verificación - Paso 2</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="bg-white p-5 rounded-4 shadow" style="width: 100%; max-width: 400px;">
+        <div class="text-center mb-4">
+            <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 60px;" />
+            <h2 class="fw-bold mt-2">Talent<span class="text-primary">Bridge</span></h2>
+            <p class="text-muted mb-0">Connecting skills with needs</p>
+        </div>
+
+        <h4 class="text-center mb-3">Paso 2: Verificación</h4>
+        <p class="text-center text-muted">Revisa tu correo y escribe el código que te enviamos</p>
+
+        <form id="verificacionForm">
+            <div class="mb-3">
+                <input type="email" id="email" class="form-control" placeholder="Correo usado en el registro" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="text" id="codigo" class="form-control" placeholder="Código de verificación" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Verificar</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small><a href="/registro">Volver al inicio</a></small>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("verificacionForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const codigo = document.getElementById("codigo").value;
+
+        try {
+            const res = await fetch('/api/registro/verificar-codigo', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, codigo })
+            });
+
+            if (res.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Código verificado',
+                    text: 'Tu cuenta ha sido validada.',
+                    confirmButtonText: 'Continuar'
+                }).then(() => window.location.href = '/registro/documento');
+            } else {
+                const err = await res.text();
+                Swal.fire({ icon: 'error', title: 'Error', text: err });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error de red', text: error.message });
+        }
+    });
+</script>
+</body>
+</html>
