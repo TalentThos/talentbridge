@@ -23,7 +23,7 @@ public class UsuarioDetailsService implements UserDetailsService {
         return new User(
                 usuario.getEmail(),
                 usuario.getPassword(),
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()))
+                Collections.emptyList()
         );
     }
 }

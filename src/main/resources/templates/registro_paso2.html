@@ -54,7 +54,7 @@
                     title: 'Código verificado',
                     text: 'Tu cuenta ha sido validada.',
                     confirmButtonText: 'Continuar'
-                }).then(() => window.location.href = '/registro/documento');
+                }).then(() => window.location.href = '/home');
             } else {
                 const err = await res.text();
                 Swal.fire({ icon: 'error', title: 'Error', text: err });

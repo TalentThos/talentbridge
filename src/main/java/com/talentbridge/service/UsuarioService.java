@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface UsuarioService {
     List<UsuarioDTO> listarTodos();
-    void registrarPaso1(RegistroPaso1DTO dto);
-    boolean existePorEmail(String email);
 }
