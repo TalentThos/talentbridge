@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
+                                "/home",
                                 "/registro/**",
                                 "/login",
                                 "/css/**",
