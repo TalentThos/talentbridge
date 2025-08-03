@@ -18,7 +18,7 @@ public class ServicioController {
 
     @GetMapping("/ofrecer")
     public String mostrarFormulario(Model model) {
-        model.addAttribute("servicio", new ServicioDTO());
+        model.addAttribute("servicio", ServicioDTO.builder().build());
         return "oferente/crear_servicio";
     }
 

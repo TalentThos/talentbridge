@@ -58,8 +58,6 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/img/**",
-                                "/buscar",
-                                "/ofrecer",
                                 "/api/registro/paso1",
                                 "/api/registro/paso2",
                                 "/api/paises").permitAll()
