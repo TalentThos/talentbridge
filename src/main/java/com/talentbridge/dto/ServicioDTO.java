@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -13,6 +15,8 @@ public class ServicioDTO {
     private Long id;
     private String titulo;
     private String descripcion;
+    private Long categoriaId;
     private String categoria;
     private Integer precio;
+    private List<String> imagenes;
 }

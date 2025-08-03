@@ -12,40 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-
-                        .requestMatchers(
-                                "/",
-                                "/registro/**",
-                                "/login",
-                                "/css/**",
-                                "/js/**",
-                                "/img/**",
-                                "/api/registro/paso1",
-                                "/api/registro/paso2",
-                                "/api/paises").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                );
-
-        return http.build();
-    }*/
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                //.csrf(csrf -> csrf.disable()) // Deshabilita CSRF para APIs
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -58,7 +27,8 @@ public class SecurityConfig {
                                 "/img/**",
                                 "/api/registro/paso1",
                                 "/api/registro/paso2",
-                                "/api/paises").permitAll()
+                                "/api/paises"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

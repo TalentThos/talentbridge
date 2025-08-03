@@ -17,6 +17,9 @@
 <div class="row" th:if="${servicios != null}">
     <div class="col-md-4 mb-3" th:each="s : ${servicios}">
         <div class="card h-100">
+            <div th:if="${s.imagenes != null && !s.imagenes.isEmpty()}">
+                <img th:src="${s.imagenes.get(0)}" class="card-img-top" alt="imagen servicio">
+            </div>
             <div class="card-body">
                 <h5 th:text="${s.titulo}"></h5>
                 <p th:text="${s.descripcion}"></p>

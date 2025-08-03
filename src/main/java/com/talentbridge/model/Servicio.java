@@ -1,9 +1,33 @@
 package com.talentbridge.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 @Getter
 @Setter
 public class Servicio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String titulo;
+
+    private String descripcion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Categoria categoria;
+
+    private Integer precio;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuario;
+
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ServicioImagen> imagenes = new ArrayList<>();
 }
