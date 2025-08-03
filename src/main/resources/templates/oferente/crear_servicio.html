@@ -6,7 +6,7 @@
 <body>
 <div class="col-md-8 offset-md-2">
     <h2 class="mb-4">Publicar nuevo servicio</h2>
-    <form th:action="@{/oferente/servicios/crear}" method="post" th:object="${servicio}">
+    <form th:action="@{/oferente/servicios/crear}" method="post" th:object="${servicio}" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Título del servicio</label>
             <input type="text" th:field="*{titulo}" class="form-control" required>
@@ -17,7 +17,13 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Categoría</label>
-            <input type="text" th:field="*{categoria}" class="form-control" required>
+            <select th:field="*{categoriaId}" id="categoria" class="form-select" required>
+                <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Fotos</label>
+            <input type="file" name="imagenes" id="imagenes" multiple />
         </div>
         <div class="mb-3">
             <label class="form-label">Precio estimado</label>
@@ -26,5 +32,16 @@
         <button type="submit" class="btn btn-success">Publicar</button>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoriaSelect = document.getElementById('categoria');
+        new Choices(categoriaSelect, { searchEnabled: true });
+
+        FilePond.create(document.querySelector('#imagenes'), {
+            allowMultiple: true
+        });
+    });
+</script>
 </body>
 </html>
