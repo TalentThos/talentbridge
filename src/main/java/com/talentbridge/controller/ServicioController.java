@@ -1,6 +1,7 @@
 package com.talentbridge.controller;
 
 import com.talentbridge.dto.ServicioDTO;
+import com.talentbridge.service.CategoriaService;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -15,10 +16,12 @@ import java.util.List;
 public class ServicioController {
 
     private final ServicioService servicioService;
+    private final CategoriaService categoriaService;
 
     @GetMapping("/ofrecer")
     public String mostrarFormulario(Model model) {
         model.addAttribute("servicio", ServicioDTO.builder().build());
+        model.addAttribute("categorias", categoriaService.listarCategorias());
         return "oferente/crear_servicio";
     }
 
