@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -13,6 +16,8 @@ public class ServicioDTO {
     private Long id;
     private String titulo;
     private String descripcion;
-    private String categoria;
+    private Long categoriaId;
+    private String categoriaNombre;
     private Integer precio;
+    private List<MultipartFile> imagenes;
 }

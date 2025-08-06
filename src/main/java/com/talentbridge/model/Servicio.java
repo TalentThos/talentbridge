@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@Table(name = "servicios")
 @Getter
 @Setter
 public class Servicio {
@@ -17,10 +21,15 @@ public class Servicio {
 
     private String descripcion;
 
-    private String categoria;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
     private Integer precio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Imagen> imagenes = new ArrayList<>();
 }

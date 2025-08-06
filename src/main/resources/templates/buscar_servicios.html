@@ -20,7 +20,7 @@
             <div class="card-body">
                 <h5 th:text="${s.titulo}"></h5>
                 <p th:text="${s.descripcion}"></p>
-                <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoria}"></span></p>
+                <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoriaNombre}"></span></p>
                 <p th:if="${s.precio != null}"><strong>Precio:</strong> $<span th:text="${s.precio}"></span></p>
             </div>
         </div>
