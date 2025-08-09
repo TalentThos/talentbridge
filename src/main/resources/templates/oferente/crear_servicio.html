@@ -6,7 +6,7 @@
 <body>
 <div class="col-md-8 offset-md-2">
     <h2 class="mb-4">Publicar nuevo servicio</h2>
-    <form th:action="@{/oferente/servicios/crear}" method="post" th:object="${servicio}" enctype="multipart/form-data">
+    <form id="crearServicioForm" th:object="${servicio}" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Título del servicio</label>
             <input type="text" th:field="*{titulo}" class="form-control" required>
@@ -38,12 +38,33 @@
         if (window.Choices) {
             new Choices(document.getElementById('categoria'));
         }
+        let pond = null;
         if (window.FilePond) {
             if (window.FilePondPluginImagePreview) {
                 FilePond.registerPlugin(FilePondPluginImagePreview);
             }
-            FilePond.create(document.getElementById('imagenes'));
+            pond = FilePond.create(document.getElementById('imagenes'), {storeAsFile: true});
         }
+
+        const form = document.getElementById('crearServicioForm');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const response = await securedFetch('/api/oferente/servicios/crear', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+            if (!response) return;
+            if (response.ok) {
+                Swal.fire('Éxito', 'Servicio creado correctamente', 'success');
+                form.reset();
+                if (pond) { pond.removeFiles(); }
+            } else {
+                const texto = await response.text();
+                Swal.fire('Error', texto || 'No se pudo crear el servicio', 'error');
+            }
+        });
     });
 </script>
 </body>
