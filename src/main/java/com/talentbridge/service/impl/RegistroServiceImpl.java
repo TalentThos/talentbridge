@@ -10,12 +10,14 @@ import com.talentbridge.service.CorreoService;
 import com.talentbridge.service.RegistroService;
 import com.talentbridge.tipos.EstadoRegistro;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RegistroServiceImpl implements RegistroService {
@@ -65,6 +67,8 @@ public class RegistroServiceImpl implements RegistroService {
     @Override
     @Transactional
     public void verificarCodigo(CodigoVerificacionDTO dto) {
+        log.info("Verificando código:");
+        log.info(dto.toString());
         Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Correo no encontrado."));
 
@@ -79,6 +83,8 @@ public class RegistroServiceImpl implements RegistroService {
         verificacion.setUsado(true);
         codigoVerificacionRepository.save(verificacion);
 
+        usuario.setActivo(true);
+        usuario.setVerificado(true);
         usuario.setEstadoRegistro(EstadoRegistro.CORREO_VALIDADO);
         usuarioRepository.save(usuario);
 

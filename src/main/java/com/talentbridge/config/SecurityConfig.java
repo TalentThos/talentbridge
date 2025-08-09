@@ -60,6 +60,7 @@ public class SecurityConfig {
                                 "/img/**",
                                 "/api/registro/paso1",
                                 "/api/registro/paso2",
+                                "/api/registro/verificar-codigo",
                                 "/api/paises").permitAll()
                         .anyRequest().authenticated()
                 )

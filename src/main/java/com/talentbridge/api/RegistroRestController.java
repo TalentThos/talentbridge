@@ -4,9 +4,11 @@ import com.talentbridge.dto.CodigoVerificacionDTO;
 import com.talentbridge.dto.RegistroPaso1DTO;
 import com.talentbridge.service.RegistroService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/registro")
 @RequiredArgsConstructor
@@ -22,6 +24,8 @@ public class RegistroRestController {
 
     @PostMapping("/verificar-codigo")
     public ResponseEntity<?> verificarCodigo(@RequestBody CodigoVerificacionDTO dto) {
+        log.info("Verificando código:");
+        log.info(dto.toString());
         try {
             registroService.verificarCodigo(dto);
             return ResponseEntity.ok().build();
