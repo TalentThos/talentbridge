@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,7 +29,10 @@ public class ServicioController {
 
     @PostMapping("/oferente/servicios/crear")
     public String crearServicio(@ModelAttribute("servicio") ServicioDTO dto,
+                                BindingResult bindingResult,
+                                @RequestParam(value = "imagenes", required = false) List<MultipartFile> imagenes,
                                 Authentication authentication) {
+        dto.setImagenes(imagenes);
         String email = authentication.getName();
         servicioService.crearServicio(dto, email);
         return "redirect:/home";
