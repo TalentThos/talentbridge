@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Mis mensajes</title>
+</head>
+<body>
+<h2>Mis mensajes</h2>
+<div th:if="${#lists.isEmpty(mensajes)}">
+    <p>No tienes mensajes.</p>
+</div>
+<ul class="list-group" th:if="${!#lists.isEmpty(mensajes)}">
+    <li class="list-group-item" th:each="m : ${mensajes}">
+        <strong th:text="${m.remitente.nombre}"></strong>:
+        <span th:text="${m.contenido}"></span>
+    </li>
+</ul>
+</body>
+</html>

@@ -22,9 +22,32 @@
                 <p th:text="${s.descripcion}"></p>
                 <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoriaNombre}"></span></p>
                 <p th:if="${s.precio != null}"><strong>Precio:</strong> $<span th:text="${s.precio}"></span></p>
+                <p><strong>Oferente:</strong> <span th:text="${s.usuarioNombre}"></span></p>
+                <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="|openChat(${s.usuarioId}, '${s.usuarioNombre}')|">Iniciar chat</button>
             </div>
         </div>
     </div>
 </div>
+
+<div id="chatBox" style="display:none; position:fixed; bottom:0; right:0; width:300px; background:white; border:1px solid #ccc; padding:10px;">
+    <div><strong>Chat con <span id="chatUser"></span></strong></div>
+    <textarea id="chatMessage" class="form-control mb-2" rows="3"></textarea>
+    <input type="hidden" id="chatDestinatarioId">
+    <button class="btn btn-primary w-100" onclick="sendMessage()">Enviar</button>
+</div>
+
+<script>
+function openChat(id, nombre){
+    document.getElementById('chatDestinatarioId').value = id;
+    document.getElementById('chatUser').innerText = nombre;
+    document.getElementById('chatBox').style.display = 'block';
+}
+function sendMessage(){
+    const id = document.getElementById('chatDestinatarioId').value;
+    const mensaje = document.getElementById('chatMessage').value;
+    securedFetch('/api/mensajes', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:`destinatarioId=${id}&contenido=${encodeURIComponent(mensaje)}`})
+        .then(() => {document.getElementById('chatMessage').value='';});
+}
+</script>
 </body>
 </html>

@@ -58,6 +58,7 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" th:href="@{/buscar}">Buscar servicios</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/ofrecer}">Ofrece tu talento</a></li>
+                <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}"><a class="nav-link" th:href="@{/mensajes}">Mensajes</a></li>
                 <li class="nav-item" th:if="${#authentication.name == 'anonymousUser'}">
                     <a class="nav-link" th:href="@{/login}">Ingresar</a>
                 </li>

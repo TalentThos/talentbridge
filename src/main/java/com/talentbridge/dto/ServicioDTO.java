@@ -19,5 +19,7 @@ public class ServicioDTO {
     private Long categoriaId;
     private String categoriaNombre;
     private Integer precio;
+    private Long usuarioId;
+    private String usuarioNombre;
     private List<MultipartFile> imagenes;
 }
