@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: base(~{::body}, ~{::title})}">
 <head>
     <title>Buscar servicios</title>
 </head>
@@ -23,7 +23,9 @@
                 <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoriaNombre}"></span></p>
                 <p th:if="${s.precio != null}"><strong>Precio:</strong> $<span th:text="${s.precio}"></span></p>
                 <p><strong>Oferente:</strong> <span th:text="${s.usuarioNombre}"></span></p>
-                <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="|openChat(${s.usuarioId}, '${s.usuarioNombre}')|">Iniciar chat</button>
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                        th:attr="data-id=${s.usuarioId};data-nombre=${s.usuarioNombre}"
+                        onclick="openChat(this.dataset.id, this.dataset.nombre)">Iniciar chat</button>
             </div>
         </div>
     </div>
