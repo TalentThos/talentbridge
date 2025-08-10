@@ -23,30 +23,58 @@
                 <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoriaNombre}"></span></p>
                 <p th:if="${s.precio != null}"><strong>Precio:</strong> $<span th:text="${s.precio}"></span></p>
                 <p><strong>Oferente:</strong> <span th:text="${s.usuarioNombre}"></span></p>
-                <button type="button" class="btn btn-sm btn-outline-primary" th:onclick="|openChat(${s.usuarioId}, '${s.usuarioNombre}')|" th:attr="data-id=${s.usuarioId}, data-nombre=${s.usuarioNombre}">Iniciar chat</button>
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                        th:onclick="|openChat(${s.usuarioId}, this.dataset.nombre)|"
+                        th:attr="data-id=${s.usuarioId}, data-nombre=${s.usuarioNombre}">
+                    Iniciar chat
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <div id="chatBox" style="display:none; position:fixed; bottom:0; right:0; width:300px; background:white; border:1px solid #ccc; padding:10px;">
-    <div><strong>Chat con <span id="chatUser"></span></strong></div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong>Mensaje con <span id="chatUser"></span></strong>
+        <button onclick="closeChat()" style="background: none; border: none; font-size: 16px; cursor: pointer;">&times;</button>
+    </div>
+    <div id="chatMessages" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #ccc; padding: 5px;"></div>
     <textarea id="chatMessage" class="form-control mb-2" rows="3"></textarea>
     <input type="hidden" id="chatDestinatarioId">
     <button class="btn btn-primary w-100" onclick="sendMessage()">Enviar</button>
 </div>
 
 <script>
+function closeChat() {
+    document.getElementById('chatBox').style.display = 'none';
+}
 function openChat(id, nombre){
     document.getElementById('chatDestinatarioId').value = id;
     document.getElementById('chatUser').innerText = nombre;
     document.getElementById('chatBox').style.display = 'block';
 }
-function sendMessage(){
+function sendMessage() {
     const id = document.getElementById('chatDestinatarioId').value;
     const mensaje = document.getElementById('chatMessage').value;
-    securedFetch('/api/mensajes', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:`destinatarioId=${id}&contenido=${encodeURIComponent(mensaje)}`})
-        .then(() => {document.getElementById('chatMessage').value='';});
+
+    if (mensaje.trim() === '') return; // Evitar mensajes vacíos
+
+    // Agregar el mensaje al contenedor de mensajes
+    const chatMessages = document.getElementById('chatMessages');
+    const newMessage = document.createElement('div');
+    newMessage.textContent = `Tú: ${mensaje}`;
+    newMessage.style.textAlign = 'right';
+    chatMessages.appendChild(newMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight; // Desplazar hacia el último mensaje
+
+    // Enviar el mensaje al servidor
+    securedFetch('/api/mensajes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `destinatarioId=${id}&contenido=${encodeURIComponent(mensaje)}`
+    }).then(() => {
+        document.getElementById('chatMessage').value = ''; // Limpiar el campo de texto
+    });
 }
 </script>
 </body>
