@@ -75,6 +75,7 @@ public class ServicioServiceImpl implements ServicioService {
                 .categoriaId(s.getCategoria() != null ? s.getCategoria().getId() : null)
                 .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
                 .precio(s.getPrecio())
+                .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
                 .build())
                 .collect(Collectors.toList());
     }
