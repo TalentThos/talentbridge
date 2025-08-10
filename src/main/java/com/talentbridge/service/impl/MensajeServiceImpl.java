@@ -1,7 +1,9 @@
 package com.talentbridge.service.impl;
 
+import com.talentbridge.model.Comunicacion;
 import com.talentbridge.model.Mensaje;
 import com.talentbridge.model.Usuario;
+import com.talentbridge.repository.ComunicacionRepository;
 import com.talentbridge.repository.MensajeRepository;
 import com.talentbridge.repository.UsuarioRepository;
 import com.talentbridge.service.MensajeService;
@@ -17,6 +19,7 @@ public class MensajeServiceImpl implements MensajeService {
 
     private final MensajeRepository mensajeRepository;
     private final UsuarioRepository usuarioRepository;
+    private final ComunicacionRepository comunicacionRepository;
 
     @Override
     public void enviarMensaje(Long remitenteId, Long destinatarioId, String contenido) {
@@ -25,9 +28,18 @@ public class MensajeServiceImpl implements MensajeService {
         Usuario destinatario = usuarioRepository.findById(destinatarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Destinatario no encontrado"));
 
+        Comunicacion comunicacion = comunicacionRepository
+                .findByRemitenteIdAndDestinatarioIdOrRemitenteIdAndDestinatarioId(remitenteId, destinatarioId, destinatarioId, remitenteId)
+                .orElseGet(() -> {
+                    Comunicacion nueva = new Comunicacion();
+                    nueva.setRemitente(remitente);
+                    nueva.setDestinatario(destinatario);
+                    nueva.setCreadaEn(LocalDateTime.now());
+                    return comunicacionRepository.save(nueva);
+                });
+
         Mensaje mensaje = new Mensaje();
-        mensaje.setRemitente(remitente);
-        mensaje.setDestinatario(destinatario);
+        mensaje.setComunicacion(comunicacion);
         mensaje.setContenido(contenido);
         mensaje.setEnviadoEn(LocalDateTime.now());
         mensajeRepository.save(mensaje);
@@ -35,6 +47,6 @@ public class MensajeServiceImpl implements MensajeService {
 
     @Override
     public List<Mensaje> obtenerMensajes(Long usuarioId) {
-        return mensajeRepository.findByDestinatarioIdOrderByEnviadoEnDesc(usuarioId);
+        return mensajeRepository.findByComunicacionDestinatarioIdOrderByEnviadoEnDesc(usuarioId);
     }
 }

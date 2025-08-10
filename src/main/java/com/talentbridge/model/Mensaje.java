@@ -16,12 +16,8 @@ public class Mensaje {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "remitente_id")
-    private Usuario remitente;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "destinatario_id")
-    private Usuario destinatario;
+    @JoinColumn(name = "comunicacion_id")
+    private Comunicacion comunicacion;
 
     private String contenido;
 

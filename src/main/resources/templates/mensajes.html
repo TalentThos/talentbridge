@@ -10,7 +10,7 @@
 </div>
 <ul class="list-group" th:if="${!#lists.isEmpty(mensajes)}">
     <li class="list-group-item" th:each="m : ${mensajes}">
-        <strong th:text="${m.remitente.nombre}"></strong>:
+        <strong th:text="${m.comunicacion.remitente.nombre}"></strong>:
         <span th:text="${m.contenido}"></span>
     </li>
 </ul>
