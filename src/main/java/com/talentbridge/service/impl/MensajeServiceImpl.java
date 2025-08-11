@@ -49,4 +49,9 @@ public class MensajeServiceImpl implements MensajeService {
     public List<Mensaje> obtenerMensajes(Long usuarioId) {
         return mensajeRepository.findByComunicacionDestinatarioIdOrderByEnviadoEnDesc(usuarioId);
     }
+
+    @Override
+    public List<Mensaje> obtenerMensajesPorComunicacion(Long comunicacionId) {
+        return mensajeRepository.findByComunicacionIdOrderByEnviadoEnAsc(comunicacionId);
+    }
 }

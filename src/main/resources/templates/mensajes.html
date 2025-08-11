@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
 <head>
-    <title>Mis mensajes</title>
+    <title>Mis comunicaciones</title>
 </head>
 <body>
-<h2>Mis mensajes</h2>
-<div th:if="${#lists.isEmpty(mensajes)}">
-    <p>No tienes mensajes.</p>
+<h2>Mis comunicaciones</h2>
+<div th:if="${#lists.isEmpty(comunicaciones)}">
+    <p>No tienes comunicaciones.</p>
 </div>
-<ul class="list-group" th:if="${!#lists.isEmpty(mensajes)}">
-    <li class="list-group-item" th:each="m : ${mensajes}">
-        <strong th:text="${m.comunicacion.remitente.nombre}"></strong>:
-        <span th:text="${m.contenido}"></span>
+<ul class="list-group" th:if="${!#lists.isEmpty(comunicaciones)}">
+    <li class="list-group-item" th:each="c : ${comunicaciones}">
+        <a th:href="@{'/mensajes/' + ${c.id}}"
+           th:text="${c.remitente.id == usuarioId ? c.destinatario.nombre : c.remitente.nombre}"></a>
     </li>
 </ul>
 </body>
