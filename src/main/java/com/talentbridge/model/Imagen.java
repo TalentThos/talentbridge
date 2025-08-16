@@ -16,7 +16,8 @@ public class Imagen {
 
     private String nombre;
 
-    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "datos", columnDefinition = "bytea")
     private byte[] datos;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -11,6 +11,7 @@ import com.talentbridge.repository.UsuarioRepository;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -84,6 +85,7 @@ public class ServicioServiceImpl implements ServicioService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<String> obtenerImagenesBase64(Long servicioId) {
         Servicio servicio = servicioRepository.findById(servicioId)
