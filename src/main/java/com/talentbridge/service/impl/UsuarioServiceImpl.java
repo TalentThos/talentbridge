@@ -30,6 +30,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             return UsuarioDTO.builder()
                     .rol(usuario.getRol())
                     .email(usuario.getEmail())
+                    .numeroMovil(usuario.getNumeroMovil())
                     .id(usuario.getId())
                     .nombre(usuario.getNombre())
                     .build();

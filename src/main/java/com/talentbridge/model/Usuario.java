@@ -23,6 +23,7 @@ public class Usuario {
     private String numeroDireccion;
     private String tipoDocumento;
     private String numeroDocumento;
+    private String numeroMovil;
     @Enumerated(EnumType.STRING)
     private EstadoRegistro estadoRegistro;
     private Boolean verificado;

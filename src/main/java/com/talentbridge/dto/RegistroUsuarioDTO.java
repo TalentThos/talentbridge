@@ -12,6 +12,7 @@ import lombok.ToString;
 public class RegistroUsuarioDTO {
     String nombre;
     String email;
+    String numeroMovil;
     String password;
     String pais;
     String ciudad;

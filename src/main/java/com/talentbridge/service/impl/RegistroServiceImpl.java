@@ -36,6 +36,7 @@ public class RegistroServiceImpl implements RegistroService {
         Usuario usuario = new Usuario();
         usuario.setNombre(dto.getNombre());
         usuario.setEmail(dto.getEmail());
+        usuario.setNumeroMovil(dto.getNumeroMovil());
         usuario.setTipoDocumento(dto.getTipoDocumento());
         usuario.setNumeroDocumento(dto.getNumeroDocumento());
         usuario.setPais(dto.getPais());
