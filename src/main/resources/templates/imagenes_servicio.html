@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Imágenes del servicio</title>
+</head>
+<body>
+<h2 class="mb-4">Imágenes del servicio</h2>
+<div class="row" th:if="${imagenes != null}">
+    <div class="col-md-4 mb-3" th:each="img : ${imagenes}">
+        <img th:src="'data:image/jpeg;base64,' + ${img}" class="img-fluid"/>
+    </div>
+</div>
+<a class="btn btn-secondary" th:href="@{/buscar}">Volver</a>
+</body>
+</html>

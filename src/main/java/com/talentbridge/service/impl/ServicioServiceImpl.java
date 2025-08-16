@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,7 +78,18 @@ public class ServicioServiceImpl implements ServicioService {
                 .precio(s.getPrecio())
                 .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
                 .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
+                .usuarioMovil(s.getUsuario() != null ? s.getUsuario().getNumeroMovil() : null)
+                .tieneImagenes(s.getImagenes() != null && !s.getImagenes().isEmpty())
                 .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> obtenerImagenesBase64(Long servicioId) {
+        Servicio servicio = servicioRepository.findById(servicioId)
+                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
+        return servicio.getImagenes().stream()
+                .map(img -> Base64.getEncoder().encodeToString(img.getDatos()))
                 .collect(Collectors.toList());
     }
 }

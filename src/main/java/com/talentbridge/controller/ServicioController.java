@@ -30,4 +30,11 @@ public class ServicioController {
         model.addAttribute("servicios", servicios);
         return "buscar_servicios";
     }
+
+    @GetMapping("/servicios/{id}/imagenes")
+    public String verImagenes(@PathVariable Long id, Model model) {
+        List<String> imagenes = servicioService.obtenerImagenesBase64(id);
+        model.addAttribute("imagenes", imagenes);
+        return "imagenes_servicio";
+    }
 }

@@ -21,5 +21,7 @@ public class ServicioDTO {
     private Integer precio;
     private Long usuarioId;
     private String usuarioNombre;
+    private String usuarioMovil;
+    private Boolean tieneImagenes;
     private List<MultipartFile> imagenes;
 }
