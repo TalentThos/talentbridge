@@ -25,6 +25,10 @@ public class Servicio {
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subcategoria_id")
+    private Subcategoria subcategoria;
+
     private Integer precio;
 
     @ManyToOne(fetch = FetchType.LAZY)

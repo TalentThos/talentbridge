@@ -22,6 +22,10 @@
             </select>
         </div>
         <div class="mb-3">
+            <label class="form-label">Subcategoría</label>
+            <select th:field="*{subcategoriaId}" id="subcategoria" class="form-select" required disabled></select>
+        </div>
+        <div class="mb-3">
             <label class="form-label">Imágenes</label>
             <input type="file" th:field="*{imagenes}" id="imagenes" multiple />
         </div>
@@ -35,8 +39,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        let subcatChoices = null;
         if (window.Choices) {
             new Choices(document.getElementById('categoria'));
+            subcatChoices = new Choices(document.getElementById('subcategoria'));
         }
         let pond = null;
         if (window.FilePond) {
@@ -47,6 +53,35 @@
         }
 
         const form = document.getElementById('crearServicioForm');
+        const categoriaSelect = document.getElementById('categoria');
+        const subcategoriaSelect = document.getElementById('subcategoria');
+
+        async function cargarSubcategorias(categoriaId) {
+            subcategoriaSelect.innerHTML = '';
+            subcategoriaSelect.disabled = true;
+            if (subcatChoices) {
+                subcatChoices.clearChoices();
+            }
+            if (!categoriaId) return;
+            const resp = await securedFetch(`/api/categorias/${categoriaId}/subcategorias`);
+            if (!resp || !resp.ok) return;
+            const data = await resp.json();
+            if (data.length === 0) return;
+            if (subcatChoices) {
+                subcatChoices.setChoices(data.map(sc => ({value: sc.id, label: sc.nombre})), 'value', 'label', true);
+            } else {
+                data.forEach(sc => {
+                    const opt = document.createElement('option');
+                    opt.value = sc.id;
+                    opt.textContent = sc.nombre;
+                    subcategoriaSelect.appendChild(opt);
+                });
+            }
+            subcategoriaSelect.disabled = false;
+        }
+
+        categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
+        cargarSubcategorias(categoriaSelect.value);
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const formData = new FormData(form);

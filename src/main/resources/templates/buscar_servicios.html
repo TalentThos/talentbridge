@@ -21,6 +21,7 @@
                 <h5 th:text="${s.titulo}"></h5>
                 <p th:text="${s.descripcion}"></p>
                 <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoriaNombre}"></span></p>
+                <p class="text-muted" th:if="${s.subcategoriaNombre}"><strong>Subcategoría:</strong> <span th:text="${s.subcategoriaNombre}"></span></p>
                 <p th:if="${s.precio != null}"><strong>Precio:</strong> $<span th:text="${s.precio}"></span></p>
                 <p><strong>Oferente:</strong> <span th:text="${s.usuarioNombre}"></span></p>
                 <p th:if="${s.usuarioMovil != null}"><strong>Móvil:</strong> <span th:text="${s.usuarioMovil}"></span></p>

@@ -4,9 +4,11 @@ import com.talentbridge.dto.ServicioDTO;
 import com.talentbridge.model.Categoria;
 import com.talentbridge.model.Imagen;
 import com.talentbridge.model.Servicio;
+import com.talentbridge.model.Subcategoria;
 import com.talentbridge.model.Usuario;
 import com.talentbridge.repository.CategoriaRepository;
 import com.talentbridge.repository.ServicioRepository;
+import com.talentbridge.repository.SubcategoriaRepository;
 import com.talentbridge.repository.UsuarioRepository;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class ServicioServiceImpl implements ServicioService {
     private final ServicioRepository servicioRepository;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
+    private final SubcategoriaRepository subcategoriaRepository;
 
     @Override
     public void crearServicio(ServicioDTO dto, String email) {
@@ -35,10 +38,20 @@ public class ServicioServiceImpl implements ServicioService {
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
 
+        Subcategoria subcategoria = null;
+        if (dto.getSubcategoriaId() != null) {
+            subcategoria = subcategoriaRepository.findById(dto.getSubcategoriaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Subcategoría no encontrada"));
+            if (subcategoria.getCategoria() == null || !subcategoria.getCategoria().getId().equals(categoria.getId())) {
+                throw new IllegalArgumentException("La subcategoría no pertenece a la categoría seleccionada");
+            }
+        }
+
         Servicio servicio = new Servicio();
         servicio.setTitulo(dto.getTitulo());
         servicio.setDescripcion(dto.getDescripcion());
         servicio.setCategoria(categoria);
+        servicio.setSubcategoria(subcategoria);
         servicio.setPrecio(dto.getPrecio());
         servicio.setUsuario(usuario);
 
@@ -76,6 +89,8 @@ public class ServicioServiceImpl implements ServicioService {
                 .descripcion(s.getDescripcion())
                 .categoriaId(s.getCategoria() != null ? s.getCategoria().getId() : null)
                 .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
+                .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
+                .subcategoriaNombre(s.getSubcategoria() != null ? s.getSubcategoria().getNombre() : null)
                 .precio(s.getPrecio())
                 .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
                 .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
