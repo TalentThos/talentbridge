@@ -58,9 +58,11 @@
 
         async function cargarSubcategorias(categoriaId) {
             subcategoriaSelect.innerHTML = '';
-            subcategoriaSelect.disabled = true;
             if (subcatChoices) {
                 subcatChoices.clearChoices();
+                subcatChoices.disable();
+            } else {
+                subcategoriaSelect.disabled = true;
             }
             if (!categoriaId) return;
             const resp = await securedFetch(`/api/categorias/${categoriaId}/subcategorias`);
@@ -69,6 +71,7 @@
             if (data.length === 0) return;
             if (subcatChoices) {
                 subcatChoices.setChoices(data.map(sc => ({value: sc.id, label: sc.nombre})), 'value', 'label', true);
+                subcatChoices.enable();
             } else {
                 data.forEach(sc => {
                     const opt = document.createElement('option');
@@ -76,8 +79,8 @@
                     opt.textContent = sc.nombre;
                     subcategoriaSelect.appendChild(opt);
                 });
+                subcategoriaSelect.disabled = false;
             }
-            subcategoriaSelect.disabled = false;
         }
 
         categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
