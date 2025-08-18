@@ -60,8 +60,11 @@
             subcategoriaSelect.innerHTML = '';
             if (subcatChoices) {
                 subcatChoices.clearChoices();
+                subcatChoices.removeActiveItems();
+                subcatChoices.setChoiceByValue('');
                 subcatChoices.disable();
             } else {
+                subcategoriaSelect.value = '';
                 subcategoriaSelect.disabled = true;
             }
             if (!categoriaId) return;
