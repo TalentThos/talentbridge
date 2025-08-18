@@ -25,9 +25,17 @@ public class ServicioController {
     }
 
     @GetMapping("/buscar")
-    public String buscarServicios(@RequestParam(value = "q", required = false) String q, Model model) {
-        List<ServicioDTO> servicios = servicioService.buscarServicios(q);
+    public String buscarServicios(
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "categoriaId", required = false) Long categoriaId,
+            @RequestParam(value = "subcategoriaId", required = false) Long subcategoriaId,
+            Model model) {
+        List<ServicioDTO> servicios = servicioService.buscarServicios(q, categoriaId, subcategoriaId);
         model.addAttribute("servicios", servicios);
+        model.addAttribute("categorias", categoriaService.listarCategorias());
+        model.addAttribute("categoriaId", categoriaId);
+        model.addAttribute("subcategoriaId", subcategoriaId);
+        model.addAttribute("termino", q);
         return "buscar_servicios";
     }
 

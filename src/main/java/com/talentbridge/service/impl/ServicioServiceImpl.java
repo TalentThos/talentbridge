@@ -75,14 +75,9 @@ public class ServicioServiceImpl implements ServicioService {
     }
 
     @Override
-    public List<ServicioDTO> buscarServicios(String termino) {
-        List<Servicio> servicios;
-        if (termino == null || termino.isBlank()) {
-            servicios = servicioRepository.findAll();
-        } else {
-            servicios = servicioRepository
-                    .findByTituloContainingIgnoreCaseOrDescripcionContainingIgnoreCase(termino, termino);
-        }
+    public List<ServicioDTO> buscarServicios(String termino, Long categoriaId, Long subcategoriaId) {
+        String term = (termino == null || termino.isBlank()) ? null : termino;
+        List<Servicio> servicios = servicioRepository.buscarPorFiltros(term, categoriaId, subcategoriaId);
         return servicios.stream().map(s -> ServicioDTO.builder()
                 .id(s.getId())
                 .titulo(s.getTitulo())

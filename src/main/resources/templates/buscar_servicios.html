@@ -6,8 +6,17 @@
 <body>
 <h2 class="mb-4">Buscar servicios disponibles</h2>
 <form class="row mb-4" th:action="@{/buscar}" method="get">
-    <div class="col-md-10">
-        <input type="text" name="q" class="form-control" placeholder="Ej: profesor guitarra, gasfiter, DJ...">
+    <div class="col-md-4 mb-2 mb-md-0">
+        <input type="text" name="q" th:value="${termino}" class="form-control" placeholder="Ej: profesor guitarra, gasfiter, DJ...">
+    </div>
+    <div class="col-md-3 mb-2 mb-md-0">
+        <select name="categoriaId" id="categoria" class="form-select">
+            <option th:value="" th:text="'Todas las categorías'"></option>
+            <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}" th:selected="${cat.id} == ${categoriaId}"></option>
+        </select>
+    </div>
+    <div class="col-md-3 mb-2 mb-md-0">
+        <select name="subcategoriaId" id="subcategoria" class="form-select" disabled></select>
     </div>
     <div class="col-md-2">
         <button type="submit" class="btn btn-primary w-100">Buscar</button>
@@ -30,5 +39,53 @@
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+document.addEventListener('DOMContentLoaded', function() {
+    let subcatChoices = null;
+    if (window.Choices) {
+        new Choices(document.getElementById('categoria'));
+        subcatChoices = new Choices(document.getElementById('subcategoria'));
+    }
+    const categoriaSelect = document.getElementById('categoria');
+    const subcategoriaSelect = document.getElementById('subcategoria');
+    const selectedSubcat = /*[[${subcategoriaId}]]*/ null;
+    const selectedCat = /*[[${categoriaId}]]*/ null;
+    async function cargarSubcategorias(categoriaId) {
+        subcategoriaSelect.innerHTML = '';
+        if (subcatChoices) {
+            subcatChoices.clearChoices();
+            subcatChoices.removeActiveItems();
+            subcatChoices.setChoiceByValue('');
+            subcatChoices.disable();
+        } else {
+            subcategoriaSelect.value = '';
+            subcategoriaSelect.disabled = true;
+        }
+        if (!categoriaId) return;
+        const resp = await securedFetch(`/api/categorias/${categoriaId}/subcategorias`);
+        if (!resp || !resp.ok) return;
+        const data = await resp.json();
+        if (data.length === 0) return;
+        if (subcatChoices) {
+            subcatChoices.setChoices(data.map(sc => ({value: sc.id, label: sc.nombre})), 'value', 'label', true);
+            subcatChoices.enable();
+            if (selectedSubcat) subcatChoices.setChoiceByValue(String(selectedSubcat));
+        } else {
+            data.forEach(sc => {
+                const opt = document.createElement('option');
+                opt.value = sc.id;
+                opt.textContent = sc.nombre;
+                if (selectedSubcat && Number(selectedSubcat) === sc.id) opt.selected = true;
+                subcategoriaSelect.appendChild(opt);
+            });
+            subcategoriaSelect.disabled = false;
+        }
+    }
+    categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
+    cargarSubcategorias(selectedCat);
+});
+/*]]>*/
+</script>
 </body>
 </html>
