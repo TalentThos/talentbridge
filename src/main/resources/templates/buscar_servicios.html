@@ -35,10 +35,34 @@
                 <p th:text="${s.descripcion}"></p>
                 <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoriaNombre}"></span></p>
                 <p class="text-muted" th:if="${s.subcategoriaNombre}"><strong>Subcategoría:</strong> <span th:text="${s.subcategoriaNombre}"></span></p>
-                <p th:if="${s.precio != null}"><strong>Precio:</strong> $<span th:text="${s.precio}"></span></p>
                 <p><strong>Oferente:</strong> <span th:text="${s.usuarioNombre}"></span></p>
                 <p th:if="${s.usuarioMovil != null}"><strong>Móvil:</strong> <span th:text="${s.usuarioMovil}"></span></p>
-                <a th:if="${s.tieneImagenes}" th:href="@{/servicios/{id}/imagenes(id=${s.id})}" class="btn btn-sm btn-outline-secondary">Ver imágenes</a>
+                <a th:if="${s.tieneImagenes}" href="#" th:data-id="${s.id}" class="btn btn-sm btn-outline-secondary ver-imagenes">Ver imágenes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para visualizar imágenes -->
+<div class="modal fade" id="imagenesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Imágenes del servicio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="imagenesCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner"></div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#imagenesCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#imagenesCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -88,6 +112,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
     cargarSubcategorias(selectedCat);
+
+    document.querySelectorAll('.ver-imagenes').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const id = this.dataset.id;
+            const resp = await securedFetch(`/api/servicios/${id}/imagenes`);
+            if (!resp || !resp.ok) return;
+            const data = await resp.json();
+            const carouselInner = document.querySelector('#imagenesCarousel .carousel-inner');
+            carouselInner.innerHTML = '';
+            data.forEach((img, idx) => {
+                const item = document.createElement('div');
+                item.className = 'carousel-item' + (idx === 0 ? ' active' : '');
+                const image = document.createElement('img');
+                image.src = 'data:image/jpeg;base64,' + img;
+                image.className = 'd-block w-100';
+                item.appendChild(image);
+                carouselInner.appendChild(item);
+            });
+            const modal = new bootstrap.Modal(document.getElementById('imagenesModal'));
+            modal.show();
+        });
+    });
 });
 /*]]>*/
 </script>

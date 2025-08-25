@@ -29,7 +29,6 @@ public class Servicio {
     @JoinColumn(name = "subcategoria_id")
     private Subcategoria subcategoria;
 
-    private Integer precio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;

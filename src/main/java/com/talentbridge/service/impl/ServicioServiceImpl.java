@@ -52,7 +52,6 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setDescripcion(dto.getDescripcion());
         servicio.setCategoria(categoria);
         servicio.setSubcategoria(subcategoria);
-        servicio.setPrecio(dto.getPrecio());
         servicio.setUsuario(usuario);
 
         if (dto.getImagenes() != null) {
@@ -88,7 +87,6 @@ public class ServicioServiceImpl implements ServicioService {
                 .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
                 .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
                 .subcategoriaNombre(s.getSubcategoria() != null ? s.getSubcategoria().getNombre() : null)
-                .precio(s.getPrecio())
                 .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
                 .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
                 .usuarioMovil(s.getUsuario() != null ? s.getUsuario().getNumeroMovil() : null)
