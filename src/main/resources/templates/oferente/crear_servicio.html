@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
 <head>
-    <title>Publicar servicio</title>
+    <title th:text="${servicio.id} != null ? 'Editar servicio' : 'Publicar servicio'">Publicar servicio</title>
 </head>
 <body>
 <div class="col-md-8 offset-md-2">
-    <h2 class="mb-4">Publicar nuevo servicio</h2>
+    <h2 class="mb-4" th:text="${servicio.id} != null ? 'Editar servicio' : 'Publicar nuevo servicio'">Publicar nuevo servicio</h2>
     <form id="crearServicioForm" th:object="${servicio}" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Título del servicio</label>
@@ -29,11 +29,11 @@
             <label class="form-label">Imágenes</label>
             <input type="file" th:field="*{imagenes}" id="imagenes" multiple />
         </div>
-        <button type="submit" class="btn btn-success">Publicar</button>
+        <button type="submit" class="btn btn-success" th:text="${servicio.id} != null ? 'Actualizar' : 'Publicar'">Publicar</button>
     </form>
 </div>
 
-<script>
+<script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         let subcatChoices = null;
         if (window.Choices) {
@@ -51,6 +51,8 @@
         const form = document.getElementById('crearServicioForm');
         const categoriaSelect = document.getElementById('categoria');
         const subcategoriaSelect = document.getElementById('subcategoria');
+        const servicioId = /*[[${servicio.id}]]*/ null;
+        const esEdicion = servicioId !== null;
 
         async function cargarSubcategorias(categoriaId) {
             subcategoriaSelect.innerHTML = '';
@@ -70,6 +72,8 @@
             if (data.length === 0) return;
             if (subcatChoices) {
                 subcatChoices.setChoices(data.map(sc => ({value: sc.id, label: sc.nombre})), 'value', 'label', true);
+                const actual = form.querySelector('[name="subcategoriaId"]').value;
+                if (actual) { subcatChoices.setChoiceByValue(actual); }
                 subcatChoices.enable();
             } else {
                 data.forEach(sc => {
@@ -79,6 +83,8 @@
                     subcategoriaSelect.appendChild(opt);
                 });
                 subcategoriaSelect.disabled = false;
+                const actual = form.querySelector('[name="subcategoriaId"]').value;
+                if (actual) { subcategoriaSelect.value = actual; }
             }
         }
 
@@ -87,19 +93,23 @@
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const formData = new FormData(form);
-            const response = await securedFetch('/api/oferente/servicios/crear', {
-                method: 'POST',
+            const url = esEdicion ? `/api/oferente/servicios/${servicioId}/actualizar` : '/api/oferente/servicios/crear';
+            const method = esEdicion ? 'PUT' : 'POST';
+            const response = await securedFetch(url, {
+                method: method,
                 body: formData,
                 credentials: 'include'
             });
             if (!response) return;
             if (response.ok) {
-                Swal.fire('Éxito', 'Servicio creado correctamente', 'success');
-                form.reset();
-                if (pond) { pond.removeFiles(); }
+                Swal.fire('Éxito', esEdicion ? 'Servicio actualizado correctamente' : 'Servicio creado correctamente', 'success');
+                if (!esEdicion) {
+                    form.reset();
+                    if (pond) { pond.removeFiles(); }
+                }
             } else {
                 const texto = await response.text();
-                Swal.fire('Error', texto || 'No se pudo crear el servicio', 'error');
+                Swal.fire('Error', texto || (esEdicion ? 'No se pudo actualizar el servicio' : 'No se pudo crear el servicio'), 'error');
             }
         });
     });

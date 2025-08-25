@@ -25,6 +25,15 @@ public class ServicioController {
         return "oferente/crear_servicio";
     }
 
+    @GetMapping("/ofrecer/{id}")
+    public String editarServicio(@PathVariable Long id, Authentication authentication, Model model) {
+        String email = authentication.getName();
+        ServicioDTO servicio = servicioService.obtenerPorId(id, email);
+        model.addAttribute("servicio", servicio);
+        model.addAttribute("categorias", categoriaService.listarCategorias());
+        return "oferente/crear_servicio";
+    }
+
     @GetMapping("/buscar")
     public String buscarServicios(
             @RequestParam(value = "q", required = false) String q,

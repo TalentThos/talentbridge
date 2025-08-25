@@ -15,7 +15,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="servicio : ${servicios}">
+    <tr th:each="servicio : ${servicios}" th:onclick="|window.location='/ofrecer/${servicio.id}'|" style="cursor:pointer">
         <td th:text="${servicio.id}"></td>
         <td th:text="${servicio.titulo}"></td>
         <td th:text="${servicio.categoriaNombre}"></td>

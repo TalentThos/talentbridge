@@ -116,4 +116,61 @@ public class ServicioServiceImpl implements ServicioService {
                 .map(img -> Base64.getEncoder().encodeToString(img.getDatos()))
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ServicioDTO obtenerPorId(Long id, String email) {
+        Servicio servicio = servicioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
+        if (servicio.getUsuario() == null || !servicio.getUsuario().getEmail().equals(email)) {
+            throw new IllegalArgumentException("No autorizado");
+        }
+        return mapToDTO(servicio);
+    }
+
+    @Transactional
+    @Override
+    public void actualizarServicio(Long id, ServicioDTO dto, String email) {
+        Servicio servicio = servicioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
+        if (servicio.getUsuario() == null || !servicio.getUsuario().getEmail().equals(email)) {
+            throw new IllegalArgumentException("No autorizado");
+        }
+
+        Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+
+        Subcategoria subcategoria = null;
+        if (dto.getSubcategoriaId() != null) {
+            subcategoria = subcategoriaRepository.findById(dto.getSubcategoriaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Subcategoría no encontrada"));
+            if (subcategoria.getCategoria() == null || !subcategoria.getCategoria().getId().equals(categoria.getId())) {
+                throw new IllegalArgumentException("La subcategoría no pertenece a la categoría seleccionada");
+            }
+        }
+
+        servicio.setTitulo(dto.getTitulo());
+        servicio.setDescripcion(dto.getDescripcion());
+        servicio.setCategoria(categoria);
+        servicio.setSubcategoria(subcategoria);
+
+        if (dto.getImagenes() != null) {
+            servicio.getImagenes().clear();
+            for (MultipartFile file : dto.getImagenes()) {
+                if (file != null && !file.isEmpty()) {
+                    try {
+                        Imagen imagen = new Imagen();
+                        imagen.setNombre(file.getOriginalFilename());
+                        imagen.setDatos(file.getBytes());
+                        imagen.setServicio(servicio);
+                        servicio.getImagenes().add(imagen);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error al guardar la imagen", e);
+                    }
+                }
+            }
+        }
+
+        servicioRepository.save(servicio);
+    }
 }

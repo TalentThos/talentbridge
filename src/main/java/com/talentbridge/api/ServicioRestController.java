@@ -30,4 +30,19 @@ public class ServicioRestController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    @PutMapping("/{id}/actualizar")
+    public ResponseEntity<?> actualizarServicio(@PathVariable Long id,
+                                                @ModelAttribute ServicioDTO dto,
+                                                @RequestParam(value = "imagenes", required = false) List<MultipartFile> imagenes,
+                                                Authentication authentication) {
+        try {
+            dto.setImagenes(imagenes);
+            String email = authentication.getName();
+            servicioService.actualizarServicio(id, dto, email);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
 }
