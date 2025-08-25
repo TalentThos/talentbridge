@@ -17,7 +17,37 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
             "OR LOWER(s.descripcion) LIKE LOWER(CONCAT('%', :termino, '%'))) " +
             "AND (:categoriaId IS NULL OR s.categoria.id = :categoriaId) " +
             "AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)")
-    List<Servicio> buscarPorFiltros(@Param("termino") String termino,
+    List<Servicio> buscarPorFiltros2(@Param("termino") String termino,
                                     @Param("categoriaId") Long categoriaId,
                                     @Param("subcategoriaId") Long subcategoriaId);
+
+    @Query("""
+        SELECT s FROM Servicio s
+        WHERE (
+            :terminoLower IS NULL
+            OR LOWER(s.titulo)      LIKE CONCAT('%', :terminoLower, '%')
+            OR LOWER(s.descripcion) LIKE CONCAT('%', :terminoLower, '%')
+        )
+        AND (:categoriaId   IS NULL OR s.categoria.id   = :categoriaId)
+        AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)
+        """)
+    List<Servicio> buscarPorFiltros3(@Param("terminoLower") String terminoLower,
+                                    @Param("categoriaId") Long categoriaId,
+                                    @Param("subcategoriaId") Long subcategoriaId);
+
+    @Query("""
+        SELECT s FROM Servicio s
+        WHERE (
+            :pattern IS NULL
+            OR LOWER(s.titulo)      LIKE :pattern
+            OR LOWER(s.descripcion) LIKE :pattern
+        )
+        AND (:categoriaId    IS NULL OR s.categoria.id    = :categoriaId)
+        AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)
+        """)
+    List<Servicio> buscarPorFiltros(
+            @Param("pattern") String pattern,
+            @Param("categoriaId") Long categoriaId,
+            @Param("subcategoriaId") Long subcategoriaId);
+
 }

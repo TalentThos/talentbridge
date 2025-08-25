@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: base(~{::body}, ~{::title})}">
 <head>
     <title>Buscar servicios</title>
 </head>
@@ -11,8 +11,12 @@
     </div>
     <div class="col-md-3 mb-2 mb-md-0">
         <select name="categoriaId" id="categoria" class="form-select">
-            <option th:value="" th:text="'Todas las categorías'"></option>
-            <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}" th:selected="${cat.id} == ${categoriaId}"></option>
+            <option value="" th:text="'Todas las categorías'"></option>
+            <option th:each="cat : ${categorias}"
+                    th:value="${cat.id}"
+                    th:text="${cat.nombre}"
+                    th:selected="${cat.id == categoriaId}">
+            </option>
         </select>
     </div>
     <div class="col-md-3 mb-2 mb-md-0">
