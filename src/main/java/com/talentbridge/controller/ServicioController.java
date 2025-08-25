@@ -4,6 +4,7 @@ import com.talentbridge.dto.ServicioDTO;
 import com.talentbridge.service.CategoriaService;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,14 @@ public class ServicioController {
         model.addAttribute("subcategoriaId", subcategoriaId);
         model.addAttribute("termino", q);
         return "buscar_servicios";
+    }
+
+    @GetMapping("/mis-servicios")
+    public String misServicios(Authentication authentication, Model model) {
+        String email = authentication.getName();
+        List<ServicioDTO> servicios = servicioService.listarPorUsuario(email);
+        model.addAttribute("servicios", servicios);
+        return "mis_servicios";
     }
 
     @GetMapping("/servicios/{id}/imagenes")

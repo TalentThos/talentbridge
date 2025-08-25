@@ -30,6 +30,22 @@ public class ServicioServiceImpl implements ServicioService {
     private final CategoriaRepository categoriaRepository;
     private final SubcategoriaRepository subcategoriaRepository;
 
+    private ServicioDTO mapToDTO(Servicio s) {
+        return ServicioDTO.builder()
+                .id(s.getId())
+                .titulo(s.getTitulo())
+                .descripcion(s.getDescripcion())
+                .categoriaId(s.getCategoria() != null ? s.getCategoria().getId() : null)
+                .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
+                .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
+                .subcategoriaNombre(s.getSubcategoria() != null ? s.getSubcategoria().getNombre() : null)
+                .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
+                .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
+                .usuarioMovil(s.getUsuario() != null ? s.getUsuario().getNumeroMovil() : null)
+                .tieneImagenes(s.getImagenes() != null && !s.getImagenes().isEmpty())
+                .build();
+    }
+
     @Override
     public void crearServicio(ServicioDTO dto, String email) {
         Usuario usuario = usuarioRepository.findByEmail(email)
@@ -79,20 +95,16 @@ public class ServicioServiceImpl implements ServicioService {
                 ? null
                 : "%" + termino.toLowerCase(java.util.Locale.ROOT) + "%";
         List<Servicio> servicios = servicioRepository.buscarPorFiltros(pattern, categoriaId, subcategoriaId);
-        return servicios.stream().map(s -> ServicioDTO.builder()
-                .id(s.getId())
-                .titulo(s.getTitulo())
-                .descripcion(s.getDescripcion())
-                .categoriaId(s.getCategoria() != null ? s.getCategoria().getId() : null)
-                .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
-                .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
-                .subcategoriaNombre(s.getSubcategoria() != null ? s.getSubcategoria().getNombre() : null)
-                .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
-                .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
-                .usuarioMovil(s.getUsuario() != null ? s.getUsuario().getNumeroMovil() : null)
-                .tieneImagenes(s.getImagenes() != null && !s.getImagenes().isEmpty())
-                .build())
-                .collect(Collectors.toList());
+        return servicios.stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ServicioDTO> listarPorUsuario(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        List<Servicio> servicios = servicioRepository.findByUsuario(usuario);
+        return servicios.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

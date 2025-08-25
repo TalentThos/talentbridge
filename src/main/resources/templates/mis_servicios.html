@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Mis servicios</title>
+</head>
+<body>
+<h2 class="mb-3">Mis servicios</h2>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Categoría</th>
+        <th>Subcategoría</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="servicio : ${servicios}">
+        <td th:text="${servicio.id}"></td>
+        <td th:text="${servicio.titulo}"></td>
+        <td th:text="${servicio.categoriaNombre}"></td>
+        <td th:text="${servicio.subcategoriaNombre}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
