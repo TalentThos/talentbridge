@@ -35,9 +35,11 @@ public class ServicioRestController {
     public ResponseEntity<?> actualizarServicio(@PathVariable Long id,
                                                 @ModelAttribute ServicioDTO dto,
                                                 @RequestParam(value = "imagenes", required = false) List<MultipartFile> imagenes,
+                                                @RequestParam(value = "imagenesEliminar", required = false) List<Long> imagenesEliminar,
                                                 Authentication authentication) {
         try {
             dto.setImagenes(imagenes);
+            dto.setImagenesEliminar(imagenesEliminar);
             String email = authentication.getName();
             servicioService.actualizarServicio(id, dto, email);
             return ResponseEntity.ok().build();

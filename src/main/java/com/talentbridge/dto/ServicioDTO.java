@@ -8,6 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+/**
+ * DTO para la información de un servicio. Se utiliza tanto para la creación
+ * como para la edición de servicios. Incluye las imágenes existentes y las que
+ * se desean eliminar.
+ */
+
 @Builder
 @Getter
 @Setter
@@ -24,5 +30,7 @@ public class ServicioDTO {
     private String usuarioNombre;
     private String usuarioMovil;
     private Boolean tieneImagenes;
+    private List<ImagenDTO> imagenesExistentes;
+    private List<Long> imagenesEliminar;
     private List<MultipartFile> imagenes;
 }

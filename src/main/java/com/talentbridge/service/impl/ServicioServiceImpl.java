@@ -1,5 +1,6 @@
 package com.talentbridge.service.impl;
 
+import com.talentbridge.dto.ImagenDTO;
 import com.talentbridge.dto.ServicioDTO;
 import com.talentbridge.model.Categoria;
 import com.talentbridge.model.Imagen;
@@ -43,6 +44,12 @@ public class ServicioServiceImpl implements ServicioService {
                 .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
                 .usuarioMovil(s.getUsuario() != null ? s.getUsuario().getNumeroMovil() : null)
                 .tieneImagenes(s.getImagenes() != null && !s.getImagenes().isEmpty())
+                .imagenesExistentes(s.getImagenes() != null ?
+                        s.getImagenes().stream()
+                                .map(i -> new ImagenDTO(i.getId(), i.getNombre(),
+                                        Base64.getEncoder().encodeToString(i.getDatos())))
+                                .collect(Collectors.toList())
+                        : null)
                 .build();
     }
 
@@ -153,6 +160,10 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setDescripcion(dto.getDescripcion());
         servicio.setCategoria(categoria);
         servicio.setSubcategoria(subcategoria);
+
+        if (dto.getImagenesEliminar() != null && !dto.getImagenesEliminar().isEmpty()) {
+            servicio.getImagenes().removeIf(img -> dto.getImagenesEliminar().contains(img.getId()));
+        }
 
         if (dto.getImagenes() != null) {
             for (MultipartFile file : dto.getImagenes()) {

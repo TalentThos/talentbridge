@@ -28,6 +28,7 @@
         <div class="mb-3">
             <label class="form-label">Imágenes</label>
             <input type="file" th:field="*{imagenes}" id="imagenes" multiple />
+            <div id="imagenesEliminarContainer"></div>
         </div>
         <button type="submit" class="btn btn-success" th:text="${servicio.id} != null ? 'Actualizar' : 'Publicar'">Publicar</button>
     </form>
@@ -51,10 +52,14 @@
         const form = document.getElementById('crearServicioForm');
         const categoriaSelect = document.getElementById('categoria');
         const subcategoriaSelect = document.getElementById('subcategoria');
+        const imagenesEliminarContainer = document.getElementById('imagenesEliminarContainer');
         const servicioId = /*[[${servicio.id}]]*/ null;
+        const imagenesExistentes = /*[[${servicio.imagenesExistentes}]]*/ [];
         const esEdicion = servicioId !== null;
 
         async function cargarSubcategorias(categoriaId) {
+            const subcatField = form.querySelector('[name="subcategoriaId"]');
+            const actual = subcatField.value || subcatField.getAttribute('value');
             subcategoriaSelect.innerHTML = '';
             if (subcatChoices) {
                 subcatChoices.clearChoices();
@@ -72,7 +77,6 @@
             if (data.length === 0) return;
             if (subcatChoices) {
                 subcatChoices.setChoices(data.map(sc => ({value: sc.id, label: sc.nombre})), 'value', 'label', true);
-                const actual = form.querySelector('[name="subcategoriaId"]').value;
                 if (actual) { subcatChoices.setChoiceByValue(actual); }
                 subcatChoices.enable();
             } else {
@@ -83,13 +87,32 @@
                     subcategoriaSelect.appendChild(opt);
                 });
                 subcategoriaSelect.disabled = false;
-                const actual = form.querySelector('[name="subcategoriaId"]').value;
                 if (actual) { subcategoriaSelect.value = actual; }
             }
         }
 
         categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
         cargarSubcategorias(categoriaSelect.value);
+
+        if (pond && esEdicion && imagenesExistentes) {
+            imagenesExistentes.forEach(img => {
+                pond.addFile(`data:image/jpeg;base64,${img.datosBase64}`, {
+                    metadata: {id: img.id}
+                });
+            });
+            pond.on('removefile', (error, file) => {
+                if (!error) {
+                    const id = file.getMetadata('id');
+                    if (id) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'imagenesEliminar';
+                        input.value = id;
+                        imagenesEliminarContainer.appendChild(input);
+                    }
+                }
+            });
+        }
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const formData = new FormData(form);
