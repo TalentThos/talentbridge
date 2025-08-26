@@ -155,7 +155,6 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setSubcategoria(subcategoria);
 
         if (dto.getImagenes() != null) {
-            servicio.getImagenes().clear();
             for (MultipartFile file : dto.getImagenes()) {
                 if (file != null && !file.isEmpty()) {
                     try {
