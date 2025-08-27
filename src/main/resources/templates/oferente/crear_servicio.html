@@ -35,107 +35,231 @@
 </div>
 
 <script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        let subcatChoices = null;
-        if (window.Choices) {
-            new Choices(document.getElementById('categoria'));
-            subcatChoices = new Choices(document.getElementById('subcategoria'));
-        }
-        let pond = null;
-        if (window.FilePond) {
-            if (window.FilePondPluginImagePreview) {
-                FilePond.registerPlugin(FilePondPluginImagePreview);
-            }
-            pond = FilePond.create(document.getElementById('imagenes'), {storeAsFile: true});
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+      // -----------------------------
+      // DOM y datos Thymeleaf
+      // -----------------------------
+      const form = document.getElementById('crearServicioForm');
+      const categoriaSelect = document.getElementById('categoria');
+      const subcategoriaSelect = document.getElementById('subcategoria');
+      const inputImagenes = document.getElementById('imagenes');
+      const imagenesEliminarContainer = document.getElementById('imagenesEliminarContainer');
 
-        const form = document.getElementById('crearServicioForm');
-        const categoriaSelect = document.getElementById('categoria');
-        const subcategoriaSelect = document.getElementById('subcategoria');
-        const imagenesEliminarContainer = document.getElementById('imagenesEliminarContainer');
-        const servicioId = /*[[${servicio.id}]]*/ null;
-        const imagenesExistentes = /*[[${servicio.imagenesExistentes}]]*/ [];
-        const esEdicion = servicioId !== null;
+      const servicioId = /*[[${servicio.id}]]*/ null;
+      const imagenesExistentes = /*[[${servicio.imagenesExistentes}]]*/ [];
+      const esEdicion = servicioId !== null;
 
-        async function cargarSubcategorias(categoriaId) {
-            const subcatField = form.querySelector('[name="subcategoriaId"]');
-            const actual = subcatField.value || subcatField.getAttribute('value');
-            subcategoriaSelect.innerHTML = '';
-            if (subcatChoices) {
-                subcatChoices.clearChoices();
-                subcatChoices.removeActiveItems();
-                subcatChoices.setChoiceByValue('');
-                subcatChoices.disable();
+      // -----------------------------
+      // Choices (selects)
+      // -----------------------------
+      let subcatChoices = null;
+      if (window.Choices) {
+        new Choices(categoriaSelect);
+        subcatChoices = new Choices(subcategoriaSelect);
+      }
+
+      async function cargarSubcategorias(categoriaId) {
+        const subcatField = form.querySelector('[name="subcategoriaId"]');
+        const actual = subcatField?.value || subcatField?.getAttribute('value');
+
+        subcategoriaSelect.innerHTML = '';
+        if (subcatChoices) {
+          subcatChoices.clearChoices();
+          subcatChoices.removeActiveItems();
+          subcatChoices.setChoiceByValue('');
+          subcatChoices.disable();
+        } else {
+          subcategoriaSelect.value = '';
+          subcategoriaSelect.disabled = true;
+        }
+        if (!categoriaId) return;
+
+        const resp = await securedFetch(`/api/categorias/${categoriaId}/subcategorias`);
+        if (!resp || !resp.ok) return;
+        const data = await resp.json();
+        if (!Array.isArray(data) || data.length === 0) return;
+
+        if (subcatChoices) {
+          subcatChoices.setChoices(data.map(sc => ({ value: sc.id, label: sc.nombre })), 'value', 'label', true);
+          if (actual) subcatChoices.setChoiceByValue(actual);
+          subcatChoices.enable();
+        } else {
+          data.forEach(sc => {
+            const opt = document.createElement('option');
+            opt.value = sc.id;
+            opt.textContent = sc.nombre;
+            subcategoriaSelect.appendChild(opt);
+          });
+          subcategoriaSelect.disabled = false;
+          if (actual) subcategoriaSelect.value = actual;
+        }
+      }
+
+      categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
+      cargarSubcategorias(categoriaSelect.value);
+
+      // -----------------------------
+      // Galería de imágenes EXISTENTES (solo vista + marcar para borrar)
+      // (No se precargan en FilePond)
+      // -----------------------------
+      if (esEdicion && Array.isArray(imagenesExistentes) && imagenesExistentes.length) {
+        const galeria = document.createElement('div');
+        galeria.id = 'galeriaExistentes';
+        galeria.className = 'row g-2 mb-2';
+        inputImagenes.insertAdjacentElement('beforebegin', galeria);
+
+        imagenesExistentes.forEach(img => {
+          const col = document.createElement('div');
+          col.className = 'col-6 col-md-4 col-lg-3';
+          col.dataset.imgId = img.id;
+
+          const card = document.createElement('div');
+          card.className = 'border rounded p-2 text-center';
+
+          const image = document.createElement('img');
+          image.src = img.datosBase64
+            ? `data:${img.contentType || 'image/jpeg'};base64,${img.datosBase64}`
+            : '';
+          image.alt = 'Imagen existente';
+          image.className = 'img-fluid';
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn btn-sm btn-outline-danger mt-2';
+          btn.textContent = 'Eliminar';
+
+          btn.addEventListener('click', () => {
+            const marked = btn.classList.toggle('active');
+            if (marked) {
+              btn.textContent = 'Se eliminará';
+              const input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = 'imagenesEliminar';
+              input.value = img.id;
+              input.dataset.deleteId = img.id;
+              imagenesEliminarContainer.appendChild(input);
+              card.classList.add('opacity-50');
             } else {
-                subcategoriaSelect.value = '';
-                subcategoriaSelect.disabled = true;
+              btn.textContent = 'Eliminar';
+              const hidden = imagenesEliminarContainer.querySelector(
+                `input[name="imagenesEliminar"][value="${img.id}"]`
+              );
+              if (hidden) hidden.remove();
+              card.classList.remove('opacity-50');
             }
-            if (!categoriaId) return;
-            const resp = await securedFetch(`/api/categorias/${categoriaId}/subcategorias`);
-            if (!resp || !resp.ok) return;
-            const data = await resp.json();
-            if (data.length === 0) return;
-            if (subcatChoices) {
-                subcatChoices.setChoices(data.map(sc => ({value: sc.id, label: sc.nombre})), 'value', 'label', true);
-                if (actual) { subcatChoices.setChoiceByValue(actual); }
-                subcatChoices.enable();
-            } else {
-                data.forEach(sc => {
-                    const opt = document.createElement('option');
-                    opt.value = sc.id;
-                    opt.textContent = sc.nombre;
-                    subcategoriaSelect.appendChild(opt);
-                });
-                subcategoriaSelect.disabled = false;
-                if (actual) { subcategoriaSelect.value = actual; }
-            }
-        }
+          });
 
-        categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
-        cargarSubcategorias(categoriaSelect.value);
-
-        if (pond && esEdicion && imagenesExistentes) {
-            imagenesExistentes.forEach(img => {
-                pond.addFile(`data:image/jpeg;base64,${img.datosBase64}`, {
-                    metadata: {id: img.id}
-                });
-            });
-            pond.on('removefile', (error, file) => {
-                if (!error) {
-                    const id = file.getMetadata('id');
-                    if (id) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'imagenesEliminar';
-                        input.value = id;
-                        imagenesEliminarContainer.appendChild(input);
-                    }
-                }
-            });
-        }
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const url = esEdicion ? `/api/oferente/servicios/${servicioId}/actualizar` : '/api/oferente/servicios/crear';
-            const method = esEdicion ? 'PUT' : 'POST';
-            const response = await securedFetch(url, {
-                method: method,
-                body: formData,
-                credentials: 'include'
-            });
-            if (!response) return;
-            if (response.ok) {
-                Swal.fire('Éxito', esEdicion ? 'Servicio actualizado correctamente' : 'Servicio creado correctamente', 'success');
-                if (!esEdicion) {
-                    form.reset();
-                    if (pond) { pond.removeFiles(); }
-                }
-            } else {
-                const texto = await response.text();
-                Swal.fire('Error', texto || (esEdicion ? 'No se pudo actualizar el servicio' : 'No se pudo crear el servicio'), 'error');
-            }
+          card.append(image, btn);
+          col.appendChild(card);
+          galeria.appendChild(col);
         });
+      }
+
+      // -----------------------------
+      // FilePond SOLO para archivos NUEVOS
+      // -----------------------------
+      let pond = null;
+      if (window.FilePond) {
+        if (window.FilePondPluginImagePreview) FilePond.registerPlugin(FilePondPluginImagePreview);
+        pond = FilePond.create(inputImagenes, {
+          allowMultiple: true,
+          storeAsFile: true // los nuevos quedan en FilePond; NO confíes en input.files
+        });
+      }
+
+      // Construir x-www-form-urlencoded (sin archivos)
+      function construirParamsSinArchivos() {
+        const params = new URLSearchParams();
+        params.set('titulo', form.querySelector('[name="titulo"]').value.trim());
+        params.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
+        params.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
+        params.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
+        imagenesEliminarContainer
+          .querySelectorAll('input[name="imagenesEliminar"]')
+          .forEach(h => params.append('imagenesEliminar', h.value));
+        return params;
+      }
+
+      // Construir FormData MANUAL con archivos NUEVOS desde FilePond
+      function construirFormDataConNuevosArchivos() {
+        const fd = new FormData();
+        fd.set('titulo', form.querySelector('[name="titulo"]').value.trim());
+        fd.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
+        fd.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
+        fd.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
+
+        // ids marcados para eliminar
+        imagenesEliminarContainer
+          .querySelectorAll('input[name="imagenesEliminar"]')
+          .forEach(h => fd.append('imagenesEliminar', h.value));
+
+        // *** AQUÍ EL CAMBIO CLAVE: desde FilePond, no desde input.files ***
+        if (pond) {
+          pond.getFiles().forEach(item => {
+            // Solo nuevos (no cargamos existentes en FilePond, así que todos son nuevos)
+            if (item && item.file) {
+              fd.append('imagenes', item.file, item.file.name || 'archivo');
+            }
+          });
+        }
+        return fd;
+      }
+
+      // -----------------------------
+      // Envío del formulario
+      // -----------------------------
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const url = esEdicion
+          ? `/api/oferente/servicios/${servicioId}/actualizar`
+          : '/api/oferente/servicios/crear';
+        const method = esEdicion ? 'PUT' : 'POST';
+
+        let response;
+
+        // ¿Hay archivos nuevos en FilePond?
+        const hayNuevos = pond && pond.getFiles().length > 0;
+
+        if (esEdicion && !hayNuevos) {
+          // *** SIN archivos nuevos => NO multipart ***
+          const params = construirParamsSinArchivos();
+          response = await securedFetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: params.toString(),
+            credentials: 'include'
+          });
+        } else {
+          // *** Con archivos nuevos (o creación) => multipart ***
+          const fd = esEdicion ? construirFormDataConNuevosArchivos() : new FormData(form);
+          response = await securedFetch(url, {
+            method,
+            body: fd,
+            credentials: 'include'
+          });
+        }
+
+        if (!response) return;
+
+        if (response.ok) {
+          Swal.fire('Éxito', esEdicion ? 'Servicio actualizado correctamente' : 'Servicio creado correctamente', 'success')
+            .then(() => {
+              if (esEdicion) {
+                // Recargar para reflejar altas/bajas de imágenes
+                window.location.reload();
+              } else {
+                form.reset();
+                if (pond) pond.removeFiles();
+              }
+            });
+        } else {
+          const texto = await response.text();
+          Swal.fire('Error', texto || (esEdicion ? 'No se pudo actualizar el servicio' : 'No se pudo crear el servicio'), 'error');
+        }
+      });
     });
 </script>
+
 </body>
 </html>
