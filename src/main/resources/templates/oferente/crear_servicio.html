@@ -23,7 +23,8 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Subcategoría</label>
-            <select th:field="*{subcategoriaId}" id="subcategoria" class="form-select" required disabled></select>
+            <select th:field="*{subcategoriaId}" th:value="${servicio.subcategoriaId}"
+                    id="subcategoria" class="form-select" required disabled></select>
         </div>
         <div class="mb-3">
             <label class="form-label">Imágenes</label>
