@@ -39,15 +39,22 @@ public class ServicioController {
     public String buscarServicios(
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "categoriaId", required = false) Long categoriaId,
-            @RequestParam(value = "subcategoriaId", required = false) Long subcategoriaId,
+            @RequestParam(value = "subcategoriaId", required = false) String subcategoriaId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             Model model) {
-        Page<ServicioDTO> servicios = servicioService.buscarServicios(q, categoriaId, subcategoriaId, page);
+        Long subcatId = null;
+        if (subcategoriaId != null && !subcategoriaId.isBlank()) {
+            try {
+                subcatId = Long.valueOf(subcategoriaId);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        Page<ServicioDTO> servicios = servicioService.buscarServicios(q, categoriaId, subcatId, page);
         model.addAttribute("servicios", servicios.getContent());
         model.addAttribute("page", servicios);
         model.addAttribute("categorias", categoriaService.listarCategorias());
         model.addAttribute("categoriaId", categoriaId);
-        model.addAttribute("subcategoriaId", subcategoriaId);
+        model.addAttribute("subcategoriaId", subcatId);
         model.addAttribute("termino", q);
         return "buscar_servicios";
     }
