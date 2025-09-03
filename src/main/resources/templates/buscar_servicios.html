@@ -112,10 +112,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const data = await resp.json();
         if (data.length === 0) return;
         if (subcatChoices) {
-            subcatChoices.setChoices(data.map(sc => ({value: sc.id, label: sc.nombre})), 'value', 'label', true);
+            const opciones = [{ value: '', label: 'Todas las subcategorías', selected: true }]
+                .concat(data.map(sc => ({ value: sc.id, label: sc.nombre })));
+            subcatChoices.setChoices(opciones, 'value', 'label', true);
             subcatChoices.enable();
             if (selectedSubcat) subcatChoices.setChoiceByValue(String(selectedSubcat));
         } else {
+            const optDefault = document.createElement('option');
+            optDefault.value = '';
+            optDefault.textContent = 'Todas las subcategorías';
+            subcategoriaSelect.appendChild(optDefault);
             data.forEach(sc => {
                 const opt = document.createElement('option');
                 opt.value = sc.id;
