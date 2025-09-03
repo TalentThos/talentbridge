@@ -2,6 +2,8 @@ package com.talentbridge.repository;
 
 import com.talentbridge.model.Servicio;
 import com.talentbridge.model.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -45,9 +47,10 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
         AND (:categoriaId    IS NULL OR s.categoria.id    = :categoriaId)
         AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)
         """)
-    List<Servicio> buscarPorFiltros(
+    Page<Servicio> buscarPorFiltros(
             @Param("pattern") String pattern,
             @Param("categoriaId") Long categoriaId,
-            @Param("subcategoriaId") Long subcategoriaId);
+            @Param("subcategoriaId") Long subcategoriaId,
+            Pageable pageable);
 
 }

@@ -4,6 +4,7 @@ import com.talentbridge.dto.ServicioDTO;
 import com.talentbridge.service.CategoriaService;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,9 +40,11 @@ public class ServicioController {
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "categoriaId", required = false) Long categoriaId,
             @RequestParam(value = "subcategoriaId", required = false) Long subcategoriaId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
             Model model) {
-        List<ServicioDTO> servicios = servicioService.buscarServicios(q, categoriaId, subcategoriaId);
-        model.addAttribute("servicios", servicios);
+        Page<ServicioDTO> servicios = servicioService.buscarServicios(q, categoriaId, subcategoriaId, page);
+        model.addAttribute("servicios", servicios.getContent());
+        model.addAttribute("page", servicios);
         model.addAttribute("categorias", categoriaService.listarCategorias());
         model.addAttribute("categoriaId", categoriaId);
         model.addAttribute("subcategoriaId", subcategoriaId);

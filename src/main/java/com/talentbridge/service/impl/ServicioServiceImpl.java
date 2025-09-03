@@ -13,6 +13,9 @@ import com.talentbridge.repository.SubcategoriaRepository;
 import com.talentbridge.repository.UsuarioRepository;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -101,12 +104,13 @@ public class ServicioServiceImpl implements ServicioService {
     }
 
     @Override
-    public List<ServicioDTO> buscarServicios(String termino, Long categoriaId, Long subcategoriaId) {
+    public Page<ServicioDTO> buscarServicios(String termino, Long categoriaId, Long subcategoriaId, int page) {
         String pattern = (termino == null || termino.isBlank())
                 ? null
                 : "%" + termino.toLowerCase(java.util.Locale.ROOT) + "%";
-        List<Servicio> servicios = servicioRepository.buscarPorFiltros(pattern, categoriaId, subcategoriaId);
-        return servicios.stream().map(this::mapToDTO).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, 6);
+        Page<Servicio> servicios = servicioRepository.buscarPorFiltros(pattern, categoriaId, subcategoriaId, pageable);
+        return servicios.map(this::mapToDTO);
     }
 
     @Transactional(readOnly = true)

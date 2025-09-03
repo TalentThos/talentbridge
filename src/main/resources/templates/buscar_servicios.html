@@ -45,6 +45,20 @@
     </div>
 </div>
 
+<nav th:if="${page != null && page.totalPages > 1}">
+    <ul class="pagination">
+        <li class="page-item" th:classappend="${page.first}? 'disabled'">
+            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},page=${page.number - 1})}">Anterior</a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages-1)}" th:classappend="${i}==${page.number}? 'active'">
+            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},page=${i})}" th:text="${i + 1}"></a>
+        </li>
+        <li class="page-item" th:classappend="${page.last}? 'disabled'">
+            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},page=${page.number + 1})}">Siguiente</a>
+        </li>
+    </ul>
+</nav>
+
 <!-- Modal para visualizar imágenes -->
 <div class="modal fade" id="imagenesModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
