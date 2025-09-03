@@ -22,6 +22,8 @@ public class ServicioDTO {
     private Long id;
     private String titulo;
     private String descripcion;
+    private String linkedin;
+    private String instagram;
     private Long categoriaId;
     private String categoriaNombre;
     private Long subcategoriaId;

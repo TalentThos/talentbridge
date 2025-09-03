@@ -21,6 +21,10 @@ public class Servicio {
 
     private String descripcion;
 
+    private String linkedin;
+
+    private String instagram;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;

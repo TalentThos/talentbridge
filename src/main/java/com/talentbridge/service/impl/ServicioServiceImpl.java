@@ -36,6 +36,8 @@ public class ServicioServiceImpl implements ServicioService {
                 .id(s.getId())
                 .titulo(s.getTitulo())
                 .descripcion(s.getDescripcion())
+                .linkedin(s.getLinkedin())
+                .instagram(s.getInstagram())
                 .categoriaId(s.getCategoria() != null ? s.getCategoria().getId() : null)
                 .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
                 .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
@@ -73,6 +75,8 @@ public class ServicioServiceImpl implements ServicioService {
         Servicio servicio = new Servicio();
         servicio.setTitulo(dto.getTitulo());
         servicio.setDescripcion(dto.getDescripcion());
+        servicio.setLinkedin(dto.getLinkedin());
+        servicio.setInstagram(dto.getInstagram());
         servicio.setCategoria(categoria);
         servicio.setSubcategoria(subcategoria);
         servicio.setUsuario(usuario);
@@ -160,6 +164,8 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setDescripcion(dto.getDescripcion());
         servicio.setCategoria(categoria);
         servicio.setSubcategoria(subcategoria);
+        servicio.setLinkedin(dto.getLinkedin());
+        servicio.setInstagram(dto.getInstagram());
 
         if (dto.getImagenesEliminar() != null && !dto.getImagenesEliminar().isEmpty()) {
             servicio.getImagenes().removeIf(img -> dto.getImagenesEliminar().contains(img.getId()));

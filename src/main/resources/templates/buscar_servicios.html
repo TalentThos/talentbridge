@@ -37,6 +37,8 @@
                 <p class="text-muted" th:if="${s.subcategoriaNombre}"><strong>Subcategoría:</strong> <span th:text="${s.subcategoriaNombre}"></span></p>
                 <p><strong>Oferente:</strong> <span th:text="${s.usuarioNombre}"></span></p>
                 <p th:if="${s.usuarioMovil != null}"><strong>Móvil:</strong> <span th:text="${s.usuarioMovil}"></span></p>
+                <p th:if="${s.linkedin}"><strong>LinkedIn:</strong> <a th:href="${s.linkedin}" target="_blank" th:text="${s.linkedin}"></a></p>
+                <p th:if="${s.instagram}"><strong>Instagram:</strong> <a th:href="${s.instagram}" target="_blank" th:text="${s.instagram}"></a></p>
                 <a th:if="${s.tieneImagenes}" href="#" th:data-id="${s.id}" class="btn btn-sm btn-outline-secondary ver-imagenes">Ver imágenes</a>
             </div>
         </div>
