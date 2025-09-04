@@ -6,7 +6,7 @@
 <body>
 <h2 class="mb-4">Buscar servicios disponibles</h2>
 <form class="row mb-4" th:action="@{/buscar}" method="get">
-    <div class="col-md-4 mb-2 mb-md-0">
+    <div class="col-md-3 mb-2 mb-md-0">
         <input type="text" name="q" th:value="${termino}" class="form-control" placeholder="Ej: profesor guitarra, gasfiter, DJ...">
     </div>
     <div class="col-md-3 mb-2 mb-md-0">
@@ -19,8 +19,11 @@
             </option>
         </select>
     </div>
-    <div class="col-md-3 mb-2 mb-md-0">
+    <div class="col-md-2 mb-2 mb-md-0">
         <select name="subcategoriaId" id="subcategoria" class="form-select" disabled></select>
+    </div>
+    <div class="col-md-2 mb-2 mb-md-0">
+        <select name="pais" id="pais" class="form-select"></select>
     </div>
     <div class="col-md-2">
         <button type="submit" class="btn btn-primary w-100">Buscar</button>
@@ -48,13 +51,13 @@
 <nav th:if="${page != null && page.totalPages > 1}">
     <ul class="pagination">
         <li class="page-item" th:classappend="${page.first}? 'disabled'">
-            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},page=${page.number - 1})}">Anterior</a>
+            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},pais=${pais},page=${page.number - 1})}">Anterior</a>
         </li>
         <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages-1)}" th:classappend="${i}==${page.number}? 'active'">
-            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},page=${i})}" th:text="${i + 1}"></a>
+            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},pais=${pais},page=${i})}" th:text="${i + 1}"></a>
         </li>
         <li class="page-item" th:classappend="${page.last}? 'disabled'">
-            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},page=${page.number + 1})}">Siguiente</a>
+            <a class="page-link" th:href="@{/buscar(q=${termino},categoriaId=${categoriaId},subcategoriaId=${subcategoriaId},pais=${pais},page=${page.number + 1})}">Siguiente</a>
         </li>
     </ul>
 </nav>
@@ -93,8 +96,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const categoriaSelect = document.getElementById('categoria');
     const subcategoriaSelect = document.getElementById('subcategoria');
+    const paisSelect = document.getElementById('pais');
     const selectedSubcat = /*[[${subcategoriaId}]]*/ null;
     const selectedCat = /*[[${categoriaId}]]*/ null;
+    const selectedPais = /*[[${pais}]]*/ '';
     async function cargarSubcategorias(categoriaId) {
         subcategoriaSelect.innerHTML = '';
         if (subcatChoices) {
@@ -134,6 +139,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
     cargarSubcategorias(selectedCat);
+
+    async function cargarPaises() {
+        if (!paisSelect) return;
+        try {
+            const res = await fetch('/api/paises');
+            if (!res) return;
+            const paises = await res.json();
+            paisSelect.innerHTML = '<option value="">Tu país</option>';
+            paises.sort((a, b) => a.name.common.localeCompare(b.name.common));
+            for (const p of paises) {
+                const opt = document.createElement('option');
+                opt.value = p.name.common;
+                opt.textContent = p.name.common;
+                if (selectedPais && selectedPais === p.name.common) opt.selected = true;
+                paisSelect.appendChild(opt);
+            }
+        } catch (e) {
+            paisSelect.innerHTML = '<option value="">Error al cargar países</option>';
+        }
+    }
+    cargarPaises();
 
     document.querySelectorAll('.ver-imagenes').forEach(btn => {
         btn.addEventListener('click', async function(e) {

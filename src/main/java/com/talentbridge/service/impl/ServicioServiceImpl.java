@@ -104,12 +104,12 @@ public class ServicioServiceImpl implements ServicioService {
     }
 
     @Override
-    public Page<ServicioDTO> buscarServicios(String termino, Long categoriaId, Long subcategoriaId, int page) {
+    public Page<ServicioDTO> buscarServicios(String termino, Long categoriaId, Long subcategoriaId, String pais, int page) {
         String pattern = (termino == null || termino.isBlank())
                 ? null
                 : "%" + termino.toLowerCase(java.util.Locale.ROOT) + "%";
         Pageable pageable = PageRequest.of(page, 6);
-        Page<Servicio> servicios = servicioRepository.buscarPorFiltros(pattern, categoriaId, subcategoriaId, pageable);
+        Page<Servicio> servicios = servicioRepository.buscarPorFiltros(pattern, categoriaId, subcategoriaId, pais, pageable);
         return servicios.map(this::mapToDTO);
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ServicioService {
     void crearServicio(ServicioDTO dto, String email);
-    Page<ServicioDTO> buscarServicios(String termino, Long categoriaId, Long subcategoriaId, int page);
+    Page<ServicioDTO> buscarServicios(String termino, Long categoriaId, Long subcategoriaId, String pais, int page);
     List<String> obtenerImagenesBase64(Long servicioId);
     List<ServicioDTO> listarPorUsuario(String email);
     ServicioDTO obtenerPorId(Long id, String email);

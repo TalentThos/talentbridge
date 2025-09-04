@@ -3,6 +3,8 @@ package com.talentbridge.controller;
 import com.talentbridge.dto.ServicioDTO;
 import com.talentbridge.service.CategoriaService;
 import com.talentbridge.service.ServicioService;
+import com.talentbridge.repository.UsuarioRepository;
+import com.talentbridge.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ public class ServicioController {
 
     private final ServicioService servicioService;
     private final CategoriaService categoriaService;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping("/ofrecer")
     public String mostrarFormulario(Model model) {
@@ -40,7 +43,9 @@ public class ServicioController {
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "categoriaId", required = false) Long categoriaId,
             @RequestParam(value = "subcategoriaId", required = false) String subcategoriaId,
+            @RequestParam(value = "pais", required = false) String pais,
             @RequestParam(value = "page", defaultValue = "0") int page,
+            Authentication authentication,
             Model model) {
         Long subcatId = null;
         if (subcategoriaId != null && !subcategoriaId.isBlank()) {
@@ -49,13 +54,21 @@ public class ServicioController {
             } catch (NumberFormatException ignored) {
             }
         }
-        Page<ServicioDTO> servicios = servicioService.buscarServicios(q, categoriaId, subcatId, page);
+        String filtroPais = pais;
+        if ((filtroPais == null || filtroPais.isBlank()) && authentication != null) {
+            String email = authentication.getName();
+            filtroPais = usuarioRepository.findByEmail(email)
+                    .map(Usuario::getPais)
+                    .orElse(null);
+        }
+        Page<ServicioDTO> servicios = servicioService.buscarServicios(q, categoriaId, subcatId, filtroPais, page);
         model.addAttribute("servicios", servicios.getContent());
         model.addAttribute("page", servicios);
         model.addAttribute("categorias", categoriaService.listarCategorias());
         model.addAttribute("categoriaId", categoriaId);
         model.addAttribute("subcategoriaId", subcatId);
         model.addAttribute("termino", q);
+        model.addAttribute("pais", pais);
         return "buscar_servicios";
     }
 

@@ -46,11 +46,14 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
         )
         AND (:categoriaId    IS NULL OR s.categoria.id    = :categoriaId)
         AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)
+        AND (:pais          IS NULL OR s.usuario.pais     = :pais)
         """)
     Page<Servicio> buscarPorFiltros(
             @Param("pattern") String pattern,
             @Param("categoriaId") Long categoriaId,
             @Param("subcategoriaId") Long subcategoriaId,
+            @Param("pais") String pais,
             Pageable pageable);
 
 }
+
