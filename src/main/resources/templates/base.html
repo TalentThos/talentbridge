@@ -61,6 +61,9 @@
                 <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">
                     <a class="nav-link" th:href="@{/mis-servicios}">Mis servicios</a>
                 </li>
+                <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">
+                    <a class="nav-link" th:href="@{/perfil}">Mi perfil</a>
+                </li>
                 <li class="nav-item" th:if="${#authentication.name == 'anonymousUser'}">
                     <a class="nav-link" th:href="@{/login}">Ingresar</a>
                 </li>
