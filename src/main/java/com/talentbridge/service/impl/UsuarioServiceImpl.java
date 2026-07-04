@@ -56,7 +56,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public void actualizarPerfil(String emailActual, UsuarioDTO dto) {
         Usuario usuario = usuarioRepository.findByEmail(emailActual)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-        if (!usuario.getEmail().equals(dto.getEmail()) && usuarioRepository.existsByEmail(dto.getEmail())) {
+        if (!usuario.getEmail().equals(dto.getEmail()) && usuarioRepository.existsByEmailAndActivoTrue(dto.getEmail())) {
             throw new IllegalArgumentException("Correo ya registrado.");
         }
         usuario.setNombre(dto.getNombre());

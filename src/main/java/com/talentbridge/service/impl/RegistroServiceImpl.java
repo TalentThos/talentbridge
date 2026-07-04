@@ -31,23 +31,17 @@ public class RegistroServiceImpl implements RegistroService {
     @Override
     @Transactional
     public void registrarPaso1(RegistroPaso1DTO dto) {
-        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
-                .orElseGet(Usuario::new);
-
-        if (cuentaYaVerificada(usuario)) {
+        if (usuarioRepository.existsByEmailAndActivoTrue(dto.getEmail())) {
             throw new IllegalArgumentException("Correo ya registrado.");
         }
+
+        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
+                .orElseGet(Usuario::new);
 
         completarDatosUsuario(usuario, dto);
         usuarioRepository.save(usuario);
         invalidarCodigosPendientes(usuario);
         enviarCodigoVerificacion(usuario, generarCodigo());
-    }
-
-    private boolean cuentaYaVerificada(Usuario usuario) {
-        return usuario.getId() != null
-                && Boolean.TRUE.equals(usuario.getVerificado())
-                && usuario.getEstadoRegistro() != EstadoRegistro.PENDIENTE_VALIDACION;
     }
 
     private void completarDatosUsuario(Usuario usuario, RegistroPaso1DTO dto) {

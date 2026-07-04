@@ -64,12 +64,25 @@
                 <input type="password" id="password" class="form-control" placeholder="Contraseña" required minlength="6">
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Continuar</button>
+            <button type="submit" class="btn btn-primary w-100" id="continuarButton">Continuar</button>
 
             <div class="text-center mt-3">
                 <small>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a></small>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="registroLoadingModal" tabindex="-1" aria-labelledby="registroLoadingTitle" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-body text-center p-4">
+                <div class="spinner-border text-primary mb-3" role="status" aria-hidden="true"></div>
+                <h5 class="modal-title mb-2" id="registroLoadingTitle">Validando datos</h5>
+                <p class="text-muted mb-0">Estamos registrando tu información. Un momento, por favor.</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -155,6 +168,16 @@
            return;
        }
 
+       const continuarButton = document.getElementById("continuarButton");
+       const loadingModalElement = document.getElementById("registroLoadingModal");
+       const loadingModal = window.bootstrap
+           ? new bootstrap.Modal(loadingModalElement)
+           : null;
+
+       continuarButton.disabled = true;
+       continuarButton.textContent = "Validando...";
+       loadingModal?.show();
+
        const data = {
            nombre: form.nombre.value,
            email: form.email.value,
@@ -178,6 +201,7 @@
            });
 
            if (res.ok) {
+               loadingModal?.hide();
                Swal.fire({
                    icon: 'success',
                    title: 'Datos registrados',
@@ -186,10 +210,16 @@
                }).then(() => window.location.href = '/registro/paso2');
            } else {
                const err = await res.text();
+               loadingModal?.hide();
+               continuarButton.disabled = false;
+               continuarButton.textContent = "Continuar";
                Swal.fire({ icon: 'error', title: 'Error', text: err });
            }
 
        } catch (error) {
+           loadingModal?.hide();
+           continuarButton.disabled = false;
+           continuarButton.textContent = "Continuar";
            Swal.fire({ icon: 'error', title: 'Error de red', text: error.message });
        }
    });
