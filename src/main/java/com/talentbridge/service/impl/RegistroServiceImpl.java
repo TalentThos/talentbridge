@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
 
@@ -30,10 +31,26 @@ public class RegistroServiceImpl implements RegistroService {
     @Override
     @Transactional
     public void registrarPaso1(RegistroPaso1DTO dto) {
-        if (usuarioRepository.existsByEmail(dto.getEmail())) {
+        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
+                .orElseGet(Usuario::new);
+
+        if (cuentaYaVerificada(usuario)) {
             throw new IllegalArgumentException("Correo ya registrado.");
         }
-        Usuario usuario = new Usuario();
+
+        completarDatosUsuario(usuario, dto);
+        usuarioRepository.save(usuario);
+        invalidarCodigosPendientes(usuario);
+        enviarCodigoVerificacion(usuario, generarCodigo());
+    }
+
+    private boolean cuentaYaVerificada(Usuario usuario) {
+        return usuario.getId() != null
+                && Boolean.TRUE.equals(usuario.getVerificado())
+                && usuario.getEstadoRegistro() != EstadoRegistro.PENDIENTE_VALIDACION;
+    }
+
+    private void completarDatosUsuario(Usuario usuario, RegistroPaso1DTO dto) {
         usuario.setNombre(dto.getNombre());
         usuario.setEmail(dto.getEmail());
         usuario.setNumeroMovil(dto.getNumeroMovil());
@@ -45,40 +62,58 @@ public class RegistroServiceImpl implements RegistroService {
         usuario.setNumeroDireccion(dto.getNumeroDireccion());
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setEstadoRegistro(EstadoRegistro.PENDIENTE_VALIDACION);
-        usuarioRepository.save(usuario);
-        String codigo = generarCodigo();
+        usuario.setActivo(false);
+        usuario.setVerificado(false);
+    }
+
+    private void invalidarCodigosPendientes(Usuario usuario) {
+        codigoVerificacionRepository.findByUsuarioAndUsadoFalse(usuario).forEach(codigoPendiente -> {
+            codigoPendiente.setUsado(true);
+            codigoVerificacionRepository.save(codigoPendiente);
+        });
+    }
+
+    private void enviarCodigoVerificacion(Usuario usuario, String codigo) {
         CodigoVerificacion verificacion = new CodigoVerificacion();
         verificacion.setCodigo(codigo);
         verificacion.setCreadoEn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
         verificacion.setExpiraEn(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(10)));
         verificacion.setUsuario(usuario);
         codigoVerificacionRepository.save(verificacion);
-        correoService.enviarCorreo(dto.getEmail(),
-                "Código de verificación TalentBridge",
-                "<p>Hola " + dto.getNombre() + ",</p>" +
-                        "<p>Tu código de verificación es: <strong>" + codigo + "</strong></p>" +
-                        "<p>Este código expirará en 10 minutos.</p>");
 
+        String linkVerificacion = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/registro/paso2")
+                .toUriString();
+
+        correoService.enviarCorreo(usuario.getEmail(),
+                "Codigo de verificacion TalentBridge",
+                "<p>Hola " + usuario.getNombre() + ",</p>" +
+                        "<p>Tu codigo de verificacion es: <strong>" + codigo + "</strong></p>" +
+                        "<p>Este codigo expirara en 10 minutos.</p>" +
+                        "<p>Continua en el paso de verificacion desde este enlace:</p>" +
+                        "<p><a href=\"" + linkVerificacion + "\">Paso 2: Verificacion</a></p>" +
+                        "<p>Si el enlace no se abre, copia y pega esta URL en tu navegador:<br>" +
+                        linkVerificacion + "</p>");
     }
 
     private String generarCodigo() {
-        return String.valueOf((int)(Math.random() * 900_000) + 100_000);
+        return String.valueOf((int) (Math.random() * 900_000) + 100_000);
     }
 
     @Override
     @Transactional
     public void verificarCodigo(CodigoVerificacionDTO dto) {
-        log.info("Verificando código:");
+        log.info("Verificando codigo:");
         log.info(dto.toString());
         Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Correo no encontrado."));
 
         CodigoVerificacion verificacion = codigoVerificacionRepository
                 .findByUsuarioAndCodigoAndUsadoFalse(usuario, dto.getCodigo())
-                .orElseThrow(() -> new IllegalArgumentException("Código inválido o ya utilizado."));
+                .orElseThrow(() -> new IllegalArgumentException("Codigo invalido o ya utilizado."));
 
         if (verificacion.getExpiraEn().toLocalDateTime().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Código expirado.");
+            throw new IllegalArgumentException("Codigo expirado.");
         }
 
         verificacion.setUsado(true);
@@ -88,7 +123,5 @@ public class RegistroServiceImpl implements RegistroService {
         usuario.setVerificado(true);
         usuario.setEstadoRegistro(EstadoRegistro.CORREO_VALIDADO);
         usuarioRepository.save(usuario);
-
     }
-
 }

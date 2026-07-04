@@ -18,8 +18,12 @@ public class RegistroRestController {
 
     @PostMapping("/paso1")
     public ResponseEntity<?> registrarPaso1(@RequestBody RegistroPaso1DTO dto) {
-        registroService.registrarPaso1(dto);
-        return ResponseEntity.ok().build();
+        try {
+            registroService.registrarPaso1(dto);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @PostMapping("/verificar-codigo")

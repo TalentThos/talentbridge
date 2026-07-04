@@ -74,6 +74,44 @@
 </div>
 
 <script>
+    function limpiarRut(rut) {
+        const normalizado = rut.toUpperCase().replace(/[^0-9K]/g, '');
+        if (normalizado.length <= 1) {
+            return normalizado;
+        }
+
+        const cuerpo = normalizado.slice(0, -1).replace(/K/g, '');
+        const digitoVerificador = normalizado.slice(-1);
+
+        return `${cuerpo}${digitoVerificador}`.slice(0, 9);
+    }
+
+    function formatearRut(rut) {
+        const rutLimpio = limpiarRut(rut);
+        if (rutLimpio.length <= 1) {
+            return rutLimpio;
+        }
+
+        const cuerpo = rutLimpio.slice(0, -1);
+        const digitoVerificador = rutLimpio.slice(-1);
+        const cuerpoFormateado = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        return `${cuerpoFormateado}-${digitoVerificador}`;
+    }
+
+    function actualizarFormatoDocumento() {
+        const tipoDocumento = document.getElementById("tipoDocumento");
+        const numeroDocumento = document.getElementById("numeroDocumento");
+
+        if (tipoDocumento.value === "RUT") {
+            numeroDocumento.value = formatearRut(numeroDocumento.value);
+            numeroDocumento.placeholder = "XX.XXX.XXX-X";
+            numeroDocumento.maxLength = 12;
+        } else {
+            numeroDocumento.placeholder = "N° documento";
+            numeroDocumento.removeAttribute("maxlength");
+        }
+    }
 
     async function cargarPaises() {
        const select = document.getElementById("pais");
@@ -106,6 +144,9 @@
 
    document.addEventListener("DOMContentLoaded", cargarPaises);
 
+   document.getElementById("tipoDocumento").addEventListener("change", actualizarFormatoDocumento);
+   document.getElementById("numeroDocumento").addEventListener("input", actualizarFormatoDocumento);
+
    document.getElementById("registroPaso1Form").addEventListener("submit", async function (e) {
        e.preventDefault();
        const form = e.target;
@@ -119,7 +160,9 @@
            email: form.email.value,
            numeroMovil: form.numeroMovil.value,
            tipoDocumento: form.tipoDocumento.value,
-           numeroDocumento: form.numeroDocumento.value,
+           numeroDocumento: form.tipoDocumento.value === "RUT"
+               ? limpiarRut(form.numeroDocumento.value)
+               : form.numeroDocumento.value,
            pais: form.pais.value,
            ciudad: form.ciudad.value,
            calle: form.calle.value,

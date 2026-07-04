@@ -4,7 +4,6 @@ import com.talentbridge.model.Usuario;
 import com.talentbridge.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -23,6 +22,10 @@ public class UsuarioDetailsService implements UserDetailsService {
         return new User(
                 usuario.getEmail(),
                 usuario.getPassword(),
+                Boolean.TRUE.equals(usuario.getActivo()),
+                true,
+                true,
+                true,
                 Collections.emptyList()
         );
     }
