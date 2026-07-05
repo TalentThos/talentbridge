@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
@@ -41,7 +43,7 @@ public class RegistroServiceImpl implements RegistroService {
         completarDatosUsuario(usuario, dto);
         usuarioRepository.save(usuario);
         invalidarCodigosPendientes(usuario);
-        enviarCodigoVerificacion(usuario, generarCodigo());
+        crearCodigoVerificacion(usuario, generarCodigo());
     }
 
     private void completarDatosUsuario(Usuario usuario, RegistroPaso1DTO dto) {
@@ -67,27 +69,50 @@ public class RegistroServiceImpl implements RegistroService {
         });
     }
 
-    private void enviarCodigoVerificacion(Usuario usuario, String codigo) {
+    private void crearCodigoVerificacion(Usuario usuario, String codigo) {
         CodigoVerificacion verificacion = new CodigoVerificacion();
         verificacion.setCodigo(codigo);
         verificacion.setCreadoEn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
         verificacion.setExpiraEn(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(10)));
+        verificacion.setUsado(false);
         verificacion.setUsuario(usuario);
         codigoVerificacionRepository.save(verificacion);
 
+        programarEnvioCodigo(usuario, codigo);
+    }
+
+    private void programarEnvioCodigo(Usuario usuario, String codigo) {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    enviarCodigoVerificacion(usuario, codigo);
+                }
+            });
+            return;
+        }
+
+        enviarCodigoVerificacion(usuario, codigo);
+    }
+
+    private void enviarCodigoVerificacion(Usuario usuario, String codigo) {
         String linkVerificacion = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/registro/paso2")
                 .toUriString();
 
-        correoService.enviarCorreo(usuario.getEmail(),
-                "Codigo de verificacion TalentBridge",
-                "<p>Hola " + usuario.getNombre() + ",</p>" +
-                        "<p>Tu codigo de verificacion es: <strong>" + codigo + "</strong></p>" +
-                        "<p>Este codigo expirara en 10 minutos.</p>" +
-                        "<p>Continua en el paso de verificacion desde este enlace:</p>" +
-                        "<p><a href=\"" + linkVerificacion + "\">Paso 2: Verificacion</a></p>" +
-                        "<p>Si el enlace no se abre, copia y pega esta URL en tu navegador:<br>" +
-                        linkVerificacion + "</p>");
+        try {
+            correoService.enviarCorreo(usuario.getEmail(),
+                    "Codigo de verificacion TalentBridge",
+                    "<p>Hola " + usuario.getNombre() + ",</p>" +
+                            "<p>Tu codigo de verificacion es: <strong>" + codigo + "</strong></p>" +
+                            "<p>Este codigo expirara en 10 minutos.</p>" +
+                            "<p>Continua en el paso de verificacion desde este enlace:</p>" +
+                            "<p><a href=\"" + linkVerificacion + "\">Paso 2: Verificacion</a></p>" +
+                            "<p>Si el enlace no se abre, copia y pega esta URL en tu navegador:<br>" +
+                            linkVerificacion + "</p>");
+        } catch (RuntimeException e) {
+            log.error("No se pudo enviar el codigo de verificacion a {}", usuario.getEmail(), e);
+        }
     }
 
     private String generarCodigo() {

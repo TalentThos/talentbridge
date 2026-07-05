@@ -1,6 +1,7 @@
 package com.talentbridge.service.impl;
 
 import com.talentbridge.dto.RegistroPaso1DTO;
+import com.talentbridge.model.CodigoVerificacion;
 import com.talentbridge.model.Usuario;
 import com.talentbridge.repository.CodigoVerificacionRepository;
 import com.talentbridge.repository.UsuarioRepository;
@@ -19,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentCaptor.forClass;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -70,11 +73,13 @@ class RegistroServiceImplTest {
         service.registrarPaso1(dto);
 
         verify(usuarioRepository).save(usuarioInactivo);
-        verify(codigoVerificacionRepository).save(any());
+        ArgumentCaptor<CodigoVerificacion> codigoCaptor = forClass(CodigoVerificacion.class);
+        verify(codigoVerificacionRepository).save(codigoCaptor.capture());
         verify(correoService).enviarCorreo(eq(dto.getEmail()), any(), any());
         assertThat(usuarioInactivo.getActivo()).isFalse();
         assertThat(usuarioInactivo.getVerificado()).isFalse();
         assertThat(usuarioInactivo.getPassword()).isEqualTo("encoded-password");
+        assertThat(codigoCaptor.getValue().getUsado()).isFalse();
     }
 
     private RegistroPaso1DTO registroDto() {
