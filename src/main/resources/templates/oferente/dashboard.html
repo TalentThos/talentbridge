@@ -12,8 +12,10 @@
             <div class="card-body">
                 <h5 class="card-title">Mis servicios</h5>
                 <p class="card-text">Revisa y edita los servicios que has publicado.</p>
-                <a class="btn btn-outline-primary" th:href="@{/oferente/servicios}">Ver servicios</a>
-                <a class="btn btn-primary ms-2" th:href="@{/oferente/servicios/crear}">Publicar nuevo</a>
+                <div class="dashboard-actions">
+                    <a class="btn btn-outline-primary" th:href="@{/oferente/servicios}">Ver servicios</a>
+                    <a class="btn btn-primary ms-2" th:href="@{/oferente/servicios/crear}">Publicar nuevo</a>
+                </div>
             </div>
         </div>
     </div>
@@ -23,7 +25,9 @@
             <div class="card-body">
                 <h5 class="card-title">Solicitudes recibidas</h5>
                 <p class="card-text">Consulta las solicitudes de clientes interesados.</p>
-                <a class="btn btn-outline-success" th:href="@{/oferente/solicitudes}">Ver solicitudes</a>
+                <div class="dashboard-actions">
+                    <a class="btn btn-outline-success" th:href="@{/oferente/solicitudes}">Ver solicitudes</a>
+                </div>
             </div>
         </div>
     </div>

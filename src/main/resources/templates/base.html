@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es" th:fragment="base (_arg0, _arg1)">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:replace="${_arg1}">TalentBridge</title>
 
     <script th:src="@{/js/utils.js}"></script>
@@ -25,6 +26,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f9f9f9;
+            overflow-x: hidden;
         }
         .navbar-brand {
             font-weight: 600;
@@ -39,6 +41,156 @@
             color: #555B6E;
             padding: 1rem 0;
             text-align: center;
+        }
+        .card,
+        .modal-content,
+        .alert {
+            overflow-wrap: anywhere;
+        }
+        .choices,
+        .choices__inner {
+            width: 100%;
+            min-width: 0;
+        }
+        .carousel-item img {
+            max-height: 70vh;
+            object-fit: contain;
+        }
+        .page-hero {
+            padding: 4rem 0 3rem;
+        }
+        .page-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .feature-card {
+            height: 100%;
+            padding: 1.25rem;
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.04);
+        }
+        .home-feature-grid > [class*="col-"] {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 150px;
+            padding: 1.25rem;
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.04);
+        }
+        .service-card .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .service-card p {
+            margin-bottom: 0.35rem;
+        }
+        .service-card a {
+            word-break: break-word;
+        }
+        .mobile-table-card {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 0.75rem;
+        }
+        .mobile-table-card table {
+            margin-bottom: 0;
+            min-width: 640px;
+        }
+        @media (max-width: 575.98px) {
+            .navbar .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            main.container {
+                margin-top: 1rem !important;
+                margin-bottom: 2rem !important;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                max-width: 100%;
+            }
+            main.container > .d-flex.vh-100 {
+                min-height: calc(100vh - 180px);
+                height: auto !important;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+                align-items: flex-start !important;
+            }
+            main.container > .d-flex.vh-100 > .bg-white {
+                padding: 1.5rem !important;
+                border-radius: 0.75rem !important;
+                box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.08) !important;
+            }
+            h1 {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            h4 {
+                font-size: 1.2rem;
+            }
+            .page-hero {
+                padding: 2rem 0 1.5rem;
+                text-align: left !important;
+            }
+            .page-hero p {
+                font-size: 1rem !important;
+            }
+            .page-actions {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+            .btn-lg {
+                width: 100%;
+                margin-right: 0 !important;
+                margin-bottom: 0.75rem;
+            }
+            .card-body {
+                padding: 1rem;
+            }
+            .feature-card {
+                padding: 1rem;
+            }
+            .search-filters {
+                gap: 0.75rem;
+            }
+            .search-filters > [class*="col-"] {
+                margin-bottom: 0 !important;
+            }
+            .service-card {
+                border-radius: 0.75rem;
+                box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.06);
+            }
+            .dashboard-actions {
+                display: grid;
+                gap: 0.5rem;
+            }
+            .dashboard-actions .btn {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+            .pagination {
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+            footer {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
         }
     </style>
 </head>
