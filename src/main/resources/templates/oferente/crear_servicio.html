@@ -38,8 +38,22 @@
             <input type="file" th:field="*{imagenes}" id="imagenes" multiple />
             <div id="imagenesEliminarContainer"></div>
         </div>
-        <button type="submit" class="btn btn-success" th:text="${servicio.id} != null ? 'Actualizar' : 'Publicar'">Publicar</button>
+        <button type="submit" class="btn btn-success" id="guardarServicioButton"
+                th:text="${servicio.id} != null ? 'Actualizar' : 'Publicar'">Publicar</button>
     </form>
+</div>
+
+<div class="modal fade" id="servicioLoadingModal" tabindex="-1" aria-labelledby="servicioLoadingTitle" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-body text-center p-4">
+                <div class="spinner-border text-success mb-3" role="status" aria-hidden="true"></div>
+                <h5 class="modal-title mb-2" id="servicioLoadingTitle">Procesando servicio</h5>
+                <p class="text-muted mb-0">Estamos guardando los cambios. Un momento, por favor.</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script th:inline="javascript">
@@ -52,6 +66,11 @@
     const subcategoriaSelect = document.getElementById('subcategoria');
     const inputImagenes = document.getElementById('imagenes');
     const imagenesEliminarContainer = document.getElementById('imagenesEliminarContainer');
+    const guardarServicioButton = document.getElementById('guardarServicioButton');
+    const servicioLoadingModalElement = document.getElementById('servicioLoadingModal');
+    const servicioLoadingModal = window.bootstrap
+      ? new bootstrap.Modal(servicioLoadingModalElement)
+      : null;
 
     const servicioId = /*[[${servicio.id}]]*/ null;
     const imagenesExistentes = /*[[${servicio.imagenesExistentes}]]*/ [];
@@ -251,47 +270,69 @@
         ? `/api/oferente/servicios/${servicioId}/actualizar`
         : '/api/oferente/servicios/crear';
       const method = esEdicion ? 'PUT' : 'POST';
+      const textoOriginalBoton = guardarServicioButton.textContent;
 
       let response;
+      guardarServicioButton.disabled = true;
+      guardarServicioButton.textContent = esEdicion ? 'Actualizando...' : 'Publicando...';
+      servicioLoadingModal?.show();
 
-      // ¿Hay archivos nuevos en FilePond?
-      const hayNuevos = pond && pond.getFiles().length > 0;
+      try {
+        // ¿Hay archivos nuevos en FilePond?
+        const hayNuevos = pond && pond.getFiles().length > 0;
 
-      if (esEdicion && !hayNuevos) {
-        // SIN archivos nuevos => NO multipart
-        const params = construirParamsSinArchivos();
-        response = await securedFetch(url, {
-          method,
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-          body: params.toString(),
-          credentials: 'include'
-        });
-      } else {
-        // Con archivos nuevos (o creación) => multipart
-        const fd = esEdicion ? construirFormDataConNuevosArchivos() : new FormData(form);
-        response = await securedFetch(url, {
-          method,
-          body: fd,
-          credentials: 'include'
-        });
-      }
-
-      if (!response) return;
-
-      if (response.ok) {
-        Swal.fire('Éxito', esEdicion ? 'Servicio actualizado correctamente' : 'Servicio creado correctamente', 'success')
-          .then(() => {
-            if (esEdicion) {
-              // Recargar para reflejar altas/bajas de imágenes
-              window.location.reload();
-            } else {
-              form.reset();
-              if (pond) pond.removeFiles();
-            }
+        if (esEdicion && !hayNuevos) {
+          // SIN archivos nuevos => NO multipart
+          const params = construirParamsSinArchivos();
+          response = await securedFetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: params.toString(),
+            credentials: 'include'
           });
-      } else {
-        const texto = await response.text();
-        Swal.fire('Error', texto || (esEdicion ? 'No se pudo actualizar el servicio' : 'No se pudo crear el servicio'), 'error');
+        } else {
+          // Con archivos nuevos (o creación) => multipart
+          const fd = esEdicion ? construirFormDataConNuevosArchivos() : new FormData(form);
+          response = await securedFetch(url, {
+            method,
+            body: fd,
+            credentials: 'include'
+          });
+        }
+
+        if (!response) {
+          servicioLoadingModal?.hide();
+          guardarServicioButton.disabled = false;
+          guardarServicioButton.textContent = textoOriginalBoton;
+          return;
+        }
+
+        if (response.ok) {
+          servicioLoadingModal?.hide();
+          Swal.fire('Éxito', esEdicion ? 'Servicio actualizado correctamente' : 'Servicio creado correctamente', 'success')
+            .then(() => {
+              if (esEdicion) {
+                // Recargar para reflejar altas/bajas de imágenes
+                window.location.reload();
+              } else {
+                form.reset();
+                if (pond) pond.removeFiles();
+                guardarServicioButton.disabled = false;
+                guardarServicioButton.textContent = textoOriginalBoton;
+              }
+            });
+        } else {
+          const texto = await response.text();
+          servicioLoadingModal?.hide();
+          guardarServicioButton.disabled = false;
+          guardarServicioButton.textContent = textoOriginalBoton;
+          Swal.fire('Error', texto || (esEdicion ? 'No se pudo actualizar el servicio' : 'No se pudo crear el servicio'), 'error');
+        }
+      } catch (error) {
+        servicioLoadingModal?.hide();
+        guardarServicioButton.disabled = false;
+        guardarServicioButton.textContent = textoOriginalBoton;
+        Swal.fire('Error', error.message || (esEdicion ? 'No se pudo actualizar el servicio' : 'No se pudo crear el servicio'), 'error');
       }
     });
   });

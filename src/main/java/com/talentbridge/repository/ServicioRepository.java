@@ -18,7 +18,9 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
             "(:termino IS NULL OR LOWER(s.titulo) LIKE LOWER(CONCAT('%', :termino, '%')) " +
             "OR LOWER(s.descripcion) LIKE LOWER(CONCAT('%', :termino, '%'))) " +
             "AND (:categoriaId IS NULL OR s.categoria.id = :categoriaId) " +
-            "AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)")
+            "AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId) " +
+            "AND s.usuario IS NOT NULL " +
+            "AND COALESCE(s.usuario.activo, false) = true")
     List<Servicio> buscarPorFiltros2(@Param("termino") String termino,
                                     @Param("categoriaId") Long categoriaId,
                                     @Param("subcategoriaId") Long subcategoriaId);
@@ -32,6 +34,8 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
         )
         AND (:categoriaId   IS NULL OR s.categoria.id   = :categoriaId)
         AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)
+        AND s.usuario IS NOT NULL
+        AND COALESCE(s.usuario.activo, false) = true
         """)
     List<Servicio> buscarPorFiltros3(@Param("terminoLower") String terminoLower,
                                     @Param("categoriaId") Long categoriaId,
@@ -47,7 +51,8 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
         AND (:categoriaId    IS NULL OR s.categoria.id    = :categoriaId)
         AND (:subcategoriaId IS NULL OR s.subcategoria.id = :subcategoriaId)
         AND (:pais          IS NULL OR s.usuario.pais     = :pais)
-        AND s.usuario.activo = true
+        AND s.usuario IS NOT NULL
+        AND COALESCE(s.usuario.activo, false) = true
         """)
     Page<Servicio> buscarPorFiltros(
             @Param("pattern") String pattern,
