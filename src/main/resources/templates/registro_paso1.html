@@ -43,7 +43,7 @@
 
             <div class="mb-3">
                 <select class="form-select" id="pais" required>
-                    <option value="">Cargando países...</option>
+                    <option value="Chile" selected>Chile</option>
                 </select>
             </div>
 
@@ -125,37 +125,6 @@
             numeroDocumento.removeAttribute("maxlength");
         }
     }
-
-    async function cargarPaises() {
-       const select = document.getElementById("pais");
-       try {
-           const res = await fetch('/api/paises');
-           if (!res) return; // ya se redirigió al login
-
-
-           const paises = await res.json();
-
-           // Limpiar opciones
-           select.innerHTML = '<option value="">Seleccione un país</option>';
-
-           // Ordenar alfabéticamente
-           paises.sort((a, b) => a.name.common.localeCompare(b.name.common));
-
-           for (const pais of paises) {
-               const nombre = pais.name.common;
-               const codigo = pais.cca2;
-               const option = document.createElement("option");
-               option.value = nombre;
-               option.textContent = nombre;
-               select.appendChild(option);
-           }
-       } catch (error) {
-           console.error("Error al cargar países", error);
-           select.innerHTML = '<option value="">Error al cargar países</option>';
-       }
-   }
-
-   document.addEventListener("DOMContentLoaded", cargarPaises);
 
    document.getElementById("tipoDocumento").addEventListener("change", actualizarFormatoDocumento);
    document.getElementById("numeroDocumento").addEventListener("input", actualizarFormatoDocumento);
