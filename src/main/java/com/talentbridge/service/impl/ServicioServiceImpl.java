@@ -1,6 +1,7 @@
 package com.talentbridge.service.impl;
 
 import com.talentbridge.dto.ImagenDTO;
+import com.talentbridge.dto.ResultadoModeracionImagen;
 import com.talentbridge.dto.ServicioDTO;
 import com.talentbridge.model.Categoria;
 import com.talentbridge.model.Imagen;
@@ -11,6 +12,7 @@ import com.talentbridge.repository.CategoriaRepository;
 import com.talentbridge.repository.ServicioRepository;
 import com.talentbridge.repository.SubcategoriaRepository;
 import com.talentbridge.repository.UsuarioRepository;
+import com.talentbridge.service.ModeracionContenidoService;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,7 @@ public class ServicioServiceImpl implements ServicioService {
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
     private final SubcategoriaRepository subcategoriaRepository;
+    private final ModeracionContenidoService moderacionContenidoService;
 
     private ServicioDTO mapToDTO(Servicio s) {
         return ServicioDTO.builder()
@@ -87,15 +90,8 @@ public class ServicioServiceImpl implements ServicioService {
         if (dto.getImagenes() != null) {
             for (MultipartFile file : dto.getImagenes()) {
                 if (file != null && !file.isEmpty()) {
-                    try {
-                        Imagen imagen = new Imagen();
-                        imagen.setNombre(file.getOriginalFilename());
-                        imagen.setDatos(file.getBytes());
-                        imagen.setServicio(servicio);
-                        servicio.getImagenes().add(imagen);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error al guardar la imagen", e);
-                    }
+                    validarModeracionImagen(file);
+                    servicio.getImagenes().add(crearImagen(file, servicio));
                 }
             }
         }
@@ -178,19 +174,31 @@ public class ServicioServiceImpl implements ServicioService {
         if (dto.getImagenes() != null) {
             for (MultipartFile file : dto.getImagenes()) {
                 if (file != null && !file.isEmpty()) {
-                    try {
-                        Imagen imagen = new Imagen();
-                        imagen.setNombre(file.getOriginalFilename());
-                        imagen.setDatos(file.getBytes());
-                        imagen.setServicio(servicio);
-                        servicio.getImagenes().add(imagen);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error al guardar la imagen", e);
-                    }
+                    validarModeracionImagen(file);
+                    servicio.getImagenes().add(crearImagen(file, servicio));
                 }
             }
         }
 
         servicioRepository.save(servicio);
+    }
+
+    private void validarModeracionImagen(MultipartFile file) {
+        ResultadoModeracionImagen resultado = moderacionContenidoService.moderarImagen(file);
+        if (!resultado.isAprobada()) {
+            throw new IllegalArgumentException(resultado.getMotivo());
+        }
+    }
+
+    private Imagen crearImagen(MultipartFile file, Servicio servicio) {
+        try {
+            Imagen imagen = new Imagen();
+            imagen.setNombre(file.getOriginalFilename());
+            imagen.setDatos(file.getBytes());
+            imagen.setServicio(servicio);
+            return imagen;
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la imagen", e);
+        }
     }
 }

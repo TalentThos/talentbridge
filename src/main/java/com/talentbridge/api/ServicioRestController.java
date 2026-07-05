@@ -3,6 +3,7 @@ package com.talentbridge.api;
 import com.talentbridge.dto.ServicioDTO;
 import com.talentbridge.service.ServicioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,9 @@ public class ServicioRestController {
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("No pudimos validar las imagenes en este momento. Intenta nuevamente mas tarde.");
         }
     }
 
@@ -45,6 +49,9 @@ public class ServicioRestController {
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("No pudimos validar las imagenes en este momento. Intenta nuevamente mas tarde.");
         }
     }
 }
