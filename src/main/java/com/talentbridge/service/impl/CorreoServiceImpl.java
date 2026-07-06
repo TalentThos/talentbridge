@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
@@ -84,15 +85,16 @@ public class CorreoServiceImpl implements CorreoService {
         );
 
         try {
-            restClient.post()
+            ResponseEntity<String> response = restClient.post()
                     .uri(brevoApiUrl)
                     .header("accept", "application/json")
                     .header("api-key", brevoApiKey)
                     .header("content-type", "application/json")
                     .body(payload)
                     .retrieve()
-                    .toBodilessEntity();
-            log.info("Correo enviado por API Brevo a {} desde {}", destinatario, remitente);
+                    .toEntity(String.class);
+            log.info("Correo aceptado por API Brevo a {} desde {} status={} response={}",
+                    destinatario, remitente, response.getStatusCode(), response.getBody());
         } catch (RestClientException e) {
             log.error("Error API Brevo al enviar mail a {} desde {}", destinatario, remitente, e);
             throw new RuntimeException("Error al enviar correo por API Brevo: " + e.getMessage(), e);

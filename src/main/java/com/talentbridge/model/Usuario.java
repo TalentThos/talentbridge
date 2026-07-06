@@ -37,4 +37,5 @@ public class Usuario {
     private String ipAceptacionPoliticas;
     @Column(length = 1000)
     private String userAgentAceptacionPoliticas;
+    private LocalDateTime recordatorioPublicacionEnviadoEn;
 }
