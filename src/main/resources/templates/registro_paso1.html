@@ -5,15 +5,26 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="bg-white p-5 rounded-4 shadow" style="width: 100%; max-width: 500px;">
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light py-4">
+    <div class="bg-white p-5 rounded-4 shadow registration-card">
         <div class="text-center mb-4">
             <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 60px;" />
             <h2 class="fw-bold mt-2">Talent<span class="text-primary">Bridge</span></h2>
             <p class="text-muted mb-0">Conectamos talentos con necesidades reales</p>
         </div>
 
-        <h4 class="text-center mb-3">Paso 1: Datos personales</h4>
+        <div class="registration-steps">
+            <div class="registration-step"><i class="bi bi-person-check" aria-hidden="true"></i> Paso 1: tus datos</div>
+            <div class="registration-step is-muted"><i class="bi bi-envelope-check" aria-hidden="true"></i> Paso 2: verifica tu correo</div>
+        </div>
+
+        <h4 class="text-center mb-2">Crea tu cuenta gratis</h4>
+        <p class="text-center text-muted small mb-3">Toma menos de 1 minuto. Luego podras publicar tu servicio o contactar con mas confianza.</p>
+
+        <div class="registration-helper">
+            <strong><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i> Por que pedimos estos datos?</strong>
+            <div>Nos ayudan a verificar cuentas, reducir publicaciones falsas y mostrar servicios con mejor contexto local.</div>
+        </div>
 
         <form id="registroPaso1Form" class="needs-validation" novalidate>
             <div class="mb-3">

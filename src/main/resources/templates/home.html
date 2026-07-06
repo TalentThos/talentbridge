@@ -5,15 +5,22 @@
 </head>
 <body>
 <div class="page-hero text-center">
-    <h1 class="mb-4">Conecta con <span class="bridge-color">el talento</span> que necesitas</h1>
-    <p class="mb-4 fs-5">Encuentra profesionales, técnicos, expertos y ayudantes en un solo lugar.</p>
+    <div class="hero-kicker"><i class="bi bi-geo-alt" aria-hidden="true"></i>Servicios cercanos en Chile</div>
+    <h1 class="mb-3">Busca servicios o publica <span class="bridge-color">tu talento gratis</span></h1>
+    <p class="mb-4 fs-5">TalentBridge conecta personas que necesitan ayuda con quienes ofrecen oficios, clases, reparaciones, eventos y servicios profesionales.</p>
     <div class="page-actions">
-        <a class="btn btn-primary btn-lg" th:href="@{/buscar}"><i class="bi bi-search-heart" aria-hidden="true"></i>Buscar servicios</a>
-        <a class="btn btn-outline-secondary btn-lg" th:href="@{/ofrecer}"><i class="bi bi-megaphone" aria-hidden="true"></i>Publicar mi servicio</a>
+        <a class="btn btn-primary btn-lg" th:href="@{/buscar}"><i class="bi bi-search-heart" aria-hidden="true"></i>Busco un servicio</a>
+        <a class="btn btn-success btn-lg" th:href="@{/registro}"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar gratis</a>
+    </div>
+    <div class="home-trust-list">
+        <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado</span>
+        <span><i class="bi bi-pencil-square bridge-color" aria-hidden="true"></i>Edita tu publicacion</span>
+        <span><i class="bi bi-image bridge-color" aria-hidden="true"></i>Imagenes moderadas</span>
     </div>
 
     <div class="home-account-actions" th:if="${#authorization.expression('isAnonymous()')}">
-        <p class="fw-semibold">¿Quieres publicar o contactar con más confianza?</p>
+        <p class="fw-semibold">Ofreces gasfiteria, clases, belleza, limpieza, reparaciones o asesorias?</p>
+        <p class="text-muted small">Crea tu cuenta en menos de 1 minuto y empieza a mostrar tu servicio.</p>
         <div class="home-account-buttons">
             <a class="btn btn-success" th:href="@{/registro}">
                 <i class="bi bi-person-plus" aria-hidden="true"></i>Crear cuenta gratis
@@ -29,16 +36,17 @@
     <div class="col-md-4">
         <span class="icon-badge"><i class="bi bi-mortarboard" aria-hidden="true"></i></span>
         <h4>Clases</h4>
-        <p>Profesores de música, matemáticas, idiomas y más.</p>
+        <p>Profesores de musica, matematicas, idiomas y mas.</p>
     </div>
     <div class="col-md-4">
-        <h4>Servicios técnicos</h4>
-        <p>Electricistas, gasfíteres, reparaciones del hogar.</p>
+        <span class="icon-badge"><i class="bi bi-tools" aria-hidden="true"></i></span>
+        <h4>Servicios tecnicos</h4>
+        <p>Electricistas, gasfiteres y reparaciones del hogar.</p>
     </div>
     <div class="col-md-4">
         <span class="icon-badge"><i class="bi bi-calendar-event" aria-hidden="true"></i></span>
         <h4>Eventos</h4>
-        <p>Coctelería, DJs, fotografía y más para tu ocasión.</p>
+        <p>Cocteleria, DJs, fotografia y apoyo para tu ocasion.</p>
     </div>
 </div>
 </body>

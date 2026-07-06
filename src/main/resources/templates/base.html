@@ -106,6 +106,18 @@
         .page-hero {
             padding: 4rem 0 3rem;
         }
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            color: #1b5fb8;
+            background: rgba(36, 107, 206, 0.1);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
         .page-actions {
             display: flex;
             justify-content: center;
@@ -129,6 +141,55 @@
             justify-content: center;
             gap: 0.75rem;
             flex-wrap: wrap;
+        }
+        .home-trust-list {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            color: #555B6E;
+            font-size: 0.95rem;
+        }
+        .home-trust-list span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .registration-card {
+            width: 100%;
+            max-width: 560px;
+        }
+        .registration-steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .registration-step {
+            border-radius: 999px;
+            padding: 0.45rem 0.75rem;
+            background: #eef5ff;
+            color: #1b5fb8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .registration-step.is-muted {
+            background: #f1f3f6;
+            color: #6c757d;
+        }
+        .registration-helper {
+            border: 1px solid #dce8f8;
+            border-radius: 0.75rem;
+            background: #f8fbff;
+            padding: 0.85rem;
+            color: #555B6E;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .registration-helper strong {
+            color: #1f2937;
         }
         .feature-card {
             height: 100%;
@@ -225,6 +286,13 @@
             }
             .home-account-buttons {
                 display: grid;
+                grid-template-columns: 1fr;
+            }
+            .home-trust-list {
+                justify-content: flex-start;
+                gap: 0.5rem;
+            }
+            .registration-steps {
                 grid-template-columns: 1fr;
             }
             .btn-lg {
