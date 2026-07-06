@@ -142,6 +142,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function cargarPaises() {
         if (!paisSelect) return;
+        paisSelect.innerHTML = '<option value="">Tu pais</option>';
+        const opt = document.createElement('option');
+        opt.value = 'Chile';
+        opt.textContent = 'Chile';
+        if (selectedPais === 'Chile') opt.selected = true;
+        paisSelect.appendChild(opt);
+        return;
         try {
             const res = await fetch('/api/paises');
             if (!res) return;
