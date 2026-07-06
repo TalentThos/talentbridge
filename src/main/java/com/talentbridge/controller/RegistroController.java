@@ -19,4 +19,14 @@ public class RegistroController {
         return "registro_paso2";
     }
 
+    @GetMapping("/politicas/privacidad")
+    public String mostrarPoliticaPrivacidad() {
+        return "politicas_privacidad";
+    }
+
+    @GetMapping("/politicas/condiciones")
+    public String mostrarCondicionesUso() {
+        return "politicas_condiciones";
+    }
+
 }

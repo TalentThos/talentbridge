@@ -58,6 +58,18 @@ class RegistroServiceImplTest {
     }
 
     @Test
+    void registrarPaso1RejectsWhenPoliciesAreNotAccepted() {
+        RegistroPaso1DTO dto = registroDto();
+        dto.setAceptaPoliticaPrivacidad(false);
+
+        assertThatThrownBy(() -> service.registrarPaso1(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Debes aceptar la politica de privacidad y las condiciones de uso para registrarte.");
+
+        verify(usuarioRepository, never()).save(any(Usuario.class));
+    }
+
+    @Test
     void registrarPaso1AllowsReusingEmailWhenExistingUserIsInactive() {
         RegistroPaso1DTO dto = registroDto();
         Usuario usuarioInactivo = new Usuario();
@@ -79,6 +91,10 @@ class RegistroServiceImplTest {
         assertThat(usuarioInactivo.getActivo()).isFalse();
         assertThat(usuarioInactivo.getVerificado()).isFalse();
         assertThat(usuarioInactivo.getPassword()).isEqualTo("encoded-password");
+        assertThat(usuarioInactivo.getAceptaPoliticaPrivacidad()).isTrue();
+        assertThat(usuarioInactivo.getAceptaCondicionesUso()).isTrue();
+        assertThat(usuarioInactivo.getFechaAceptacionPoliticas()).isNotNull();
+        assertThat(usuarioInactivo.getVersionPoliticas()).isEqualTo("2026-07-05");
         assertThat(codigoCaptor.getValue().getUsado()).isFalse();
     }
 
@@ -94,6 +110,10 @@ class RegistroServiceImplTest {
                 .calle("Calle Uno")
                 .numeroDireccion("123")
                 .password("password")
+                .aceptaPoliticaPrivacidad(true)
+                .aceptaCondicionesUso(true)
+                .ipAceptacionPoliticas("127.0.0.1")
+                .userAgentAceptacionPoliticas("JUnit")
                 .build();
     }
 }

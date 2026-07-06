@@ -20,4 +20,8 @@ public class RegistroPaso1DTO {
     private String calle;
     private String numeroDireccion;
     private String password;
+    private Boolean aceptaPoliticaPrivacidad;
+    private Boolean aceptaCondicionesUso;
+    private String ipAceptacionPoliticas;
+    private String userAgentAceptacionPoliticas;
 }

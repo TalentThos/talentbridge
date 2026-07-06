@@ -64,12 +64,117 @@
                 <input type="password" id="password" class="form-control" placeholder="Contraseña" required minlength="6">
             </div>
 
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="aceptaPoliticas" name="aceptaPoliticas" required>
+                <label class="form-check-label small" for="aceptaPoliticas">
+                    Acepto la
+                    <a th:href="@{/politicas/privacidad}" target="_blank">política de privacidad</a>
+                    y las
+                    <a th:href="@{/politicas/condiciones}" target="_blank">condiciones de uso</a>.
+                    Declaro que soy responsable del contenido que publique en TalentBridge.
+                </label>
+                <div class="invalid-feedback">
+                    Debes aceptar la política de privacidad y las condiciones de uso para continuar.
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary w-100" id="continuarButton">Continuar</button>
 
             <div class="text-center mt-3">
                 <small>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a></small>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="politicaPrivacidadModal" tabindex="-1" aria-labelledby="politicaPrivacidadTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="politicaPrivacidadTitle">Politica de privacidad</h5>
+                    <small class="text-muted">Version 2026-07-05</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    TalentBridge recopila los datos que entregas al registrarte y al publicar servicios,
+                    como nombre, correo electronico, telefono, ubicacion general, descripcion del servicio,
+                    enlaces e imagenes asociadas.
+                </p>
+                <h6>Uso de la informacion</h6>
+                <p>
+                    Usamos esta informacion para crear tu cuenta, verificar tu correo, mostrar servicios
+                    publicados, facilitar el contacto entre usuarios y proteger la seguridad de la plataforma.
+                </p>
+                <h6>Contenido publicado</h6>
+                <p>
+                    El contenido que publiques puede ser visible para otros usuarios. No publiques informacion
+                    sensible, privada o de terceros sin autorizacion.
+                </p>
+                <h6>Seguridad y moderacion</h6>
+                <p>
+                    Podemos revisar, moderar, ocultar o eliminar contenido que incumpla las condiciones de uso,
+                    incluyendo contenido ilegal, ofensivo, fraudulento, sexual explicito o que afecte derechos
+                    de terceros.
+                </p>
+                <h6>Conservacion</h6>
+                <p class="mb-0">
+                    Conservamos registros de aceptacion de politicas, incluyendo fecha, version aceptada,
+                    direccion IP y navegador usado, con fines de trazabilidad y seguridad.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="condicionesUsoModal" tabindex="-1" aria-labelledby="condicionesUsoTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="condicionesUsoTitle">Condiciones de uso</h5>
+                    <small class="text-muted">Version 2026-07-05</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Al usar TalentBridge aceptas que eres responsable de la informacion, imagenes, enlaces
+                    y servicios que publiques en la plataforma.
+                </p>
+                <h6>Responsabilidad del usuario</h6>
+                <p>
+                    Debes publicar informacion verdadera, respetuosa y relacionada con servicios reales.
+                    Tambien debes contar con autorizacion para usar cualquier imagen, dato o enlace que publiques.
+                </p>
+                <h6>Contenido prohibido</h6>
+                <p>
+                    No esta permitido publicar contenido pornografico, sexual explicito, ilegal, violento,
+                    discriminatorio, fraudulento, ofensivo, spam, datos personales de terceros sin autorizacion
+                    o cualquier contenido que infrinja derechos de otras personas.
+                </p>
+                <h6>Moderacion</h6>
+                <p>
+                    TalentBridge puede rechazar, ocultar, suspender o eliminar publicaciones que incumplan estas
+                    condiciones. Tambien podemos usar herramientas automaticas para revisar imagenes y prevenir
+                    contenido no permitido.
+                </p>
+                <h6>Relacion entre usuarios</h6>
+                <p class="mb-0">
+                    TalentBridge facilita el contacto entre personas que buscan y ofrecen servicios, pero no es
+                    responsable por la calidad, cumplimiento, precio, seguridad o resultado de los servicios
+                    acordados directamente entre usuarios.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -129,6 +234,25 @@
    document.getElementById("tipoDocumento").addEventListener("change", actualizarFormatoDocumento);
    document.getElementById("numeroDocumento").addEventListener("input", actualizarFormatoDocumento);
 
+   document.addEventListener("DOMContentLoaded", function () {
+       const politicaLink = document.querySelector('a[href$="/politicas/privacidad"]');
+       const condicionesLink = document.querySelector('a[href$="/politicas/condiciones"]');
+
+       function abrirModalDesdeLink(link, modalId) {
+           if (!link) return;
+           link.removeAttribute("target");
+           link.addEventListener("click", function (event) {
+               if (!window.bootstrap) return;
+               event.preventDefault();
+               const modal = new bootstrap.Modal(document.getElementById(modalId));
+               modal.show();
+           });
+       }
+
+       abrirModalDesdeLink(politicaLink, "politicaPrivacidadModal");
+       abrirModalDesdeLink(condicionesLink, "condicionesUsoModal");
+   });
+
    document.getElementById("registroPaso1Form").addEventListener("submit", async function (e) {
        e.preventDefault();
        const form = e.target;
@@ -159,7 +283,9 @@
            ciudad: form.ciudad.value,
            calle: form.calle.value,
            numeroDireccion: form.numeroDireccion.value,
-           password: form.password.value
+           password: form.password.value,
+           aceptaPoliticaPrivacidad: form.aceptaPoliticas.checked,
+           aceptaCondicionesUso: form.aceptaPoliticas.checked
        };
 
        try {

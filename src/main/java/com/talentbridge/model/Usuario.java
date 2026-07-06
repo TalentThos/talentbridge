@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usuarios")
 @Getter
@@ -28,4 +30,11 @@ public class Usuario {
     private EstadoRegistro estadoRegistro;
     private Boolean verificado;
     private Boolean activo;
+    private Boolean aceptaPoliticaPrivacidad;
+    private Boolean aceptaCondicionesUso;
+    private LocalDateTime fechaAceptacionPoliticas;
+    private String versionPoliticas;
+    private String ipAceptacionPoliticas;
+    @Column(length = 1000)
+    private String userAgentAceptacionPoliticas;
 }

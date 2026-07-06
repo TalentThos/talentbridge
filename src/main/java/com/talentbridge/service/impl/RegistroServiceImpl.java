@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class RegistroServiceImpl implements RegistroService {
+    private static final String VERSION_POLITICAS = "2026-07-05";
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -33,6 +34,8 @@ public class RegistroServiceImpl implements RegistroService {
     @Override
     @Transactional
     public void registrarPaso1(RegistroPaso1DTO dto) {
+        validarAceptacionPoliticas(dto);
+
         if (usuarioRepository.existsByEmailAndActivoTrue(dto.getEmail())) {
             throw new IllegalArgumentException("Correo ya registrado.");
         }
@@ -60,6 +63,19 @@ public class RegistroServiceImpl implements RegistroService {
         usuario.setEstadoRegistro(EstadoRegistro.PENDIENTE_VALIDACION);
         usuario.setActivo(false);
         usuario.setVerificado(false);
+        usuario.setAceptaPoliticaPrivacidad(Boolean.TRUE);
+        usuario.setAceptaCondicionesUso(Boolean.TRUE);
+        usuario.setFechaAceptacionPoliticas(LocalDateTime.now());
+        usuario.setVersionPoliticas(VERSION_POLITICAS);
+        usuario.setIpAceptacionPoliticas(dto.getIpAceptacionPoliticas());
+        usuario.setUserAgentAceptacionPoliticas(dto.getUserAgentAceptacionPoliticas());
+    }
+
+    private void validarAceptacionPoliticas(RegistroPaso1DTO dto) {
+        if (!Boolean.TRUE.equals(dto.getAceptaPoliticaPrivacidad()) ||
+                !Boolean.TRUE.equals(dto.getAceptaCondicionesUso())) {
+            throw new IllegalArgumentException("Debes aceptar la politica de privacidad y las condiciones de uso para registrarte.");
+        }
     }
 
     private void invalidarCodigosPendientes(Usuario usuario) {

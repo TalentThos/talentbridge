@@ -3,6 +3,7 @@ package com.talentbridge.api;
 import com.talentbridge.dto.CodigoVerificacionDTO;
 import com.talentbridge.dto.RegistroPaso1DTO;
 import com.talentbridge.service.RegistroService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,10 @@ public class RegistroRestController {
     private final RegistroService registroService;
 
     @PostMapping("/paso1")
-    public ResponseEntity<?> registrarPaso1(@RequestBody RegistroPaso1DTO dto) {
+    public ResponseEntity<?> registrarPaso1(@RequestBody RegistroPaso1DTO dto, HttpServletRequest request) {
         try {
+            dto.setIpAceptacionPoliticas(obtenerIpCliente(request));
+            dto.setUserAgentAceptacionPoliticas(request.getHeader("User-Agent"));
             registroService.registrarPaso1(dto);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException ex) {
@@ -39,4 +42,15 @@ public class RegistroRestController {
     }
 
 
+    private String obtenerIpCliente(HttpServletRequest request) {
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+        if (forwardedFor != null && !forwardedFor.isBlank()) {
+            return forwardedFor.split(",")[0].trim();
+        }
+        String realIp = request.getHeader("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) {
+            return realIp;
+        }
+        return request.getRemoteAddr();
+    }
 }
