@@ -8,13 +8,26 @@
     <h1 class="mb-4">Conecta con <span class="bridge-color">el talento</span> que necesitas</h1>
     <p class="mb-4 fs-5">Encuentra profesionales, técnicos, expertos y ayudantes en un solo lugar.</p>
     <div class="page-actions">
-        <a class="btn btn-primary btn-lg" th:href="@{/buscar}">Buscar servicios</a>
-        <a class="btn btn-outline-secondary btn-lg" th:href="@{/ofrecer}">Publicar mi servicio</a>
+        <a class="btn btn-primary btn-lg" th:href="@{/buscar}"><i class="bi bi-search-heart" aria-hidden="true"></i>Buscar servicios</a>
+        <a class="btn btn-outline-secondary btn-lg" th:href="@{/ofrecer}"><i class="bi bi-megaphone" aria-hidden="true"></i>Publicar mi servicio</a>
+    </div>
+
+    <div class="home-account-actions" th:if="${#authorization.expression('isAnonymous()')}">
+        <p class="fw-semibold">¿Quieres publicar o contactar con más confianza?</p>
+        <div class="home-account-buttons">
+            <a class="btn btn-success" th:href="@{/registro}">
+                <i class="bi bi-person-plus" aria-hidden="true"></i>Crear cuenta gratis
+            </a>
+            <a class="btn btn-outline-primary" th:href="@{/login}">
+                <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ingresar
+            </a>
+        </div>
     </div>
 </div>
 
 <div class="row g-3 text-center mt-2 home-feature-grid">
     <div class="col-md-4">
+        <span class="icon-badge"><i class="bi bi-mortarboard" aria-hidden="true"></i></span>
         <h4>Clases</h4>
         <p>Profesores de música, matemáticas, idiomas y más.</p>
     </div>
@@ -23,6 +36,7 @@
         <p>Electricistas, gasfíteres, reparaciones del hogar.</p>
     </div>
     <div class="col-md-4">
+        <span class="icon-badge"><i class="bi bi-calendar-event" aria-hidden="true"></i></span>
         <h4>Eventos</h4>
         <p>Coctelería, DJs, fotografía y más para tu ocasión.</p>
     </div>
