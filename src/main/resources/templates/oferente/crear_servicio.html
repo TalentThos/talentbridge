@@ -16,14 +16,6 @@
             <textarea th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
         </div>
         <div class="mb-3">
-            <label class="form-label">LinkedIn</label>
-            <input type="url" th:field="*{linkedin}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Instagram</label>
-            <input type="url" th:field="*{instagram}" class="form-control">
-        </div>
-        <div class="mb-3">
             <label class="form-label">Categoría</label>
             <select th:field="*{categoriaId}" id="categoria" class="form-select" required>
                 <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
@@ -224,8 +216,6 @@
       const params = new URLSearchParams();
       params.set('titulo', form.querySelector('[name="titulo"]').value.trim());
       params.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
-      params.set('linkedin', form.querySelector('[name="linkedin"]').value.trim());
-      params.set('instagram', form.querySelector('[name="instagram"]').value.trim());
       params.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
       params.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
       imagenesEliminarContainer
@@ -239,8 +229,6 @@
       const fd = new FormData();
       fd.set('titulo', form.querySelector('[name="titulo"]').value.trim());
       fd.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
-      fd.set('linkedin', form.querySelector('[name="linkedin"]').value.trim());
-      fd.set('instagram', form.querySelector('[name="instagram"]').value.trim());
       fd.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
       fd.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
 
