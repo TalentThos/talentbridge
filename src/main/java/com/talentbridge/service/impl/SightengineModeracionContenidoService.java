@@ -23,7 +23,7 @@ public class SightengineModeracionContenidoService implements ModeracionContenid
 
     private final RestClient restClient = RestClient.create();
 
-    @Value("${content.moderation.enabled:false}")
+    @Value("${content.moderation.enabled:true}")
     private boolean moderacionHabilitada;
 
     @Value("${sightengine.api-url:https://api.sightengine.com/1.0/check.json}")
