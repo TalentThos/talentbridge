@@ -10,7 +10,8 @@
     <p class="mb-4 fs-5">TalentBridge conecta personas que necesitan ayuda con quienes ofrecen oficios, clases, reparaciones, eventos y servicios profesionales.</p>
     <div class="page-actions">
         <a class="btn btn-primary btn-lg" th:href="@{/buscar}"><i class="bi bi-search-heart" aria-hidden="true"></i>Busco un servicio</a>
-        <a class="btn btn-success btn-lg" th:href="@{/registro}"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar gratis</a>
+        <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/registro}"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar gratis</a>
+        <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/ofrecer}"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar gratis</a>
     </div>
     <div class="home-trust-list">
         <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado</span>
