@@ -6,6 +6,10 @@
 <body>
 <div class="col-md-8 offset-md-2">
     <h2 class="mb-4" th:text="${servicio.id} != null ? 'Editar servicio' : 'Publicar nuevo servicio'">Publicar nuevo servicio</h2>
+    <p class="text-muted small mb-3">
+        Los campos marcados como <span class="badge text-bg-primary">Obligatorio</span> son necesarios para publicar.
+        Los campos <span class="badge text-bg-secondary">Opcional</span> puedes completarlos despues.
+    </p>
     <form id="crearServicioForm" th:object="${servicio}" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Título del servicio</label>
@@ -63,6 +67,30 @@
     const servicioLoadingModal = window.bootstrap
       ? new bootstrap.Modal(servicioLoadingModalElement)
       : null;
+
+    function agregarBadgeCampo(input, texto, clase) {
+      if (!input) return;
+      const contenedor = input.closest('.mb-3');
+      const label = contenedor ? contenedor.querySelector('.form-label') : null;
+      if (!label || label.querySelector('.badge')) return;
+
+      label.classList.add('d-flex', 'align-items-center', 'justify-content-between', 'gap-2');
+      const badge = document.createElement('span');
+      badge.className = `badge ${clase}`;
+      badge.textContent = texto;
+      label.appendChild(badge);
+    }
+
+    form.querySelectorAll('input[required], textarea[required], select[required]')
+      .forEach(input => agregarBadgeCampo(input, 'Obligatorio', 'text-bg-primary'));
+    agregarBadgeCampo(inputImagenes, 'Opcional', 'text-bg-secondary');
+
+    if (inputImagenes) {
+      const ayudaImagenes = document.createElement('div');
+      ayudaImagenes.className = 'form-text mb-2';
+      ayudaImagenes.textContent = 'Puedes agregar imagenes para que tu servicio destaque mas.';
+      inputImagenes.insertAdjacentElement('beforebegin', ayudaImagenes);
+    }
 
     const servicioId = /*[[${servicio.id}]]*/ null;
     const imagenesExistentes = /*[[${servicio.imagenesExistentes}]]*/ [];
