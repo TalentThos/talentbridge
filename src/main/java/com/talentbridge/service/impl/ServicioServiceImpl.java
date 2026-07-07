@@ -44,13 +44,14 @@ public class ServicioServiceImpl implements ServicioService {
                 .descripcion(s.getDescripcion())
                 .linkedin(s.getLinkedin())
                 .instagram(s.getInstagram())
+                .numeroMovil(s.getNumeroMovil())
                 .categoriaId(s.getCategoria() != null ? s.getCategoria().getId() : null)
                 .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
                 .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
                 .subcategoriaNombre(s.getSubcategoria() != null ? s.getSubcategoria().getNombre() : null)
                 .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
                 .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
-                .usuarioMovil(s.getUsuario() != null ? s.getUsuario().getNumeroMovil() : null)
+                .usuarioMovil(s.getNumeroMovil())
                 .tieneImagenes(s.getImagenes() != null && !s.getImagenes().isEmpty())
                 .imagenesExistentes(s.getImagenes() != null ?
                         s.getImagenes().stream()
@@ -83,6 +84,7 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setDescripcion(dto.getDescripcion());
         servicio.setLinkedin(dto.getLinkedin());
         servicio.setInstagram(dto.getInstagram());
+        servicio.setNumeroMovil(normalizarTexto(dto.getNumeroMovil()));
         servicio.setCategoria(categoria);
         servicio.setSubcategoria(subcategoria);
         servicio.setUsuario(usuario);
@@ -166,6 +168,7 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setSubcategoria(subcategoria);
         servicio.setLinkedin(dto.getLinkedin());
         servicio.setInstagram(dto.getInstagram());
+        servicio.setNumeroMovil(normalizarTexto(dto.getNumeroMovil()));
 
         if (dto.getImagenesEliminar() != null && !dto.getImagenesEliminar().isEmpty()) {
             servicio.getImagenes().removeIf(img -> dto.getImagenesEliminar().contains(img.getId()));
@@ -200,5 +203,9 @@ public class ServicioServiceImpl implements ServicioService {
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar la imagen", e);
         }
+    }
+
+    private String normalizarTexto(String valor) {
+        return valor == null || valor.isBlank() ? null : valor.trim();
     }
 }

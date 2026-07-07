@@ -20,6 +20,11 @@
             <textarea th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
         </div>
         <div class="mb-3">
+            <label class="form-label">Telefono de contacto</label>
+            <input type="tel" th:field="*{numeroMovil}" class="form-control" placeholder="Ej: +56 9 1234 5678">
+            <div class="form-text">Opcional. Si lo agregas, se mostrara junto a tu servicio en la busqueda.</div>
+        </div>
+        <div class="mb-3">
             <label class="form-label">Categoría</label>
             <select th:field="*{categoriaId}" id="categoria" class="form-select" required>
                 <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
@@ -61,6 +66,7 @@
     const categoriaSelect = document.getElementById('categoria');
     const subcategoriaSelect = document.getElementById('subcategoria');
     const inputImagenes = document.getElementById('imagenes');
+    const inputNumeroMovil = form.querySelector('[name="numeroMovil"]');
     const imagenesEliminarContainer = document.getElementById('imagenesEliminarContainer');
     const guardarServicioButton = document.getElementById('guardarServicioButton');
     const servicioLoadingModalElement = document.getElementById('servicioLoadingModal');
@@ -83,6 +89,7 @@
 
     form.querySelectorAll('input[required], textarea[required], select[required]')
       .forEach(input => agregarBadgeCampo(input, 'Obligatorio', 'text-bg-primary'));
+    agregarBadgeCampo(inputNumeroMovil, 'Opcional', 'text-bg-secondary');
     agregarBadgeCampo(inputImagenes, 'Opcional', 'text-bg-secondary');
 
     if (inputImagenes) {
@@ -244,6 +251,7 @@
       const params = new URLSearchParams();
       params.set('titulo', form.querySelector('[name="titulo"]').value.trim());
       params.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
+      params.set('numeroMovil', inputNumeroMovil.value.trim());
       params.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
       params.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
       imagenesEliminarContainer
@@ -257,6 +265,7 @@
       const fd = new FormData();
       fd.set('titulo', form.querySelector('[name="titulo"]').value.trim());
       fd.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
+      fd.set('numeroMovil', inputNumeroMovil.value.trim());
       fd.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
       fd.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
 

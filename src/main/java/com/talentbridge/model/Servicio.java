@@ -25,6 +25,8 @@ public class Servicio {
 
     private String instagram;
 
+    private String numeroMovil;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
