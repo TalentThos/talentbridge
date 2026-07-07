@@ -14,16 +14,16 @@
         </div>
 
         <div class="registration-steps">
-            <div class="registration-step"><i class="bi bi-person-check" aria-hidden="true"></i> Paso 1: tus datos</div>
+            <div class="registration-step"><i class="bi bi-person-check" aria-hidden="true"></i> Paso 1: datos basicos</div>
             <div class="registration-step is-muted"><i class="bi bi-envelope-check" aria-hidden="true"></i> Paso 2: verifica tu correo</div>
         </div>
 
         <h4 class="text-center mb-2">Crea tu cuenta gratis</h4>
-        <p class="text-center text-muted small mb-3">Toma menos de 1 minuto. Luego podras publicar tu servicio o contactar con mas confianza.</p>
+        <p class="text-center text-muted small mb-3">Solo pedimos lo necesario para crear tu cuenta. Despues podras completar tu perfil.</p>
 
         <div class="registration-helper">
-            <strong><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i> Por que pedimos estos datos?</strong>
-            <div>Nos ayudan a verificar cuentas, reducir publicaciones falsas y mostrar servicios con mejor contexto local.</div>
+            <strong><i class="bi bi-lightning-charge bridge-color" aria-hidden="true"></i> Registro mas rapido</strong>
+            <div>Completa estos datos basicos y verifica tu correo para comenzar.</div>
         </div>
 
         <form id="registroPaso1Form" class="needs-validation" novalidate>
@@ -31,25 +31,8 @@
                 <input type="text" id="nombre" class="form-control" placeholder="Nombre completo" required>
             </div>
 
-           <div class="mb-3">
-               <input type="email" id="email" class="form-control" placeholder="Correo electrónico" required>
-           </div>
-
             <div class="mb-3">
-                <input type="tel" id="numeroMovil" class="form-control" placeholder="Número móvil" required>
-            </div>
-
-            <div class="row">
-                <div class="col-6 mb-3">
-                    <select class="form-select" id="tipoDocumento" required>
-                        <option value="">Tipo doc.</option>
-                        <option value="RUT">RUT (Chile)</option>
-                        <option value="DNI">DNI (extranjero)</option>
-                    </select>
-                </div>
-                <div class="col-6 mb-3">
-                    <input type="text" id="numeroDocumento" class="form-control" placeholder="N° documento" required>
-                </div>
+                <input type="email" id="email" class="form-control" placeholder="Correo electronico" required>
             </div>
 
             <div class="mb-3">
@@ -58,41 +41,35 @@
                 </select>
             </div>
 
-
             <div class="mb-3">
-                <input type="text" id="ciudad" class="form-control" placeholder="Ciudad" required>
+                <input type="text" id="ciudad" class="form-control" placeholder="Ciudad o comuna" required>
             </div>
 
             <div class="mb-3">
-                <input type="text" id="calle" class="form-control" placeholder="Calle" required>
-            </div>
-
-            <div class="mb-3">
-                <input type="text" id="numeroDireccion" class="form-control" placeholder="N° de dirección" required>
-            </div>
-
-            <div class="mb-3">
-                <input type="password" id="password" class="form-control" placeholder="Contraseña" required minlength="6">
+                <input type="password" id="password" class="form-control" placeholder="Contrasena" required minlength="6">
+                <div class="form-text">Minimo 6 caracteres.</div>
             </div>
 
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="aceptaPoliticas" name="aceptaPoliticas" required>
                 <label class="form-check-label small" for="aceptaPoliticas">
                     Acepto la
-                    <a th:href="@{/politicas/privacidad}" target="_blank">política de privacidad</a>
+                    <a th:href="@{/politicas/privacidad}" target="_blank">politica de privacidad</a>
                     y las
                     <a th:href="@{/politicas/condiciones}" target="_blank">condiciones de uso</a>.
                     Declaro que soy responsable del contenido que publique en TalentBridge.
                 </label>
                 <div class="invalid-feedback">
-                    Debes aceptar la política de privacidad y las condiciones de uso para continuar.
+                    Debes aceptar la politica de privacidad y las condiciones de uso para continuar.
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100" id="continuarButton"><i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Continuar</button>
+            <button type="submit" class="btn btn-primary w-100" id="continuarButton">
+                <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Continuar
+            </button>
 
             <div class="text-center mt-3">
-                <small>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a></small>
+                <small>Ya tienes cuenta? <a th:href="@{/login}">Inicia sesion</a></small>
             </div>
         </form>
     </div>
@@ -111,8 +88,8 @@
             <div class="modal-body">
                 <p>
                     TalentBridge recopila los datos que entregas al registrarte y al publicar servicios,
-                    como nombre, correo electronico, telefono, ubicacion general, descripcion del servicio,
-                    enlaces e imagenes asociadas.
+                    como nombre, correo electronico, telefono, ubicacion general, descripcion del servicio
+                    e imagenes asociadas.
                 </p>
                 <h6>Uso de la informacion</h6>
                 <p>
@@ -196,55 +173,13 @@
             <div class="modal-body text-center p-4">
                 <div class="spinner-border text-primary mb-3" role="status" aria-hidden="true"></div>
                 <h5 class="modal-title mb-2" id="registroLoadingTitle">Validando datos</h5>
-                <p class="text-muted mb-0">Estamos registrando tu información. Un momento, por favor.</p>
+                <p class="text-muted mb-0">Estamos registrando tu informacion. Un momento, por favor.</p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function limpiarRut(rut) {
-        const normalizado = rut.toUpperCase().replace(/[^0-9K]/g, '');
-        if (normalizado.length <= 1) {
-            return normalizado;
-        }
-
-        const cuerpo = normalizado.slice(0, -1).replace(/K/g, '');
-        const digitoVerificador = normalizado.slice(-1);
-
-        return `${cuerpo}${digitoVerificador}`.slice(0, 9);
-    }
-
-    function formatearRut(rut) {
-        const rutLimpio = limpiarRut(rut);
-        if (rutLimpio.length <= 1) {
-            return rutLimpio;
-        }
-
-        const cuerpo = rutLimpio.slice(0, -1);
-        const digitoVerificador = rutLimpio.slice(-1);
-        const cuerpoFormateado = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-        return `${cuerpoFormateado}-${digitoVerificador}`;
-    }
-
-    function actualizarFormatoDocumento() {
-        const tipoDocumento = document.getElementById("tipoDocumento");
-        const numeroDocumento = document.getElementById("numeroDocumento");
-
-        if (tipoDocumento.value === "RUT") {
-            numeroDocumento.value = formatearRut(numeroDocumento.value);
-            numeroDocumento.placeholder = "XX.XXX.XXX-X";
-            numeroDocumento.maxLength = 12;
-        } else {
-            numeroDocumento.placeholder = "N° documento";
-            numeroDocumento.removeAttribute("maxlength");
-        }
-    }
-
-   document.getElementById("tipoDocumento").addEventListener("change", actualizarFormatoDocumento);
-   document.getElementById("numeroDocumento").addEventListener("input", actualizarFormatoDocumento);
-
    document.addEventListener("DOMContentLoaded", function () {
        const politicaLink = document.querySelector('a[href$="/politicas/privacidad"]');
        const condicionesLink = document.querySelector('a[href$="/politicas/condiciones"]');
@@ -285,15 +220,8 @@
        const data = {
            nombre: form.nombre.value,
            email: form.email.value,
-           numeroMovil: form.numeroMovil.value,
-           tipoDocumento: form.tipoDocumento.value,
-           numeroDocumento: form.tipoDocumento.value === "RUT"
-               ? limpiarRut(form.numeroDocumento.value)
-               : form.numeroDocumento.value,
            pais: form.pais.value,
            ciudad: form.ciudad.value,
-           calle: form.calle.value,
-           numeroDireccion: form.numeroDireccion.value,
            password: form.password.value,
            aceptaPoliticaPrivacidad: form.aceptaPoliticas.checked,
            aceptaCondicionesUso: form.aceptaPoliticas.checked
@@ -329,7 +257,6 @@
            Swal.fire({ icon: 'error', title: 'Error de red', text: error.message });
        }
    });
-
 </script>
 </body>
 </html>

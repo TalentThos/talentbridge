@@ -11,12 +11,12 @@ import com.talentbridge.service.RegistroService;
 import com.talentbridge.tipos.EstadoRegistro;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +30,9 @@ public class RegistroServiceImpl implements RegistroService {
     private final PasswordEncoder passwordEncoder;
     private final CodigoVerificacionRepository codigoVerificacionRepository;
     private final CorreoService correoService;
+
+    @Value("${app.public-url:https://www.talentbridge.cl}")
+    private String appPublicUrl;
 
     @Override
     @Transactional
@@ -52,13 +55,13 @@ public class RegistroServiceImpl implements RegistroService {
     private void completarDatosUsuario(Usuario usuario, RegistroPaso1DTO dto) {
         usuario.setNombre(dto.getNombre());
         usuario.setEmail(dto.getEmail());
-        usuario.setNumeroMovil(dto.getNumeroMovil());
-        usuario.setTipoDocumento(dto.getTipoDocumento());
-        usuario.setNumeroDocumento(dto.getNumeroDocumento());
+        usuario.setNumeroMovil(null);
+        usuario.setTipoDocumento(null);
+        usuario.setNumeroDocumento(null);
         usuario.setPais(dto.getPais());
         usuario.setCiudad(dto.getCiudad());
-        usuario.setCalle(dto.getCalle());
-        usuario.setNumeroDireccion(dto.getNumeroDireccion());
+        usuario.setCalle(null);
+        usuario.setNumeroDireccion(null);
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setEstadoRegistro(EstadoRegistro.PENDIENTE_VALIDACION);
         usuario.setActivo(false);
@@ -112,9 +115,7 @@ public class RegistroServiceImpl implements RegistroService {
     }
 
     private void enviarCodigoVerificacion(Usuario usuario, String codigo) {
-        String linkVerificacion = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/registro/paso2")
-                .toUriString();
+        String linkVerificacion = normalizarUrlBase(appPublicUrl) + "/registro/paso2";
 
         try {
             correoService.enviarCorreo(usuario.getEmail(),
@@ -133,6 +134,13 @@ public class RegistroServiceImpl implements RegistroService {
 
     private String generarCodigo() {
         return String.valueOf((int) (Math.random() * 900_000) + 100_000);
+    }
+
+    private String normalizarUrlBase(String url) {
+        if (url == null || url.isBlank()) {
+            return "https://www.talentbridge.cl";
+        }
+        return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
     }
 
     @Override
