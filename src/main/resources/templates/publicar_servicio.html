@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Publicar servicio gratis</title>
+</head>
+<body>
+<section class="publish-landing">
+    <div class="publish-hero">
+        <div class="hero-kicker"><i class="bi bi-stars" aria-hidden="true"></i>Para personas que ofrecen servicios</div>
+        <h1>Publica tu servicio para que vecinos y personas de tu comuna puedan encontrarte</h1>
+        <p class="lead">
+            Crea tu perfil en TalentBridge, describe lo que haces y aparece cuando alguien busque servicios como el tuyo.
+        </p>
+        <div class="page-actions justify-content-start">
+            <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/registro}">
+                <i class="bi bi-person-plus" aria-hidden="true"></i>Crear cuenta para publicar
+            </a>
+            <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/ofrecer}">
+                <i class="bi bi-megaphone" aria-hidden="true"></i>Publicar mi servicio
+            </a>
+            <a class="btn btn-outline-primary btn-lg" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/login}">
+                <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ya tengo cuenta
+            </a>
+        </div>
+        <div class="home-trust-list justify-content-start">
+            <span><i class="bi bi-clock bridge-color" aria-hidden="true"></i>Toma menos de 1 minuto</span>
+            <span><i class="bi bi-pencil-square bridge-color" aria-hidden="true"></i>Editable cuando quieras</span>
+            <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado</span>
+        </div>
+    </div>
+
+    <div class="publish-panel">
+        <h2>Que puedes publicar?</h2>
+        <div class="publish-category-grid">
+            <span><i class="bi bi-tools" aria-hidden="true"></i>Reparaciones</span>
+            <span><i class="bi bi-droplet" aria-hidden="true"></i>Gasfiteria</span>
+            <span><i class="bi bi-lightning-charge" aria-hidden="true"></i>Electricidad</span>
+            <span><i class="bi bi-mortarboard" aria-hidden="true"></i>Clases</span>
+            <span><i class="bi bi-scissors" aria-hidden="true"></i>Belleza</span>
+            <span><i class="bi bi-house-heart" aria-hidden="true"></i>Limpieza</span>
+            <span><i class="bi bi-calendar-event" aria-hidden="true"></i>Eventos</span>
+            <span><i class="bi bi-briefcase" aria-hidden="true"></i>Asesorias</span>
+        </div>
+    </div>
+</section>
+
+<section class="row g-3 mt-4 publish-steps">
+    <div class="col-md-4">
+        <div class="feature-card">
+            <span class="icon-badge"><i class="bi bi-person-check" aria-hidden="true"></i></span>
+            <h4>Crea tu cuenta</h4>
+            <p>Registrate con tus datos basicos para que podamos verificar tu correo.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card">
+            <span class="icon-badge"><i class="bi bi-card-text" aria-hidden="true"></i></span>
+            <h4>Describe tu servicio</h4>
+            <p>Cuenta que haces, en que categoria trabajas y agrega imagenes si quieres destacar.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card">
+            <span class="icon-badge"><i class="bi bi-search-heart" aria-hidden="true"></i></span>
+            <h4>Aparece en busquedas</h4>
+            <p>Tu servicio quedara disponible para personas que busquen ayuda en TalentBridge.</p>
+        </div>
+    </div>
+</section>
+</body>
+</html>
