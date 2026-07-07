@@ -156,6 +156,56 @@
             align-items: center;
             gap: 0.35rem;
         }
+        .publish-landing {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+            gap: 2rem;
+            align-items: center;
+            padding: 3rem 0 2rem;
+        }
+        .publish-hero h1 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            line-height: 1.12;
+            margin-bottom: 1rem;
+        }
+        .publish-hero .lead {
+            color: #555B6E;
+            max-width: 720px;
+        }
+        .publish-panel {
+            background: #ffffff;
+            border: 1px solid #dce8f8;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 0.75rem 2rem rgba(15, 23, 42, 0.06);
+        }
+        .publish-panel h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .publish-category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .publish-category-grid span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 2.5rem;
+            padding: 0.55rem 0.65rem;
+            border: 1px solid #e8edf5;
+            border-radius: 0.5rem;
+            color: #1f2937;
+            background: #f8fbff;
+            font-size: 0.95rem;
+        }
+        .publish-category-grid .bi {
+            color: #246BCE;
+        }
+        .publish-steps .feature-card {
+            min-height: 100%;
+        }
         .registration-card {
             width: 100%;
             max-width: 560px;
@@ -292,6 +342,13 @@
                 justify-content: flex-start;
                 gap: 0.5rem;
             }
+            .publish-landing {
+                grid-template-columns: 1fr;
+                padding: 2rem 0 1rem;
+            }
+            .publish-category-grid {
+                grid-template-columns: 1fr;
+            }
             .registration-steps {
                 grid-template-columns: 1fr;
             }
@@ -350,7 +407,7 @@
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" th:href="@{/buscar}"><i class="bi bi-search" aria-hidden="true"></i>Buscar servicios</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/ofrecer}"><i class="bi bi-stars" aria-hidden="true"></i>Ofrece tu talento</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/publicar-servicio}"><i class="bi bi-stars" aria-hidden="true"></i>Ofrece tu talento</a></li>
                 <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
                     <a class="nav-link" th:href="@{/mis-servicios}"><i class="bi bi-briefcase" aria-hidden="true"></i>Mis servicios</a>
                 </li>

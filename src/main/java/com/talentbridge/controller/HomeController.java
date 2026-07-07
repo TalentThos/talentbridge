@@ -16,4 +16,9 @@ public class HomeController {
         return "home";
     }
 
+    @GetMapping("/publicar-servicio")
+    public String publicarServicio() {
+        return "publicar_servicio";
+    }
+
 }
