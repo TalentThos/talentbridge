@@ -49,6 +49,7 @@ public class ServicioServiceImpl implements ServicioService {
                 .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
                 .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
                 .subcategoriaNombre(s.getSubcategoria() != null ? s.getSubcategoria().getNombre() : null)
+                .subcategoriaIcono(iconoSubcategoria(s.getSubcategoria()))
                 .usuarioId(s.getUsuario() != null ? s.getUsuario().getId() : null)
                 .usuarioNombre(s.getUsuario() != null ? s.getUsuario().getNombre() : null)
                 .usuarioMovil(s.getNumeroMovil())
@@ -207,5 +208,12 @@ public class ServicioServiceImpl implements ServicioService {
 
     private String normalizarTexto(String valor) {
         return valor == null || valor.isBlank() ? null : valor.trim();
+    }
+
+    private String iconoSubcategoria(Subcategoria subcategoria) {
+        if (subcategoria == null || subcategoria.getIcono() == null || subcategoria.getIcono().isBlank()) {
+            return "bi-briefcase";
+        }
+        return subcategoria.getIcono().trim();
     }
 }

@@ -29,6 +29,7 @@ public class ServicioDTO {
     private String categoriaNombre;
     private Long subcategoriaId;
     private String subcategoriaNombre;
+    private String subcategoriaIcono;
     private Long usuarioId;
     private String usuarioNombre;
     private String usuarioMovil;

@@ -16,6 +16,8 @@ public class Subcategoria {
 
     private String nombre;
 
+    private String icono;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     @JsonIgnore

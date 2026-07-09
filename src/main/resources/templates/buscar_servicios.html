@@ -11,7 +11,7 @@
     </div>
     <div class="col-md-3 mb-2 mb-md-0">
         <select name="categoriaId" id="categoria" class="form-select">
-            <option value="" th:text="'Todas las categorías'"></option>
+            <option value="" th:text="'Todas las categorias'"></option>
             <option th:each="cat : ${categorias}"
                     th:value="${cat.id}"
                     th:text="${cat.nombre}"
@@ -32,17 +32,41 @@
 
 <div class="row g-3" th:if="${servicios != null}">
     <div class="col-md-4" th:each="s : ${servicios}">
-        <div class="card service-card h-100">
+        <div class="card service-card service-result-card h-100">
+            <div class="service-result-media">
+                <img th:if="${s.tieneImagenes and s.imagenesExistentes != null and !#lists.isEmpty(s.imagenesExistentes)}"
+                     th:src="|data:image/jpeg;base64,${s.imagenesExistentes[0].datosBase64}|"
+                     alt="Imagen del servicio">
+                <div class="service-result-placeholder"
+                     th:unless="${s.tieneImagenes and s.imagenesExistentes != null and !#lists.isEmpty(s.imagenesExistentes)}">
+                    <i th:class="'bi ' + ${s.subcategoriaIcono}" aria-hidden="true"></i>
+                </div>
+            </div>
             <div class="card-body">
+                <div class="service-result-tags">
+                    <span th:if="${s.categoriaNombre}" th:text="${s.categoriaNombre}">Categoria</span>
+                    <span th:if="${s.subcategoriaNombre}" th:text="${s.subcategoriaNombre}">Subcategoria</span>
+                </div>
                 <h5 th:text="${s.titulo}"></h5>
-                <p th:text="${s.descripcion}"></p>
-                <p class="text-muted"><strong>Categoría:</strong> <span th:text="${s.categoriaNombre}"></span></p>
-                <p class="text-muted" th:if="${s.subcategoriaNombre}"><strong>Subcategoría:</strong> <span th:text="${s.subcategoriaNombre}"></span></p>
-                <p><strong>Oferente:</strong> <span th:text="${s.usuarioNombre}"></span></p>
-                <p th:if="${s.numeroMovil != null}"><strong>Móvil:</strong> <span th:text="${s.numeroMovil}"></span></p>
-                <p th:if="${s.linkedin}"><strong>LinkedIn:</strong> <a th:href="${s.linkedin}" target="_blank" th:text="${s.linkedin}"></a></p>
-                <p th:if="${s.instagram}"><strong>Instagram:</strong> <a th:href="${s.instagram}" target="_blank" th:text="${s.instagram}"></a></p>
-                <a th:if="${s.tieneImagenes}" href="#" th:data-id="${s.id}" class="btn btn-sm btn-outline-secondary ver-imagenes">Ver imágenes</a>
+                <p class="service-result-description" th:text="${s.descripcion}"></p>
+                <div class="service-result-provider">
+                    <span class="service-result-avatar" th:text="${s.usuarioNombre != null and !#strings.isEmpty(s.usuarioNombre) ? #strings.substring(s.usuarioNombre, 0, 1) : 'T'}">T</span>
+                    <div>
+                        <strong th:text="${s.usuarioNombre}">Oferente</strong>
+                        <small><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Correo verificado</small>
+                    </div>
+                </div>
+                <div class="service-result-actions">
+                    <a th:if="${s.numeroMovil != null}" class="btn btn-primary btn-sm" th:href="'tel:' + ${s.numeroMovil}">
+                        <i class="bi bi-telephone" aria-hidden="true"></i>Contactar
+                    </a>
+                    <button th:unless="${s.numeroMovil != null}" type="button" class="btn btn-outline-primary btn-sm" disabled>
+                        <i class="bi bi-chat-dots" aria-hidden="true"></i>Mensaje pronto
+                    </button>
+                    <a th:if="${s.tieneImagenes}" href="#" th:data-id="${s.id}" class="btn btn-sm btn-outline-secondary ver-imagenes">
+                        <i class="bi bi-images" aria-hidden="true"></i>Ver imagenes
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -62,12 +86,11 @@
     </ul>
 </nav>
 
-<!-- Modal para visualizar imágenes -->
 <div class="modal fade" id="imagenesModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Imágenes del servicio</h5>
+                <h5 class="modal-title">Imagenes del servicio</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -86,6 +109,7 @@
         </div>
     </div>
 </div>
+
 <script th:inline="javascript">
 /*<![CDATA[*/
 document.addEventListener('DOMContentLoaded', function() {
@@ -100,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedSubcat = /*[[${subcategoriaId}]]*/ null;
     const selectedCat = /*[[${categoriaId}]]*/ null;
     const selectedPais = /*[[${pais}]]*/ '';
+
     async function cargarSubcategorias(categoriaId) {
         subcategoriaSelect.innerHTML = '';
         if (subcatChoices) {
@@ -117,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const data = await resp.json();
         if (data.length === 0) return;
         if (subcatChoices) {
-            const opciones = [{ value: '', label: 'Todas las subcategorías', selected: true }]
+            const opciones = [{ value: '', label: 'Todas las subcategorias', selected: true }]
                 .concat(data.map(sc => ({ value: sc.id, label: sc.nombre })));
             subcatChoices.setChoices(opciones, 'value', 'label', true);
             subcatChoices.enable();
@@ -125,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             const optDefault = document.createElement('option');
             optDefault.value = '';
-            optDefault.textContent = 'Todas las subcategorías';
+            optDefault.textContent = 'Todas las subcategorias';
             subcategoriaSelect.appendChild(optDefault);
             data.forEach(sc => {
                 const opt = document.createElement('option');
@@ -140,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
     categoriaSelect.addEventListener('change', e => cargarSubcategorias(e.target.value));
     cargarSubcategorias(selectedCat);
 
-    async function cargarPaises() {
+    function cargarPaises() {
         if (!paisSelect) return;
         paisSelect.innerHTML = '<option value="">Tu pais</option>';
         const opt = document.createElement('option');
@@ -148,23 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
         opt.textContent = 'Chile';
         if (selectedPais === 'Chile') opt.selected = true;
         paisSelect.appendChild(opt);
-        return;
-        try {
-            const res = await fetch('/api/paises');
-            if (!res) return;
-            const paises = await res.json();
-            paisSelect.innerHTML = '<option value="">Tu país</option>';
-            paises.sort((a, b) => a.name.common.localeCompare(b.name.common));
-            for (const p of paises) {
-                const opt = document.createElement('option');
-                opt.value = p.name.common;
-                opt.textContent = p.name.common;
-                if (selectedPais && selectedPais === p.name.common) opt.selected = true;
-                paisSelect.appendChild(opt);
-            }
-        } catch (e) {
-            paisSelect.innerHTML = '<option value="">Error al cargar países</option>';
-        }
     }
     cargarPaises();
 

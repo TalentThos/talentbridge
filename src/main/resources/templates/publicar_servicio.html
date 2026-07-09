@@ -7,13 +7,13 @@
 <section class="publish-landing">
     <div class="publish-hero">
         <div class="hero-kicker"><i class="bi bi-stars" aria-hidden="true"></i>Para personas que ofrecen servicios</div>
-        <h1>Publica tu servicio para que vecinos y personas de tu comuna puedan encontrarte</h1>
+        <h1>Crea tu aviso y deja que te encuentren cuando necesiten tu servicio</h1>
         <p class="lead">
-            Crea tu perfil en TalentBridge, describe lo que haces y aparece cuando alguien busque servicios como el tuyo.
+            Muestra lo que haces, tu comuna y una forma de contacto. Tu aviso quedara disponible para personas que buscan ayuda cerca.
         </p>
         <div class="page-actions justify-content-start">
             <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/registro}">
-                <i class="bi bi-person-plus" aria-hidden="true"></i>Crear cuenta para publicar
+                <i class="bi bi-megaphone" aria-hidden="true"></i>Crear mi aviso gratis
             </a>
             <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/ofrecer}">
                 <i class="bi bi-megaphone" aria-hidden="true"></i>Publicar mi servicio
@@ -23,24 +23,64 @@
             </a>
         </div>
         <div class="home-trust-list justify-content-start">
-            <span><i class="bi bi-clock bridge-color" aria-hidden="true"></i>Toma menos de 1 minuto</span>
+            <span><i class="bi bi-cash-coin bridge-color" aria-hidden="true"></i>Publicar es gratis</span>
             <span><i class="bi bi-pencil-square bridge-color" aria-hidden="true"></i>Editable cuando quieras</span>
-            <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado</span>
+            <span><i class="bi bi-eye bridge-color" aria-hidden="true"></i>Visible en busquedas</span>
         </div>
     </div>
 
-    <div class="publish-panel">
-        <h2>Que puedes publicar?</h2>
-        <div class="publish-category-grid">
-            <span><i class="bi bi-tools" aria-hidden="true"></i>Reparaciones</span>
-            <span><i class="bi bi-droplet" aria-hidden="true"></i>Gasfiteria</span>
-            <span><i class="bi bi-lightning-charge" aria-hidden="true"></i>Electricidad</span>
-            <span><i class="bi bi-mortarboard" aria-hidden="true"></i>Clases</span>
-            <span><i class="bi bi-scissors" aria-hidden="true"></i>Belleza</span>
-            <span><i class="bi bi-house-heart" aria-hidden="true"></i>Limpieza</span>
-            <span><i class="bi bi-calendar-event" aria-hidden="true"></i>Eventos</span>
-            <span><i class="bi bi-briefcase" aria-hidden="true"></i>Asesorias</span>
+    <div class="publish-preview-wrap" aria-label="Vista previa de aviso publicado">
+        <div class="publish-preview-toolbar">
+            <span><i class="bi bi-search" aria-hidden="true"></i> Busqueda: gasfiter comuna</span>
+            <span class="publish-preview-live">Asi se vera tu aviso</span>
         </div>
+        <div class="publish-preview-card">
+            <div class="publish-preview-image">
+                <i class="bi bi-tools" aria-hidden="true"></i>
+            </div>
+            <div class="publish-preview-body">
+                <div class="publish-preview-tags">
+                    <span>Gasfiteria</span>
+                    <span>Santiago</span>
+                </div>
+                <h2>Reparaciones de gasfiteria a domicilio</h2>
+                <p>
+                    Destapes, filtraciones, cambios de llaves y reparaciones menores. Atencion en la comuna y alrededores.
+                </p>
+                <div class="publish-preview-provider">
+                    <span class="publish-avatar">MR</span>
+                    <div>
+                        <strong>Marcela Rojas</strong>
+                        <small>Oferente verificado</small>
+                    </div>
+                </div>
+                <div class="publish-preview-actions">
+                    <button type="button" class="btn btn-primary btn-sm"><i class="bi bi-chat-dots" aria-hidden="true"></i>Enviar mensaje</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm"><i class="bi bi-telephone" aria-hidden="true"></i>Ver telefono</button>
+                </div>
+            </div>
+        </div>
+        <div class="publish-preview-note">
+            <i class="bi bi-arrow-up-right-circle bridge-color" aria-hidden="true"></i>
+            Las personas podran ver tu aviso, revisar lo que ofreces y contactarte desde TalentBridge.
+        </div>
+    </div>
+</section>
+
+<section class="publish-panel mb-4">
+    <div class="publish-panel-header">
+        <h2>Que puedes publicar?</h2>
+        <p>Servicios reales que personas de tu sector podrian estar buscando hoy.</p>
+    </div>
+    <div class="publish-category-grid">
+        <span><i class="bi bi-tools" aria-hidden="true"></i>Reparaciones</span>
+        <span><i class="bi bi-droplet" aria-hidden="true"></i>Gasfiteria</span>
+        <span><i class="bi bi-lightning-charge" aria-hidden="true"></i>Electricidad</span>
+        <span><i class="bi bi-mortarboard" aria-hidden="true"></i>Clases</span>
+        <span><i class="bi bi-scissors" aria-hidden="true"></i>Belleza</span>
+        <span><i class="bi bi-house-heart" aria-hidden="true"></i>Limpieza</span>
+        <span><i class="bi bi-calendar-event" aria-hidden="true"></i>Eventos</span>
+        <span><i class="bi bi-briefcase" aria-hidden="true"></i>Asesorias</span>
     </div>
 </section>
 
