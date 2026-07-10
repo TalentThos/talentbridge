@@ -6,16 +6,16 @@
 <body>
 <div class="page-hero text-center">
     <div class="hero-kicker"><i class="bi bi-geo-alt" aria-hidden="true"></i>Servicios cercanos en Chile</div>
-    <h1 class="mb-3">Busca servicios o publica <span class="bridge-color">tu talento gratis</span></h1>
+    <h1 class="mb-3">Busca servicios o publica <span class="bridge-color">tu talento</span></h1>
     <p class="mb-4 fs-5">TalentBridge conecta personas que necesitan ayuda con quienes ofrecen oficios, clases, reparaciones, eventos y servicios profesionales.</p>
     <div class="page-actions">
         <a class="btn btn-primary btn-lg" th:href="@{/buscar}"><i class="bi bi-search-heart" aria-hidden="true"></i>Busco un servicio</a>
-        <a class="btn btn-success btn-lg" th:href="@{/publicar-servicio}"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar gratis</a>
+        <a class="btn btn-success btn-lg" th:href="@{/publicar-servicio}"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar mi servicio</a>
     </div>
     <div class="home-trust-list">
         <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado</span>
         <span><i class="bi bi-pencil-square bridge-color" aria-hidden="true"></i>Edita tu publicacion</span>
-        <span><i class="bi bi-image bridge-color" aria-hidden="true"></i>Imagenes moderadas</span>
+        <span><i class="bi bi-cash-coin bridge-color" aria-hidden="true"></i>Pago directo entre usuarios</span>
     </div>
 
     <div class="home-account-actions" th:if="${#authorization.expression('isAnonymous()')}">
@@ -23,7 +23,7 @@
         <p class="text-muted small">Crea tu cuenta en menos de 1 minuto y empieza a mostrar tu servicio.</p>
         <div class="home-account-buttons">
             <a class="btn btn-success" th:href="@{/registro}">
-                <i class="bi bi-person-plus" aria-hidden="true"></i>Crear cuenta gratis
+                <i class="bi bi-person-plus" aria-hidden="true"></i>Crear cuenta
             </a>
             <a class="btn btn-outline-primary" th:href="@{/login}">
                 <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ingresar

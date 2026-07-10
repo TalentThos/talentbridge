@@ -23,8 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +48,9 @@ public class ServicioServiceImpl implements ServicioService {
                 .linkedin(s.getLinkedin())
                 .instagram(s.getInstagram())
                 .numeroMovil(s.getNumeroMovil())
+                .tipoValorizacion(s.getTipoValorizacion())
+                .valorReferencial(s.getValorReferencial())
+                .valorizacionTexto(formatearValorizacion(s.getTipoValorizacion(), s.getValorReferencial()))
                 .categoriaId(s.getCategoria() != null ? s.getCategoria().getId() : null)
                 .categoriaNombre(s.getCategoria() != null ? s.getCategoria().getNombre() : null)
                 .subcategoriaId(s.getSubcategoria() != null ? s.getSubcategoria().getId() : null)
@@ -86,6 +92,8 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setLinkedin(dto.getLinkedin());
         servicio.setInstagram(dto.getInstagram());
         servicio.setNumeroMovil(normalizarTexto(dto.getNumeroMovil()));
+        servicio.setTipoValorizacion(normalizarTipoValorizacion(dto.getTipoValorizacion()));
+        servicio.setValorReferencial(normalizarValorReferencial(dto.getValorReferencial(), servicio.getTipoValorizacion()));
         servicio.setCategoria(categoria);
         servicio.setSubcategoria(subcategoria);
         servicio.setUsuario(usuario);
@@ -170,6 +178,8 @@ public class ServicioServiceImpl implements ServicioService {
         servicio.setLinkedin(dto.getLinkedin());
         servicio.setInstagram(dto.getInstagram());
         servicio.setNumeroMovil(normalizarTexto(dto.getNumeroMovil()));
+        servicio.setTipoValorizacion(normalizarTipoValorizacion(dto.getTipoValorizacion()));
+        servicio.setValorReferencial(normalizarValorReferencial(dto.getValorReferencial(), servicio.getTipoValorizacion()));
 
         if (dto.getImagenesEliminar() != null && !dto.getImagenesEliminar().isEmpty()) {
             servicio.getImagenes().removeIf(img -> dto.getImagenesEliminar().contains(img.getId()));
@@ -208,6 +218,41 @@ public class ServicioServiceImpl implements ServicioService {
 
     private String normalizarTexto(String valor) {
         return valor == null || valor.isBlank() ? null : valor.trim();
+    }
+
+    private String normalizarTipoValorizacion(String tipoValorizacion) {
+        if (tipoValorizacion == null || tipoValorizacion.isBlank()) {
+            return "A_CONVENIR";
+        }
+        String valor = tipoValorizacion.trim().toUpperCase(Locale.ROOT);
+        return switch (valor) {
+            case "POR_HORA", "POR_TRABAJO", "A_CONVENIR" -> valor;
+            default -> "A_CONVENIR";
+        };
+    }
+
+    private BigDecimal normalizarValorReferencial(BigDecimal valorReferencial, String tipoValorizacion) {
+        if ("A_CONVENIR".equals(tipoValorizacion) || valorReferencial == null || valorReferencial.signum() <= 0) {
+            return null;
+        }
+        return valorReferencial;
+    }
+
+    private String formatearValorizacion(String tipoValorizacion, BigDecimal valorReferencial) {
+        String tipo = normalizarTipoValorizacion(tipoValorizacion);
+        if ("A_CONVENIR".equals(tipo)) {
+            return "Valor a convenir";
+        }
+
+        String monto = valorReferencial != null && valorReferencial.signum() > 0
+                ? NumberFormat.getCurrencyInstance(Locale.forLanguageTag("es-CL")).format(valorReferencial)
+                : "Valor referencial";
+
+        return switch (tipo) {
+            case "POR_HORA" -> monto + " por hora";
+            case "POR_TRABAJO" -> monto + " por trabajo";
+            default -> "Valor a convenir";
+        };
     }
 
     private String iconoSubcategoria(Subcategoria subcategoria) {

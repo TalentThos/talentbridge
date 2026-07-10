@@ -49,6 +49,10 @@
                 </div>
                 <h5 th:text="${s.titulo}"></h5>
                 <p class="service-result-description" th:text="${s.descripcion}"></p>
+                <div class="service-result-price" th:if="${s.valorizacionTexto != null}">
+                    <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                    <span th:text="${s.valorizacionTexto}">Valor a convenir</span>
+                </div>
                 <div class="service-result-provider">
                     <span class="service-result-avatar" th:text="${s.usuarioNombre != null and !#strings.isEmpty(s.usuarioNombre) ? #strings.substring(s.usuarioNombre, 0, 1) : 'T'}">T</span>
                     <div>

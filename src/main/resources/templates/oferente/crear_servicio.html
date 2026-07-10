@@ -24,6 +24,23 @@
             <input type="tel" th:field="*{numeroMovil}" class="form-control" placeholder="Ej: +56 9 1234 5678">
             <div class="form-text">Opcional. Si lo agregas, se mostrara junto a tu servicio en la busqueda.</div>
         </div>
+        <div class="row g-3">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Forma de cobro</label>
+                <select th:field="*{tipoValorizacion}" id="tipoValorizacion" class="form-select" required>
+                    <option value="A_CONVENIR">A convenir con el contratante</option>
+                    <option value="POR_HORA">Valor por hora</option>
+                    <option value="POR_TRABAJO">Valor por trabajo</option>
+                </select>
+                <div class="form-text">El pago se acuerda directamente entre quien publica y quien contrata.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Valor referencial</label>
+                <input type="number" th:field="*{valorReferencial}" id="valorReferencial" class="form-control"
+                       min="0" step="100" placeholder="Ej: 15000">
+                <div class="form-text">Opcional si el valor sera a convenir.</div>
+            </div>
+        </div>
         <div class="mb-3">
             <label class="form-label">Categoría</label>
             <select th:field="*{categoriaId}" id="categoria" class="form-select" required>
@@ -67,6 +84,8 @@
     const subcategoriaSelect = document.getElementById('subcategoria');
     const inputImagenes = document.getElementById('imagenes');
     const inputNumeroMovil = form.querySelector('[name="numeroMovil"]');
+    const inputTipoValorizacion = form.querySelector('[name="tipoValorizacion"]');
+    const inputValorReferencial = form.querySelector('[name="valorReferencial"]');
     const imagenesEliminarContainer = document.getElementById('imagenesEliminarContainer');
     const guardarServicioButton = document.getElementById('guardarServicioButton');
     const servicioLoadingModalElement = document.getElementById('servicioLoadingModal');
@@ -90,7 +109,19 @@
     form.querySelectorAll('input[required], textarea[required], select[required]')
       .forEach(input => agregarBadgeCampo(input, 'Obligatorio', 'text-bg-primary'));
     agregarBadgeCampo(inputNumeroMovil, 'Opcional', 'text-bg-secondary');
+    agregarBadgeCampo(inputValorReferencial, 'Opcional', 'text-bg-secondary');
     agregarBadgeCampo(inputImagenes, 'Opcional', 'text-bg-secondary');
+
+    function actualizarValorReferencial() {
+      const esAConvenir = inputTipoValorizacion && inputTipoValorizacion.value === 'A_CONVENIR';
+      if (!inputValorReferencial) return;
+      inputValorReferencial.disabled = esAConvenir;
+      if (esAConvenir) inputValorReferencial.value = '';
+      inputValorReferencial.placeholder = esAConvenir ? 'Se acordara directamente' : 'Ej: 15000';
+    }
+
+    inputTipoValorizacion?.addEventListener('change', actualizarValorReferencial);
+    actualizarValorReferencial();
 
     if (inputImagenes) {
       const ayudaImagenes = document.createElement('div');
@@ -252,6 +283,8 @@
       params.set('titulo', form.querySelector('[name="titulo"]').value.trim());
       params.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
       params.set('numeroMovil', inputNumeroMovil.value.trim());
+      params.set('tipoValorizacion', inputTipoValorizacion.value);
+      params.set('valorReferencial', inputValorReferencial.disabled ? '' : inputValorReferencial.value.trim());
       params.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
       params.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
       imagenesEliminarContainer
@@ -266,6 +299,8 @@
       fd.set('titulo', form.querySelector('[name="titulo"]').value.trim());
       fd.set('descripcion', form.querySelector('[name="descripcion"]').value.trim());
       fd.set('numeroMovil', inputNumeroMovil.value.trim());
+      fd.set('tipoValorizacion', inputTipoValorizacion.value);
+      fd.set('valorReferencial', inputValorReferencial.disabled ? '' : inputValorReferencial.value.trim());
       fd.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
       fd.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
 

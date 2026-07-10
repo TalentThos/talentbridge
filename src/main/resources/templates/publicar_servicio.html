@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
 <head>
-    <title>Publicar servicio gratis</title>
+    <title>Publicar servicio</title>
 </head>
 <body>
 <section class="publish-landing">
@@ -9,11 +9,12 @@
         <div class="hero-kicker"><i class="bi bi-stars" aria-hidden="true"></i>Para personas que ofrecen servicios</div>
         <h1>Crea tu aviso y deja que te encuentren cuando necesiten tu servicio</h1>
         <p class="lead">
-            Muestra lo que haces, tu comuna y una forma de contacto. Tu aviso quedara disponible para personas que buscan ayuda cerca.
+            Muestra lo que haces, tu comuna, como cobras y una forma de contacto. Tu aviso quedara disponible para personas que buscan ayuda cerca.
+            Tu servicio lo cobras tu; el pago se acuerda directamente con quien te contrate.
         </p>
         <div class="page-actions justify-content-start">
             <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/registro}">
-                <i class="bi bi-megaphone" aria-hidden="true"></i>Crear mi aviso gratis
+                <i class="bi bi-megaphone" aria-hidden="true"></i>Crear mi aviso
             </a>
             <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/ofrecer}">
                 <i class="bi bi-megaphone" aria-hidden="true"></i>Publicar mi servicio
@@ -23,7 +24,7 @@
             </a>
         </div>
         <div class="home-trust-list justify-content-start">
-            <span><i class="bi bi-cash-coin bridge-color" aria-hidden="true"></i>Publicar es gratis</span>
+            <span><i class="bi bi-cash-coin bridge-color" aria-hidden="true"></i>Tu defines el valor</span>
             <span><i class="bi bi-pencil-square bridge-color" aria-hidden="true"></i>Editable cuando quieras</span>
             <span><i class="bi bi-eye bridge-color" aria-hidden="true"></i>Visible en busquedas</span>
         </div>
@@ -47,6 +48,10 @@
                 <p>
                     Destapes, filtraciones, cambios de llaves y reparaciones menores. Atencion en la comuna y alrededores.
                 </p>
+                <div class="service-result-price">
+                    <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                    <span>$18.000 por trabajo</span>
+                </div>
                 <div class="publish-preview-provider">
                     <span class="publish-avatar">MR</span>
                     <div>
@@ -62,7 +67,7 @@
         </div>
         <div class="publish-preview-note">
             <i class="bi bi-arrow-up-right-circle bridge-color" aria-hidden="true"></i>
-            Las personas podran ver tu aviso, revisar lo que ofreces y contactarte desde TalentBridge.
+            Las personas podran ver tu aviso, revisar lo que ofreces y contactarte. El valor y pago se acuerdan directamente entre ustedes.
         </div>
     </div>
 </section>

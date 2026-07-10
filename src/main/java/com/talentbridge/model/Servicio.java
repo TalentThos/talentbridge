@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,10 @@ public class Servicio {
     private String instagram;
 
     private String numeroMovil;
+
+    private String tipoValorizacion;
+
+    private BigDecimal valorReferencial;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")

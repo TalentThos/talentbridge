@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -25,6 +26,9 @@ public class ServicioDTO {
     private String linkedin;
     private String instagram;
     private String numeroMovil;
+    private String tipoValorizacion;
+    private BigDecimal valorReferencial;
+    private String valorizacionTexto;
     private Long categoriaId;
     private String categoriaNombre;
     private Long subcategoriaId;

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:replace="${_arg1}">TalentBridge</title>
+    <link rel="icon" type="image/png" sizes="64x64" th:href="@{/img/favicon.png}">
+    <link rel="apple-touch-icon" th:href="@{/img/favicon.png}">
 
     <script th:src="@{/js/utils.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -450,6 +452,18 @@
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+        .service-result-price {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+            color: #0f766e;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+        .service-result-price i {
+            font-size: 1rem;
         }
         .service-result-provider {
             display: flex;
