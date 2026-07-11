@@ -20,6 +20,9 @@
 
         <h4 class="text-center mb-2">Crea tu cuenta</h4>
         <p class="text-center text-muted small mb-3">Solo pedimos lo necesario para crear tu cuenta. Despues podras completar tu perfil.</p>
+        <div id="draftRegisterHint" class="alert alert-info d-none" role="alert">
+            Tu aviso quedo guardado. Crea tu cuenta para verificar tu correo y publicarlo.
+        </div>
 
         <div class="registration-helper">
             <strong><i class="bi bi-lightning-charge bridge-color" aria-hidden="true"></i> Registro mas rapido</strong>
@@ -181,6 +184,12 @@
 
 <script>
    document.addEventListener("DOMContentLoaded", function () {
+       const draftHint = document.getElementById("draftRegisterHint");
+       if (localStorage.getItem("talentbridge_servicio_draft")) {
+           sessionStorage.setItem("talentbridge_continuar_borrador", "1");
+           draftHint?.classList.remove("d-none");
+       }
+
        const politicaLink = document.querySelector('a[href$="/politicas/privacidad"]');
        const condicionesLink = document.querySelector('a[href$="/politicas/condiciones"]');
 

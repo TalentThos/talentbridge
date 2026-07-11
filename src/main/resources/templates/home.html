@@ -22,8 +22,8 @@
         <p class="fw-semibold">Ofreces gasfiteria, clases, belleza, limpieza, reparaciones o asesorias?</p>
         <p class="text-muted small">Crea tu cuenta en menos de 1 minuto y empieza a mostrar tu servicio.</p>
         <div class="home-account-buttons">
-            <a class="btn btn-success" th:href="@{/registro}">
-                <i class="bi bi-person-plus" aria-hidden="true"></i>Crear cuenta
+            <a class="btn btn-success" th:href="@{/publicar-servicio}">
+                <i class="bi bi-megaphone" aria-hidden="true"></i>Crear mi aviso
             </a>
             <a class="btn btn-outline-primary" th:href="@{/login}">
                 <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ingresar
@@ -49,5 +49,14 @@
         <p>Cocteleria, DJs, fotografia y apoyo para tu ocasion.</p>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tieneBorrador = localStorage.getItem('talentbridge_servicio_draft');
+    const debeContinuar = sessionStorage.getItem('talentbridge_continuar_borrador');
+    if (tieneBorrador && debeContinuar) {
+        window.location.href = '/ofrecer';
+    }
+});
+</script>
 </body>
 </html>

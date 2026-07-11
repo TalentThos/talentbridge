@@ -133,10 +133,32 @@
     const servicioId = /*[[${servicio.id}]]*/ null;
     const imagenesExistentes = /*[[${servicio.imagenesExistentes}]]*/ [];
     const esEdicion = servicioId !== null;
+    const DRAFT_KEY = 'talentbridge_servicio_draft';
+    let draftPendiente = null;
+
+    if (!esEdicion) {
+      try {
+        draftPendiente = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+      } catch (e) {
+        draftPendiente = null;
+      }
+
+      if (draftPendiente) {
+        form.querySelector('[name="titulo"]').value = draftPendiente.titulo || '';
+        form.querySelector('[name="descripcion"]').value = draftPendiente.descripcion || '';
+        inputNumeroMovil.value = draftPendiente.numeroMovil || '';
+        inputTipoValorizacion.value = draftPendiente.tipoValorizacion || 'A_CONVENIR';
+        inputValorReferencial.value = draftPendiente.valorReferencial || '';
+        categoriaSelect.value = draftPendiente.categoriaId || categoriaSelect.value;
+        actualizarValorReferencial();
+      }
+    }
 
     // Valor inicial de subcategoría desde el modelo (no desde el DOM)
     const subcategoriaInicial = /*[[${servicio.subcategoriaId}]]*/ null;
-    const subcategoriaInicialStr = subcategoriaInicial != null ? String(subcategoriaInicial) : null;
+    const subcategoriaInicialStr = subcategoriaInicial != null
+      ? String(subcategoriaInicial)
+      : (draftPendiente && draftPendiente.subcategoriaId ? String(draftPendiente.subcategoriaId) : null);
     let debePreseleccionarSubcat = !!subcategoriaInicialStr;
 
     // -----------------------------
@@ -377,6 +399,8 @@
               } else {
                 form.reset();
                 if (pond) pond.removeFiles();
+                localStorage.removeItem(DRAFT_KEY);
+                sessionStorage.removeItem('talentbridge_continuar_borrador');
                 guardarServicioButton.disabled = false;
                 guardarServicioButton.textContent = textoOriginalBoton;
               }

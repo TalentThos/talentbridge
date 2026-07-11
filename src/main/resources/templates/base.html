@@ -254,6 +254,17 @@
         .publish-preview-card {
             padding: 1rem;
         }
+        .publish-draft-form {
+            padding: 1rem;
+        }
+        .publish-draft-form .form-label {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .publish-draft-form .form-control,
+        .publish-draft-form .form-select {
+            min-height: 2.75rem;
+        }
         .publish-preview-image {
             height: 150px;
             display: flex;
@@ -664,7 +675,7 @@
                     <a class="nav-link" th:href="@{/login}"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ingresar</a>
                 </li>
                 <li class="nav-item" th:if="${#authorization.expression('isAnonymous()')}">
-                    <a class="nav-link" th:href="@{/registro}"><i class="bi bi-person-plus" aria-hidden="true"></i>Registrarse</a>
+                    <a class="nav-link" th:href="@{/publicar-servicio}"><i class="bi bi-person-plus" aria-hidden="true"></i>Crear aviso</a>
                 </li>
                 <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
                     <form action="/logout" method="post">

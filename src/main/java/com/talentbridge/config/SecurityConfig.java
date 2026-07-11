@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/home",
+                                "/buscar",
                                 "/publicar-servicio",
                                 "/politicas/**",
                                 "/registro/**",
@@ -61,6 +62,8 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/img/**",
+                                "/api/categorias/**",
+                                "/api/servicios/*/imagenes",
                                 "/api/registro/paso1",
                                 "/api/registro/paso2",
                                 "/api/registro/verificar-codigo",

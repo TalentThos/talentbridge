@@ -7,110 +7,279 @@
 <section class="publish-landing">
     <div class="publish-hero">
         <div class="hero-kicker"><i class="bi bi-stars" aria-hidden="true"></i>Para personas que ofrecen servicios</div>
-        <h1>Crea tu aviso y deja que te encuentren cuando necesiten tu servicio</h1>
+        <h1>Crea primero tu aviso. La cuenta viene al final.</h1>
         <p class="lead">
-            Muestra lo que haces, tu comuna, como cobras y una forma de contacto. Tu aviso quedara disponible para personas que buscan ayuda cerca.
-            Tu servicio lo cobras tu; el pago se acuerda directamente con quien te contrate.
+            Completa lo que ofreces, como cobras y donde atiendes. Tu decides el valor de tu servicio y el pago se acuerda
+            directamente con quien te contacte.
         </p>
-        <div class="page-actions justify-content-start">
-            <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/registro}">
-                <i class="bi bi-megaphone" aria-hidden="true"></i>Crear mi aviso
-            </a>
-            <a class="btn btn-success btn-lg" th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/ofrecer}">
-                <i class="bi bi-megaphone" aria-hidden="true"></i>Publicar mi servicio
-            </a>
-            <a class="btn btn-outline-primary btn-lg" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/login}">
-                <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ya tengo cuenta
-            </a>
-        </div>
         <div class="home-trust-list justify-content-start">
             <span><i class="bi bi-cash-coin bridge-color" aria-hidden="true"></i>Tu defines el valor</span>
             <span><i class="bi bi-pencil-square bridge-color" aria-hidden="true"></i>Editable cuando quieras</span>
-            <span><i class="bi bi-eye bridge-color" aria-hidden="true"></i>Visible en busquedas</span>
+            <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado antes de publicar</span>
         </div>
     </div>
 
-    <div class="publish-preview-wrap" aria-label="Vista previa de aviso publicado">
+    <div class="publish-preview-wrap" aria-label="Crear aviso">
         <div class="publish-preview-toolbar">
-            <span><i class="bi bi-search" aria-hidden="true"></i> Busqueda: gasfiter comuna</span>
-            <span class="publish-preview-live">Asi se vera tu aviso</span>
+            <span><i class="bi bi-pencil-square" aria-hidden="true"></i> Crear aviso</span>
+            <span class="publish-preview-live">Paso 1</span>
         </div>
-        <div class="publish-preview-card">
-            <div class="publish-preview-image">
-                <i class="bi bi-tools" aria-hidden="true"></i>
+
+        <form id="publicarDraftForm" class="publish-draft-form">
+            <div class="mb-3">
+                <label class="form-label" for="draftTitulo">Titulo del servicio</label>
+                <input type="text" id="draftTitulo" class="form-control" maxlength="120"
+                       placeholder="Ej: Reparaciones de gasfiteria a domicilio" required>
             </div>
-            <div class="publish-preview-body">
-                <div class="publish-preview-tags">
-                    <span>Gasfiteria</span>
-                    <span>Santiago</span>
+
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="draftCategoria">Categoria</label>
+                    <select id="draftCategoria" class="form-select" required>
+                        <option value="">Selecciona</option>
+                        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
+                    </select>
                 </div>
-                <h2>Reparaciones de gasfiteria a domicilio</h2>
-                <p>
-                    Destapes, filtraciones, cambios de llaves y reparaciones menores. Atencion en la comuna y alrededores.
-                </p>
-                <div class="service-result-price">
-                    <i class="bi bi-cash-coin" aria-hidden="true"></i>
-                    <span>$18.000 por trabajo</span>
-                </div>
-                <div class="publish-preview-provider">
-                    <span class="publish-avatar">MR</span>
-                    <div>
-                        <strong>Marcela Rojas</strong>
-                        <small>Oferente verificado</small>
-                    </div>
-                </div>
-                <div class="publish-preview-actions">
-                    <button type="button" class="btn btn-primary btn-sm"><i class="bi bi-chat-dots" aria-hidden="true"></i>Enviar mensaje</button>
-                    <button type="button" class="btn btn-outline-primary btn-sm"><i class="bi bi-telephone" aria-hidden="true"></i>Ver telefono</button>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="draftSubcategoria">Subcategoria</label>
+                    <select id="draftSubcategoria" class="form-select" required disabled>
+                        <option value="">Selecciona categoria</option>
+                    </select>
                 </div>
             </div>
-        </div>
-        <div class="publish-preview-note">
-            <i class="bi bi-arrow-up-right-circle bridge-color" aria-hidden="true"></i>
-            Las personas podran ver tu aviso, revisar lo que ofreces y contactarte. El valor y pago se acuerdan directamente entre ustedes.
-        </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="draftDescripcion">Descripcion</label>
+                <textarea id="draftDescripcion" class="form-control" rows="4"
+                          placeholder="Cuenta que haces, en que comunas atiendes y que incluye tu servicio." required></textarea>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="draftTipoValorizacion">Forma de cobro</label>
+                    <select id="draftTipoValorizacion" class="form-select" required>
+                        <option value="A_CONVENIR">A convenir con el contratante</option>
+                        <option value="POR_HORA">Valor por hora</option>
+                        <option value="POR_TRABAJO">Valor por trabajo</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="draftValorReferencial">Valor referencial</label>
+                    <input type="number" id="draftValorReferencial" class="form-control" min="0" step="100"
+                           placeholder="Ej: 15000">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="draftNumeroMovil">Telefono de contacto</label>
+                <input type="tel" id="draftNumeroMovil" class="form-control" placeholder="Ej: +56 9 1234 5678">
+                <div class="form-text">Opcional. Tambien podras editarlo antes de publicar.</div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Continuar para publicar
+                </button>
+                <a class="btn btn-outline-primary" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/login}">
+                    <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ya tengo cuenta
+                </a>
+            </div>
+        </form>
     </div>
 </section>
 
 <section class="publish-panel mb-4">
     <div class="publish-panel-header">
-        <h2>Que puedes publicar?</h2>
-        <p>Servicios reales que personas de tu sector podrian estar buscando hoy.</p>
+        <h2>Asi se vera tu aviso</h2>
+        <p>Las personas podran revisar lo que ofreces, ver tu valor referencial y contactarte directamente.</p>
     </div>
-    <div class="publish-category-grid">
-        <span><i class="bi bi-tools" aria-hidden="true"></i>Reparaciones</span>
-        <span><i class="bi bi-droplet" aria-hidden="true"></i>Gasfiteria</span>
-        <span><i class="bi bi-lightning-charge" aria-hidden="true"></i>Electricidad</span>
-        <span><i class="bi bi-mortarboard" aria-hidden="true"></i>Clases</span>
-        <span><i class="bi bi-scissors" aria-hidden="true"></i>Belleza</span>
-        <span><i class="bi bi-house-heart" aria-hidden="true"></i>Limpieza</span>
-        <span><i class="bi bi-calendar-event" aria-hidden="true"></i>Eventos</span>
-        <span><i class="bi bi-briefcase" aria-hidden="true"></i>Asesorias</span>
+    <div class="row g-3">
+        <div class="col-lg-5">
+            <div class="card service-card service-result-card h-100">
+                <div class="service-result-media">
+                    <div class="service-result-placeholder">
+                        <i class="bi bi-tools" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="service-result-tags">
+                        <span id="previewCategoria">Categoria</span>
+                        <span id="previewSubcategoria">Subcategoria</span>
+                    </div>
+                    <h5 id="previewTitulo">Tu servicio aparecera aqui</h5>
+                    <p class="service-result-description" id="previewDescripcion">
+                        Escribe una descripcion clara para que las personas entiendan que ofreces.
+                    </p>
+                    <div class="service-result-price">
+                        <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                        <span id="previewValor">Valor a convenir</span>
+                    </div>
+                    <div class="service-result-provider">
+                        <span class="service-result-avatar">TB</span>
+                        <div>
+                            <strong>Tu nombre</strong>
+                            <small><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Correo verificado</small>
+                        </div>
+                    </div>
+                    <div class="service-result-actions">
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="bi bi-telephone" aria-hidden="true"></i>Contactar
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-images" aria-hidden="true"></i>Ver imagenes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="publish-category-grid h-100">
+                <span><i class="bi bi-tools" aria-hidden="true"></i>Reparaciones</span>
+                <span><i class="bi bi-droplet" aria-hidden="true"></i>Gasfiteria</span>
+                <span><i class="bi bi-lightning-charge" aria-hidden="true"></i>Electricidad</span>
+                <span><i class="bi bi-mortarboard" aria-hidden="true"></i>Clases</span>
+                <span><i class="bi bi-scissors" aria-hidden="true"></i>Belleza</span>
+                <span><i class="bi bi-house-heart" aria-hidden="true"></i>Limpieza</span>
+                <span><i class="bi bi-calendar-event" aria-hidden="true"></i>Eventos</span>
+                <span><i class="bi bi-briefcase" aria-hidden="true"></i>Asesorias</span>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="row g-3 mt-4 publish-steps">
-    <div class="col-md-4">
-        <div class="feature-card">
-            <span class="icon-badge"><i class="bi bi-person-check" aria-hidden="true"></i></span>
-            <h4>Crea tu cuenta</h4>
-            <p>Registrate con tus datos basicos para que podamos verificar tu correo.</p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="feature-card">
-            <span class="icon-badge"><i class="bi bi-card-text" aria-hidden="true"></i></span>
-            <h4>Describe tu servicio</h4>
-            <p>Cuenta que haces, en que categoria trabajas y agrega imagenes si quieres destacar.</p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="feature-card">
-            <span class="icon-badge"><i class="bi bi-search-heart" aria-hidden="true"></i></span>
-            <h4>Aparece en busquedas</h4>
-            <p>Tu servicio quedara disponible para personas que busquen ayuda en TalentBridge.</p>
-        </div>
-    </div>
-</section>
+<script th:inline="javascript">
+document.addEventListener('DOMContentLoaded', function () {
+    const DRAFT_KEY = 'talentbridge_servicio_draft';
+    const form = document.getElementById('publicarDraftForm');
+    const categoria = document.getElementById('draftCategoria');
+    const subcategoria = document.getElementById('draftSubcategoria');
+    const tipoValorizacion = document.getElementById('draftTipoValorizacion');
+    const valorReferencial = document.getElementById('draftValorReferencial');
+    const isAuthenticated = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
+
+    const previewTitulo = document.getElementById('previewTitulo');
+    const previewDescripcion = document.getElementById('previewDescripcion');
+    const previewCategoria = document.getElementById('previewCategoria');
+    const previewSubcategoria = document.getElementById('previewSubcategoria');
+    const previewValor = document.getElementById('previewValor');
+
+    function textoSelect(select, fallback) {
+        return select.selectedOptions && select.selectedOptions.length
+            ? (select.selectedOptions[0].textContent || fallback)
+            : fallback;
+    }
+
+    function valorTexto() {
+        const tipo = tipoValorizacion.value;
+        const monto = valorReferencial.value ? Number(valorReferencial.value).toLocaleString('es-CL', {
+            style: 'currency',
+            currency: 'CLP',
+            maximumFractionDigits: 0
+        }) : 'Valor referencial';
+
+        if (tipo === 'POR_HORA') return `${monto} por hora`;
+        if (tipo === 'POR_TRABAJO') return `${monto} por trabajo`;
+        return 'Valor a convenir';
+    }
+
+    function actualizarValorReferencial() {
+        const esAConvenir = tipoValorizacion.value === 'A_CONVENIR';
+        valorReferencial.disabled = esAConvenir;
+        if (esAConvenir) valorReferencial.value = '';
+        valorReferencial.placeholder = esAConvenir ? 'Se acordara directamente' : 'Ej: 15000';
+    }
+
+    function actualizarPreview() {
+        previewTitulo.textContent = document.getElementById('draftTitulo').value.trim() || 'Tu servicio aparecera aqui';
+        previewDescripcion.textContent = document.getElementById('draftDescripcion').value.trim()
+            || 'Escribe una descripcion clara para que las personas entiendan que ofreces.';
+        previewCategoria.textContent = categoria.value ? textoSelect(categoria, 'Categoria') : 'Categoria';
+        previewSubcategoria.textContent = subcategoria.value ? textoSelect(subcategoria, 'Subcategoria') : 'Subcategoria';
+        previewValor.textContent = valorTexto();
+    }
+
+    async function cargarSubcategorias(categoriaId, selectedValue) {
+        subcategoria.innerHTML = '<option value="">Selecciona subcategoria</option>';
+        subcategoria.disabled = true;
+        if (!categoriaId) {
+            subcategoria.innerHTML = '<option value="">Selecciona categoria</option>';
+            actualizarPreview();
+            return;
+        }
+
+        const response = await fetch(`/api/categorias/${categoriaId}/subcategorias`);
+        if (!response.ok) return;
+        const data = await response.json();
+        data.forEach(sc => {
+            const option = document.createElement('option');
+            option.value = String(sc.id);
+            option.textContent = sc.nombre;
+            subcategoria.appendChild(option);
+        });
+        subcategoria.disabled = false;
+        if (selectedValue) subcategoria.value = String(selectedValue);
+        actualizarPreview();
+    }
+
+    function leerDraft() {
+        try {
+            return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function restaurarDraft() {
+        const draft = leerDraft();
+        if (!draft) return;
+        document.getElementById('draftTitulo').value = draft.titulo || '';
+        document.getElementById('draftDescripcion').value = draft.descripcion || '';
+        document.getElementById('draftNumeroMovil').value = draft.numeroMovil || '';
+        tipoValorizacion.value = draft.tipoValorizacion || 'A_CONVENIR';
+        valorReferencial.value = draft.valorReferencial || '';
+        categoria.value = draft.categoriaId || '';
+        actualizarValorReferencial();
+        await cargarSubcategorias(categoria.value, draft.subcategoriaId);
+        actualizarPreview();
+    }
+
+    function guardarDraft() {
+        const draft = {
+            titulo: document.getElementById('draftTitulo').value.trim(),
+            descripcion: document.getElementById('draftDescripcion').value.trim(),
+            numeroMovil: document.getElementById('draftNumeroMovil').value.trim(),
+            tipoValorizacion: tipoValorizacion.value,
+            valorReferencial: valorReferencial.disabled ? '' : valorReferencial.value.trim(),
+            categoriaId: categoria.value,
+            subcategoriaId: subcategoria.value,
+            creadoEn: new Date().toISOString()
+        };
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        sessionStorage.setItem('talentbridge_continuar_borrador', '1');
+    }
+
+    categoria.addEventListener('change', () => cargarSubcategorias(categoria.value));
+    tipoValorizacion.addEventListener('change', () => {
+        actualizarValorReferencial();
+        actualizarPreview();
+    });
+    form.querySelectorAll('input, textarea, select').forEach(el => el.addEventListener('input', actualizarPreview));
+    subcategoria.addEventListener('change', actualizarPreview);
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            return;
+        }
+        guardarDraft();
+        window.location.href = isAuthenticated ? '/ofrecer' : '/registro';
+    });
+
+    actualizarValorReferencial();
+    restaurarDraft();
+    actualizarPreview();
+});
+</script>
 </body>
 </html>
