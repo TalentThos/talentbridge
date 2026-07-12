@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: base(~{::body}, ~{::title})}">
 <head>
     <title th:text="${servicio.id} != null ? 'Editar servicio' : 'Publicar servicio'">Publicar servicio</title>
 </head>
@@ -8,21 +8,21 @@
     <h2 class="mb-4" th:text="${servicio.id} != null ? 'Editar servicio' : 'Publicar nuevo servicio'">Publicar nuevo servicio</h2>
     <p class="text-muted small mb-3">
         Los campos marcados como <span class="badge text-bg-primary">Obligatorio</span> son necesarios para publicar.
-        Los campos <span class="badge text-bg-secondary">Opcional</span> puedes completarlos despues.
+        Los campos <span class="badge text-bg-secondary">Opcional</span> puedes completarlos despu&eacute;s.
     </p>
     <form id="crearServicioForm" th:object="${servicio}" enctype="multipart/form-data">
         <div class="mb-3">
-            <label class="form-label">Título del servicio</label>
+            <label class="form-label">T&iacute;tulo del servicio</label>
             <input type="text" th:field="*{titulo}" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">Descripción</label>
+            <label class="form-label">Descripci&oacute;n</label>
             <textarea th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
         </div>
         <div class="mb-3">
-            <label class="form-label">Telefono de contacto</label>
+            <label class="form-label">Tel&eacute;fono de contacto</label>
             <input type="tel" th:field="*{numeroMovil}" class="form-control" placeholder="Ej: +56 9 1234 5678">
-            <div class="form-text">Opcional. Si lo agregas, se mostrara junto a tu servicio en la busqueda.</div>
+            <div class="form-text">Opcional. Si lo agregas, se mostrar&aacute; junto a tu servicio en la b&uacute;squeda.</div>
         </div>
         <div class="row g-3">
             <div class="col-md-6 mb-3">
@@ -38,22 +38,22 @@
                 <label class="form-label">Valor referencial</label>
                 <input type="number" th:field="*{valorReferencial}" id="valorReferencial" class="form-control"
                        min="0" step="100" placeholder="Ej: 15000">
-                <div class="form-text">Opcional si el valor sera a convenir.</div>
+                <div class="form-text">Opcional si el valor ser&aacute; a convenir.</div>
             </div>
         </div>
         <div class="mb-3">
-            <label class="form-label">Categoría</label>
+            <label class="form-label">Categor&iacute;a</label>
             <select th:field="*{categoriaId}" id="categoria" class="form-select" required>
                 <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Subcategoría</label>
+            <label class="form-label">Subcategor&iacute;a</label>
             <select th:field="*{subcategoriaId}" id="subcategoria" class="form-select" required></select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Imágenes</label>
-            <input type="file" th:field="*{imagenes}" id="imagenes" multiple />
+            <label class="form-label">Im&aacute;genes</label>
+            <input type="file" th:field="*{imagenes}" id="imagenes" multiple>
             <div id="imagenesEliminarContainer"></div>
         </div>
         <button type="submit" class="btn btn-success" id="guardarServicioButton"
@@ -76,9 +76,6 @@
 
 <script th:inline="javascript">
   document.addEventListener('DOMContentLoaded', function () {
-    // -----------------------------
-    // DOM y datos Thymeleaf
-    // -----------------------------
     const form = document.getElementById('crearServicioForm');
     const categoriaSelect = document.getElementById('categoria');
     const subcategoriaSelect = document.getElementById('subcategoria');
@@ -117,7 +114,7 @@
       if (!inputValorReferencial) return;
       inputValorReferencial.disabled = esAConvenir;
       if (esAConvenir) inputValorReferencial.value = '';
-      inputValorReferencial.placeholder = esAConvenir ? 'Se acordara directamente' : 'Ej: 15000';
+      inputValorReferencial.placeholder = esAConvenir ? 'Se acordar\u00e1 directamente' : 'Ej: 15000';
     }
 
     inputTipoValorizacion?.addEventListener('change', actualizarValorReferencial);
@@ -126,7 +123,7 @@
     if (inputImagenes) {
       const ayudaImagenes = document.createElement('div');
       ayudaImagenes.className = 'form-text mb-2';
-      ayudaImagenes.textContent = 'Puedes agregar imagenes para que tu servicio destaque mas.';
+      ayudaImagenes.textContent = 'Puedes agregar im\u00e1genes para que tu servicio destaque m\u00e1s.';
       inputImagenes.insertAdjacentElement('beforebegin', ayudaImagenes);
     }
 
@@ -154,25 +151,19 @@
       }
     }
 
-    // Valor inicial de subcategoría desde el modelo (no desde el DOM)
     const subcategoriaInicial = /*[[${servicio.subcategoriaId}]]*/ null;
     const subcategoriaInicialStr = subcategoriaInicial != null
       ? String(subcategoriaInicial)
       : (draftPendiente && draftPendiente.subcategoriaId ? String(draftPendiente.subcategoriaId) : null);
     let debePreseleccionarSubcat = !!subcategoriaInicialStr;
 
-    // -----------------------------
-    // Choices (selects)
-    // -----------------------------
     let subcatChoices = null;
     if (window.Choices) {
       new Choices(categoriaSelect);
       subcatChoices = new Choices(subcategoriaSelect);
     }
 
-    // Cargar subcategorías por categoría y (una sola vez) preseleccionar la inicial
     async function cargarSubcategorias(categoriaId) {
-      // Reset visual/estado antes de cargar
       if (subcatChoices) {
         subcatChoices.clearChoices();
         subcatChoices.removeActiveItems();
@@ -201,7 +192,6 @@
         );
         subcatChoices.enable();
 
-        // Aplicar preselección solo una vez (carga inicial)
         if (debePreseleccionarSubcat && subcategoriaInicialStr) {
           subcatChoices.setChoiceByValue(subcategoriaInicialStr);
           debePreseleccionarSubcat = false;
@@ -222,18 +212,13 @@
       }
     }
 
-    // Cambiar categoría => recargar subcategorías (sin re-forzar la preselección inicial)
     categoriaSelect.addEventListener('change', e => {
       debePreseleccionarSubcat = false;
       cargarSubcategorias(e.target.value);
     });
 
-    // Carga inicial
     cargarSubcategorias(categoriaSelect.value);
 
-    // -----------------------------
-    // Galería de imágenes EXISTENTES (solo vista + marcar para borrar)
-    // -----------------------------
     if (esEdicion && Array.isArray(imagenesExistentes) && imagenesExistentes.length) {
       const galeria = document.createElement('div');
       galeria.id = 'galeriaExistentes';
@@ -263,7 +248,7 @@
         btn.addEventListener('click', () => {
           const marked = btn.classList.toggle('active');
           if (marked) {
-            btn.textContent = 'Se eliminará';
+            btn.textContent = 'Se eliminar\u00e1';
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'imagenesEliminar';
@@ -287,19 +272,15 @@
       });
     }
 
-    // -----------------------------
-    // FilePond SOLO para archivos NUEVOS
-    // -----------------------------
     let pond = null;
     if (window.FilePond) {
       if (window.FilePondPluginImagePreview) FilePond.registerPlugin(FilePondPluginImagePreview);
       pond = FilePond.create(inputImagenes, {
         allowMultiple: true,
-        storeAsFile: true // los nuevos quedan en FilePond; NO confíes en input.files
+        storeAsFile: true
       });
     }
 
-    // Construir x-www-form-urlencoded (sin archivos)
     function construirParamsSinArchivos() {
       const params = new URLSearchParams();
       params.set('titulo', form.querySelector('[name="titulo"]').value.trim());
@@ -315,7 +296,6 @@
       return params;
     }
 
-    // Construir FormData MANUAL con archivos NUEVOS desde FilePond
     function construirFormDataConNuevosArchivos() {
       const fd = new FormData();
       fd.set('titulo', form.querySelector('[name="titulo"]').value.trim());
@@ -326,12 +306,10 @@
       fd.set('categoriaId', form.querySelector('[name="categoriaId"]').value);
       fd.set('subcategoriaId', form.querySelector('[name="subcategoriaId"]').value);
 
-      // ids marcados para eliminar
       imagenesEliminarContainer
         .querySelectorAll('input[name="imagenesEliminar"]')
         .forEach(h => fd.append('imagenesEliminar', h.value));
 
-      // Nuevos archivos desde FilePond
       if (pond) {
         pond.getFiles().forEach(item => {
           if (item && item.file) {
@@ -342,9 +320,6 @@
       return fd;
     }
 
-    // -----------------------------
-    // Envío del formulario
-    // -----------------------------
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -360,11 +335,9 @@
       servicioLoadingModal?.show();
 
       try {
-        // ¿Hay archivos nuevos en FilePond?
         const hayNuevos = pond && pond.getFiles().length > 0;
 
         if (esEdicion && !hayNuevos) {
-          // SIN archivos nuevos => NO multipart
           const params = construirParamsSinArchivos();
           response = await securedFetch(url, {
             method,
@@ -373,7 +346,6 @@
             credentials: 'include'
           });
         } else {
-          // Con archivos nuevos (o creación) => multipart
           const fd = esEdicion ? construirFormDataConNuevosArchivos() : new FormData(form);
           response = await securedFetch(url, {
             method,
@@ -391,10 +363,9 @@
 
         if (response.ok) {
           servicioLoadingModal?.hide();
-          Swal.fire('Éxito', esEdicion ? 'Servicio actualizado correctamente' : 'Servicio creado correctamente', 'success')
+          Swal.fire('\u00c9xito', esEdicion ? 'Servicio actualizado correctamente' : 'Servicio creado correctamente', 'success')
             .then(() => {
               if (esEdicion) {
-                // Recargar para reflejar altas/bajas de imágenes
                 window.location.reload();
               } else {
                 form.reset();
@@ -421,7 +392,5 @@
     });
   });
 </script>
-
-
 </body>
 </html>

@@ -11,7 +11,7 @@
     </div>
     <div class="col-md-3 mb-2 mb-md-0">
         <select name="categoriaId" id="categoria" class="form-select">
-            <option value="" th:text="'Todas las categorias'"></option>
+            <option value="">Todas las categor&iacute;as</option>
             <option th:each="cat : ${categorias}"
                     th:value="${cat.id}"
                     th:text="${cat.nombre}"
@@ -44,8 +44,8 @@
             </div>
             <div class="card-body">
                 <div class="service-result-tags">
-                    <span th:if="${s.categoriaNombre}" th:text="${s.categoriaNombre}">Categoria</span>
-                    <span th:if="${s.subcategoriaNombre}" th:text="${s.subcategoriaNombre}">Subcategoria</span>
+                    <span th:if="${s.categoriaNombre}" th:text="${s.categoriaNombre}">Categor&iacute;a</span>
+                    <span th:if="${s.subcategoriaNombre}" th:text="${s.subcategoriaNombre}">Subcategor&iacute;a</span>
                 </div>
                 <h5 th:text="${s.titulo}"></h5>
                 <p class="service-result-description" th:text="${s.descripcion}"></p>
@@ -68,7 +68,7 @@
                         <i class="bi bi-chat-dots" aria-hidden="true"></i>Mensaje pronto
                     </button>
                     <a th:if="${s.tieneImagenes}" href="#" th:data-id="${s.id}" class="btn btn-sm btn-outline-secondary ver-imagenes">
-                        <i class="bi bi-images" aria-hidden="true"></i>Ver imagenes
+                        <i class="bi bi-images" aria-hidden="true"></i>Ver im&aacute;genes
                     </a>
                 </div>
             </div>
@@ -94,7 +94,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Imagenes del servicio</h5>
+                <h5 class="modal-title">Im&aacute;genes del servicio</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const data = await resp.json();
         if (data.length === 0) return;
         if (subcatChoices) {
-            const opciones = [{ value: '', label: 'Todas las subcategorias', selected: true }]
+            const opciones = [{ value: '', label: 'Todas las subcategor\u00edas', selected: true }]
                 .concat(data.map(sc => ({ value: sc.id, label: sc.nombre })));
             subcatChoices.setChoices(opciones, 'value', 'label', true);
             subcatChoices.enable();
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             const optDefault = document.createElement('option');
             optDefault.value = '';
-            optDefault.textContent = 'Todas las subcategorias';
+            optDefault.textContent = 'Todas las subcategor\u00edas';
             subcategoriaSelect.appendChild(optDefault);
             data.forEach(sc => {
                 const opt = document.createElement('option');
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function cargarPaises() {
         if (!paisSelect) return;
-        paisSelect.innerHTML = '<option value="">Tu pais</option>';
+        paisSelect.innerHTML = '<option value="">Tu pa&iacute;s</option>';
         const opt = document.createElement('option');
         opt.value = 'Chile';
         opt.textContent = 'Chile';

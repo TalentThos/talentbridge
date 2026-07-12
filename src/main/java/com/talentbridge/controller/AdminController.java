@@ -13,6 +13,7 @@ import com.talentbridge.repository.UsuarioRepository;
 import com.talentbridge.tipos.EstadoRegistro;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,14 +27,18 @@ import java.util.Locale;
 public class AdminController {
 
     private static final String ADMIN_SESSION = "TALENTBRIDGE_ADMIN";
-    private static final String ADMIN_USER = "admin";
-    private static final String ADMIN_PASS = "rbak2654";
 
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
     private final SubcategoriaRepository subcategoriaRepository;
     private final ServicioRepository servicioRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${admin.user:admin}")
+    private String adminUser;
+
+    @Value("${admin.password:TbAdmin!2026_S7qP9x}")
+    private String adminPassword;
 
     @GetMapping("/admin/login")
     public String login() {
@@ -45,7 +50,7 @@ public class AdminController {
                           @RequestParam String password,
                           HttpSession session,
                           Model model) {
-        if (ADMIN_USER.equals(usuario) && ADMIN_PASS.equals(password)) {
+        if (adminUser.equals(usuario) && adminPassword.equals(password)) {
             session.setAttribute(ADMIN_SESSION, Boolean.TRUE);
             return "redirect:/admin";
         }

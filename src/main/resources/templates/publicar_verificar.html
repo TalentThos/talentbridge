@@ -9,12 +9,12 @@
         <div class="text-center mb-4">
             <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 72px;">
             <h2 class="fw-bold mt-2">Talent<span class="text-primary">Bridge</span></h2>
-            <p class="text-muted mb-0">Un ultimo paso para publicar tu aviso</p>
+            <p class="text-muted mb-0">Un &uacute;ltimo paso para publicar tu aviso</p>
         </div>
 
         <h4 class="text-center mb-3">Verifica tu correo</h4>
         <p class="text-center text-muted small">
-            Te enviamos un codigo. Al validarlo, tu servicio quedara publicado.
+            Te enviamos un c&oacute;digo. Al validarlo, tu servicio quedar&aacute; publicado.
         </p>
 
         <form id="verificarPublicacionForm">
@@ -22,7 +22,7 @@
                 <input type="email" id="email" class="form-control" placeholder="Correo usado" required>
             </div>
             <div class="mb-3">
-                <input type="text" id="codigo" class="form-control" placeholder="Codigo de verificacion" required>
+                <input type="text" id="codigo" class="form-control" placeholder="C&oacute;digo de verificaci&oacute;n" required>
             </div>
             <button type="submit" class="btn btn-success w-100" id="verificarButton">
                 <i class="bi bi-check-circle" aria-hidden="true"></i>Publicar mi aviso
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     icon: 'success',
                     title: 'Aviso publicado',
-                    text: 'Ahora crea una contrasena para administrarlo.',
+                    text: 'Ahora crea una contraseña para administrarlo.',
                     confirmButtonText: 'Continuar'
                 }).then(() => {
                     window.location.href = '/publicar/crear-password?email=' + encodeURIComponent(emailInput.value.trim());
@@ -70,9 +70,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const text = await response.text();
-            Swal.fire('No pudimos verificar el codigo', text || 'Revisa el codigo e intenta nuevamente.', 'error');
+            Swal.fire('No pudimos verificar el código', text || 'Revisa el código e intenta nuevamente.', 'error');
         } catch (error) {
-            Swal.fire('No pudimos verificar el codigo', error.message || 'Intenta nuevamente.', 'error');
+            Swal.fire('No pudimos verificar el código', error.message || 'Intenta nuevamente.', 'error');
         } finally {
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-check-circle" aria-hidden="true"></i>Publicar mi aviso';

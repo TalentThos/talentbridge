@@ -9,11 +9,11 @@
         <div class="hero-kicker"><i class="bi bi-stars" aria-hidden="true"></i>Para personas que ofrecen servicios</div>
         <h1>Crea primero tu aviso. La cuenta viene al final.</h1>
         <p class="lead">
-            Completa lo que ofreces, como cobras y donde atiendes. Tu decides el valor de tu servicio y el pago se acuerda
+            Completa lo que ofreces, c&oacute;mo cobras y d&oacute;nde atiendes. T&uacute; decides el valor de tu servicio y el pago se acuerda
             directamente con quien te contacte.
         </p>
         <div class="home-trust-list justify-content-start">
-            <span><i class="bi bi-cash-coin bridge-color" aria-hidden="true"></i>Tu defines el valor</span>
+            <span><i class="bi bi-cash-coin bridge-color" aria-hidden="true"></i>T&uacute; defines el valor</span>
             <span><i class="bi bi-pencil-square bridge-color" aria-hidden="true"></i>Editable cuando quieras</span>
             <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado antes de publicar</span>
         </div>
@@ -32,7 +32,7 @@
                     <input type="text" id="draftNombre" class="form-control" placeholder="Ej: Marcela Rojas" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label" for="draftEmail">Correo de verificacion</label>
+                    <label class="form-label" for="draftEmail">Correo de verificaci&oacute;n</label>
                     <input type="email" id="draftEmail" class="form-control" placeholder="tu@email.com" required>
                 </div>
             </div>
@@ -43,31 +43,31 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="draftTitulo">Titulo del servicio</label>
+                <label class="form-label" for="draftTitulo">T&iacute;tulo del servicio</label>
                 <input type="text" id="draftTitulo" class="form-control" maxlength="120"
-                       placeholder="Ej: Reparaciones de gasfiteria a domicilio" required>
+                       placeholder="Ej: Reparaciones de gasfiter&iacute;a a domicilio" required>
             </div>
 
             <div class="row g-3">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label" for="draftCategoria">Categoria</label>
+                    <label class="form-label" for="draftCategoria">Categor&iacute;a</label>
                     <select id="draftCategoria" class="form-select" required>
                         <option value="">Selecciona</option>
                         <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label" for="draftSubcategoria">Subcategoria</label>
+                    <label class="form-label" for="draftSubcategoria">Subcategor&iacute;a</label>
                     <select id="draftSubcategoria" class="form-select" required disabled>
-                        <option value="">Selecciona categoria</option>
+                        <option value="">Selecciona categor&iacute;a</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="draftDescripcion">Descripcion</label>
+                <label class="form-label" for="draftDescripcion">Descripci&oacute;n</label>
                 <textarea id="draftDescripcion" class="form-control" rows="4"
-                          placeholder="Cuenta que haces, en que comunas atiendes y que incluye tu servicio." required></textarea>
+                          placeholder="Cuenta qu&eacute; haces, en qu&eacute; comunas atiendes y qu&eacute; incluye tu servicio." required></textarea>
             </div>
 
             <div class="row g-3">
@@ -87,14 +87,14 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="draftNumeroMovil">Telefono de contacto</label>
+                <label class="form-label" for="draftNumeroMovil">Tel&eacute;fono de contacto</label>
                 <input type="tel" id="draftNumeroMovil" class="form-control" placeholder="Ej: +56 9 1234 5678">
-                <div class="form-text">Opcional. Tambien podras editarlo antes de publicar.</div>
+                <div class="form-text">Opcional. Tambi&eacute;n podr&aacute;s editarlo antes de publicar.</div>
             </div>
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success btn-lg" id="publicarPendienteButton">
-                    <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Enviar codigo y publicar
+                    <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Enviar c&oacute;digo y publicar
                 </button>
                 <a class="btn btn-outline-primary" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/login}">
                     <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ya tengo cuenta
@@ -106,8 +106,8 @@
 
 <section class="publish-panel mb-4">
     <div class="publish-panel-header">
-        <h2>Asi se vera tu aviso</h2>
-        <p>Las personas podran revisar lo que ofreces, ver tu valor referencial y contactarte directamente.</p>
+        <h2>As&iacute; se ver&aacute; tu aviso</h2>
+        <p>Las personas podr&aacute;n revisar lo que ofreces, ver tu valor referencial y contactarte directamente.</p>
     </div>
     <div class="row g-3">
         <div class="col-lg-5">
@@ -119,12 +119,12 @@
                 </div>
                 <div class="card-body">
                     <div class="service-result-tags">
-                        <span id="previewCategoria">Categoria</span>
-                        <span id="previewSubcategoria">Subcategoria</span>
+                        <span id="previewCategoria">Categor&iacute;a</span>
+                        <span id="previewSubcategoria">Subcategor&iacute;a</span>
                     </div>
-                    <h5 id="previewTitulo">Tu servicio aparecera aqui</h5>
+                    <h5 id="previewTitulo">Tu servicio aparecer&aacute; aqu&iacute;</h5>
                     <p class="service-result-description" id="previewDescripcion">
-                        Escribe una descripcion clara para que las personas entiendan que ofreces.
+                        Escribe una descripci&oacute;n clara para que las personas entiendan qu&eacute; ofreces.
                     </p>
                     <div class="service-result-price">
                         <i class="bi bi-cash-coin" aria-hidden="true"></i>
@@ -142,7 +142,7 @@
                             <i class="bi bi-telephone" aria-hidden="true"></i>Contactar
                         </button>
                         <button type="button" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-images" aria-hidden="true"></i>Ver imagenes
+                            <i class="bi bi-images" aria-hidden="true"></i>Ver im&aacute;genes
                         </button>
                     </div>
                 </div>
@@ -151,13 +151,13 @@
         <div class="col-lg-7">
             <div class="publish-category-grid h-100">
                 <span><i class="bi bi-tools" aria-hidden="true"></i>Reparaciones</span>
-                <span><i class="bi bi-droplet" aria-hidden="true"></i>Gasfiteria</span>
+                <span><i class="bi bi-droplet" aria-hidden="true"></i>Gasfiter&iacute;a</span>
                 <span><i class="bi bi-lightning-charge" aria-hidden="true"></i>Electricidad</span>
                 <span><i class="bi bi-mortarboard" aria-hidden="true"></i>Clases</span>
                 <span><i class="bi bi-scissors" aria-hidden="true"></i>Belleza</span>
                 <span><i class="bi bi-house-heart" aria-hidden="true"></i>Limpieza</span>
                 <span><i class="bi bi-calendar-event" aria-hidden="true"></i>Eventos</span>
-                <span><i class="bi bi-briefcase" aria-hidden="true"></i>Asesorias</span>
+                <span><i class="bi bi-briefcase" aria-hidden="true"></i>Asesor&iacute;as</span>
             </div>
         </div>
     </div>
@@ -201,23 +201,23 @@ document.addEventListener('DOMContentLoaded', function () {
         const esAConvenir = tipoValorizacion.value === 'A_CONVENIR';
         valorReferencial.disabled = esAConvenir;
         if (esAConvenir) valorReferencial.value = '';
-        valorReferencial.placeholder = esAConvenir ? 'Se acordara directamente' : 'Ej: 15000';
+        valorReferencial.placeholder = esAConvenir ? 'Se acordará directamente' : 'Ej: 15000';
     }
 
     function actualizarPreview() {
-        previewTitulo.textContent = document.getElementById('draftTitulo').value.trim() || 'Tu servicio aparecera aqui';
+        previewTitulo.textContent = document.getElementById('draftTitulo').value.trim() || 'Tu servicio aparecerá aquí';
         previewDescripcion.textContent = document.getElementById('draftDescripcion').value.trim()
-            || 'Escribe una descripcion clara para que las personas entiendan que ofreces.';
-        previewCategoria.textContent = categoria.value ? textoSelect(categoria, 'Categoria') : 'Categoria';
-        previewSubcategoria.textContent = subcategoria.value ? textoSelect(subcategoria, 'Subcategoria') : 'Subcategoria';
+            || 'Escribe una descripción clara para que las personas entiendan qué ofreces.';
+        previewCategoria.textContent = categoria.value ? textoSelect(categoria, 'Categoría') : 'Categoría';
+        previewSubcategoria.textContent = subcategoria.value ? textoSelect(subcategoria, 'Subcategoría') : 'Subcategoría';
         previewValor.textContent = valorTexto();
     }
 
     async function cargarSubcategorias(categoriaId, selectedValue) {
-        subcategoria.innerHTML = '<option value="">Selecciona subcategoria</option>';
+        subcategoria.innerHTML = '<option value="">Selecciona subcategoría</option>';
         subcategoria.disabled = true;
         if (!categoriaId) {
-            subcategoria.innerHTML = '<option value="">Selecciona categoria</option>';
+            subcategoria.innerHTML = '<option value="">Selecciona categoría</option>';
             actualizarPreview();
             return;
         }
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         submitButton.disabled = true;
-        submitButton.textContent = 'Enviando codigo...';
+        submitButton.textContent = 'Enviando código...';
         try {
             const response = await fetch('/api/publicaciones/pendiente', {
                 method: 'POST',
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
             Swal.fire('No pudimos crear tu aviso', error.message || 'Intenta nuevamente.', 'error');
         } finally {
             submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Enviar codigo y publicar';
+            submitButton.innerHTML = '<i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Enviar c&oacute;digo y publicar';
         }
     });
 

@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="base :: base(~{::body}, ~{::title})">
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="~{base :: base(~{::body}, ~{::title})}">
 <head>
-    <title>Verificación - Paso 2</title>
+    <title>Verificaci&oacute;n - Paso 2</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="bg-white p-5 rounded-4 shadow" style="width: 100%; max-width: 400px;">
         <div class="text-center mb-4">
-            <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 60px;" />
+            <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 60px;">
             <h2 class="fw-bold mt-2">Talent<span class="text-primary">Bridge</span></h2>
             <p class="text-muted mb-0">Conectamos talentos con necesidades reales</p>
         </div>
 
-        <h4 class="text-center mb-3">Paso 2: Verificación</h4>
-        <p class="text-center text-muted">Revisa tu correo y escribe el código que te enviamos</p>
+        <h4 class="text-center mb-3">Paso 2: Verificaci&oacute;n</h4>
+        <p class="text-center text-muted">Revisa tu correo y escribe el c&oacute;digo que te enviamos</p>
 
         <form id="verificacionForm">
             <div class="mb-3">
@@ -22,7 +22,7 @@
             </div>
 
             <div class="mb-3">
-                <input type="text" id="codigo" class="form-control" placeholder="Código de verificación" required>
+                <input type="text" id="codigo" class="form-control" placeholder="C&oacute;digo de verificaci&oacute;n" required>
             </div>
 
             <button type="submit" class="btn btn-primary w-100"><i class="bi bi-shield-check" aria-hidden="true"></i>Verificar</button>
@@ -51,7 +51,7 @@
             if (res.ok) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Código verificado',
+                    title: 'C\u00f3digo verificado',
                     text: 'Tu cuenta ha sido validada.',
                     confirmButtonText: 'Continuar'
                 }).then(() => window.location.href = '/login');

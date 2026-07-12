@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: base(~{::body}, ~{::title})}">
 <head>
     <title>Registro</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -17,12 +17,12 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Correo electrónico</label>
+                <label class="form-label">Correo electr&oacute;nico</label>
                 <input type="email" id="email" class="form-control" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Contraseña</label>
+                <label class="form-label">Contrase&ntilde;a</label>
                 <input type="password" id="password" class="form-control" required>
             </div>
 
@@ -37,11 +37,10 @@
 
             <button type="submit" class="btn btn-primary w-100">Registrarse</button>
             <div class="text-center mt-3">
-                ¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a>
+                &iquest;Ya tienes cuenta? <a th:href="@{/login}">Inicia sesi&oacute;n</a>
             </div>
         </form>
         <script>
-            // Validación visual Bootstrap
             (() => {
                 'use strict';
                 const form = document.querySelector('#registroForm');
@@ -79,7 +78,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'Registro exitoso',
-                    text: 'Puedes iniciar sesión ahora',
+                    text: 'Puedes iniciar sesi\u00f3n ahora',
                     confirmButtonText: 'Ir al login'
                 }).then(() => window.location.href = '/login');
             } else {

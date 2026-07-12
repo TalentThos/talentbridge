@@ -36,7 +36,7 @@
                         <input type="text" th:field="*{ciudad}" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Telefono</label>
+                        <label class="form-label">Tel&eacute;fono</label>
                         <input type="tel" th:field="*{numeroMovil}" class="form-control">
                     </div>
                     <div class="mb-3">
@@ -66,21 +66,21 @@
                         <input type="text" th:field="*{titulo}" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Descripcion</label>
+                        <label class="form-label">Descripci&oacute;n</label>
                         <textarea th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Categoria</label>
+                            <label class="form-label">Categor&iacute;a</label>
                             <select th:field="*{categoriaId}" id="adminCategoria" class="form-select" required>
                                 <option value="">Selecciona</option>
                                 <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"></option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Subcategoria</label>
+                            <label class="form-label">Subcategor&iacute;a</label>
                             <select th:field="*{subcategoriaId}" id="adminSubcategoria" class="form-select" required disabled>
-                                <option value="">Selecciona categoria</option>
+                                <option value="">Selecciona categor&iacute;a</option>
                             </select>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Telefono de contacto</label>
+                        <label class="form-label">Tel&eacute;fono de contacto</label>
                         <input type="tel" th:field="*{numeroMovil}" class="form-control">
                     </div>
                     <button class="btn btn-success w-100" type="submit">Publicar servicio</button>
@@ -111,7 +111,7 @@
 
 <div class="card shadow-sm mt-4">
     <div class="card-body">
-        <h4>Ultimos servicios</h4>
+        <h4>&Uacute;ltimos servicios</h4>
         <div class="table-responsive">
             <table class="table table-sm align-middle">
                 <thead>
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const subcategoria = document.getElementById('adminSubcategoria');
 
     categoria.addEventListener('change', async function () {
-        subcategoria.innerHTML = '<option value="">Selecciona subcategoria</option>';
+        subcategoria.innerHTML = '<option value="">Selecciona subcategoría</option>';
         subcategoria.disabled = true;
         if (!categoria.value) return;
 
