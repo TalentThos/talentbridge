@@ -49,13 +49,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 //.csrf(csrf -> csrf.disable()) // Deshabilita CSRF para APIs
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/login", "/logout"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/admin/**", "/login", "/logout"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
                                 "/home",
                                 "/buscar",
                                 "/publicar-servicio",
+                                "/publicar/verificar",
+                                "/publicar/crear-password",
+                                "/admin/**",
                                 "/politicas/**",
                                 "/registro/**",
                                 "/login",
@@ -64,6 +67,7 @@ public class SecurityConfig {
                                 "/img/**",
                                 "/api/categorias/**",
                                 "/api/servicios/*/imagenes",
+                                "/api/publicaciones/**",
                                 "/api/registro/paso1",
                                 "/api/registro/paso2",
                                 "/api/registro/verificar-codigo",

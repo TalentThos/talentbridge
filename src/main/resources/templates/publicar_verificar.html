@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="base :: base(~{::body}, ~{::title})">
+<head>
+    <title>Verificar aviso - TalentBridge</title>
+</head>
+<body>
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light py-4">
+    <div class="bg-white p-5 rounded-4 shadow" style="width: 100%; max-width: 440px;">
+        <div class="text-center mb-4">
+            <img th:src="@{/img/logo.png}" alt="Logo TalentBridge" style="width: 72px;">
+            <h2 class="fw-bold mt-2">Talent<span class="text-primary">Bridge</span></h2>
+            <p class="text-muted mb-0">Un ultimo paso para publicar tu aviso</p>
+        </div>
+
+        <h4 class="text-center mb-3">Verifica tu correo</h4>
+        <p class="text-center text-muted small">
+            Te enviamos un codigo. Al validarlo, tu servicio quedara publicado.
+        </p>
+
+        <form id="verificarPublicacionForm">
+            <div class="mb-3">
+                <input type="email" id="email" class="form-control" placeholder="Correo usado" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="codigo" class="form-control" placeholder="Codigo de verificacion" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100" id="verificarButton">
+                <i class="bi bi-check-circle" aria-hidden="true"></i>Publicar mi aviso
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small><a th:href="@{/publicar-servicio}">Volver a crear aviso</a></small>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    const emailInput = document.getElementById('email');
+    const codigoInput = document.getElementById('codigo');
+    const button = document.getElementById('verificarButton');
+    emailInput.value = params.get('email') || '';
+
+    document.getElementById('verificarPublicacionForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        button.disabled = true;
+        button.textContent = 'Publicando...';
+        try {
+            const response = await fetch('/api/publicaciones/verificar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: emailInput.value.trim(),
+                    codigo: codigoInput.value.trim()
+                })
+            });
+
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Aviso publicado',
+                    text: 'Ahora crea una contrasena para administrarlo.',
+                    confirmButtonText: 'Continuar'
+                }).then(() => {
+                    window.location.href = '/publicar/crear-password?email=' + encodeURIComponent(emailInput.value.trim());
+                });
+                return;
+            }
+
+            const text = await response.text();
+            Swal.fire('No pudimos verificar el codigo', text || 'Revisa el codigo e intenta nuevamente.', 'error');
+        } catch (error) {
+            Swal.fire('No pudimos verificar el codigo', error.message || 'Intenta nuevamente.', 'error');
+        } finally {
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-check-circle" aria-hidden="true"></i>Publicar mi aviso';
+        }
+    });
+});
+</script>
+</body>
+</html>

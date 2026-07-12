@@ -32,6 +32,8 @@ public class Servicio {
 
     private BigDecimal valorReferencial;
 
+    private String estadoPublicacion;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;

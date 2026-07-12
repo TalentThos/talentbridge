@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="~{base :: base(~{::body}, ~{::title})}">
+<head>
+    <title>Panel admin - TalentBridge</title>
+</head>
+<body>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">Panel admin</h2>
+        <p class="text-muted mb-0">Carga usuarios y servicios iniciales para poblar TalentBridge.</p>
+    </div>
+    <form method="post" action="/admin/logout">
+        <button class="btn btn-outline-secondary" type="submit">Salir</button>
+    </form>
+</div>
+
+<div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="mb-3">Crear usuario</h4>
+                <form method="post" action="/admin/usuarios" th:object="${usuarioForm}">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" th:field="*{nombre}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" th:field="*{email}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ciudad o comuna</label>
+                        <input type="text" th:field="*{ciudad}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefono</label>
+                        <input type="tel" th:field="*{numeroMovil}" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password inicial</label>
+                        <input type="text" th:field="*{password}" class="form-control" placeholder="talentbridge123">
+                    </div>
+                    <button class="btn btn-primary w-100" type="submit">Guardar usuario</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="mb-3">Crear servicio publicado</h4>
+                <form method="post" action="/admin/servicios" th:object="${servicioForm}">
+                    <div class="mb-3">
+                        <label class="form-label">Usuario oferente</label>
+                        <select th:field="*{usuarioId}" class="form-select" required>
+                            <option value="">Selecciona</option>
+                            <option th:each="u : ${usuarios}" th:value="${u.id}" th:text="|${u.nombre} - ${u.email}|"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Titulo</label>
+                        <input type="text" th:field="*{titulo}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripcion</label>
+                        <textarea th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Categoria</label>
+                            <select th:field="*{categoriaId}" id="adminCategoria" class="form-select" required>
+                                <option value="">Selecciona</option>
+                                <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Subcategoria</label>
+                            <select th:field="*{subcategoriaId}" id="adminSubcategoria" class="form-select" required disabled>
+                                <option value="">Selecciona categoria</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Forma de cobro</label>
+                            <select th:field="*{tipoValorizacion}" class="form-select">
+                                <option value="A_CONVENIR">A convenir</option>
+                                <option value="POR_HORA">Por hora</option>
+                                <option value="POR_TRABAJO">Por trabajo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Valor referencial</label>
+                            <input type="number" th:field="*{valorReferencial}" class="form-control" min="0" step="100">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefono de contacto</label>
+                        <input type="tel" th:field="*{numeroMovil}" class="form-control">
+                    </div>
+                    <button class="btn btn-success w-100" type="submit">Publicar servicio</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mt-4">
+    <div class="card-body">
+        <h4>Ultimos servicios</h4>
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titulo</th>
+                    <th>Usuario</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${servicios}">
+                    <td th:text="${s.id}"></td>
+                    <td th:text="${s.titulo}"></td>
+                    <td th:text="${s.usuario != null ? s.usuario.email : '-'}"></td>
+                    <td th:text="${s.estadoPublicacion ?: 'PUBLICADO'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const categoria = document.getElementById('adminCategoria');
+    const subcategoria = document.getElementById('adminSubcategoria');
+
+    categoria.addEventListener('change', async function () {
+        subcategoria.innerHTML = '<option value="">Selecciona subcategoria</option>';
+        subcategoria.disabled = true;
+        if (!categoria.value) return;
+
+        const response = await fetch(`/api/categorias/${categoria.value}/subcategorias`);
+        if (!response.ok) return;
+        const data = await response.json();
+        data.forEach(sc => {
+            const option = document.createElement('option');
+            option.value = sc.id;
+            option.textContent = sc.nombre;
+            subcategoria.appendChild(option);
+        });
+        subcategoria.disabled = false;
+    });
+});
+</script>
+</body>
+</html>

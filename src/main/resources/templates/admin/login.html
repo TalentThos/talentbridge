@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="~{base :: base(~{::body}, ~{::title})}">
+<head>
+    <title>Admin - TalentBridge</title>
+</head>
+<body>
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light py-4">
+    <div class="bg-white p-5 rounded-4 shadow" style="width: 100%; max-width: 420px;">
+        <div class="text-center mb-4">
+            <img th:src="@{/img/logo.png}" alt="TalentBridge" style="width: 72px;">
+            <h2 class="fw-bold mt-2">Admin TalentBridge</h2>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form method="post" action="/admin/login">
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <input type="text" name="usuario" class="form-control" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

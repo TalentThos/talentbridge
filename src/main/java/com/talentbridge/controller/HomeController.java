@@ -28,4 +28,14 @@ public class HomeController {
         return "publicar_servicio";
     }
 
+    @GetMapping("/publicar/verificar")
+    public String verificarPublicacion() {
+        return "publicar_verificar";
+    }
+
+    @GetMapping("/publicar/crear-password")
+    public String crearPasswordPublicacion() {
+        return "publicar_crear_password";
+    }
+
 }

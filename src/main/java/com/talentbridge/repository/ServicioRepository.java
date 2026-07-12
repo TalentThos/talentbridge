@@ -53,6 +53,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
         AND (:pais          IS NULL OR s.usuario.pais     = :pais)
         AND s.usuario IS NOT NULL
         AND COALESCE(s.usuario.activo, false) = true
+        AND (s.estadoPublicacion IS NULL OR s.estadoPublicacion = 'PUBLICADO')
         """)
     Page<Servicio> buscarPorFiltros(
             @Param("pattern") String pattern,
@@ -60,6 +61,8 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
             @Param("subcategoriaId") Long subcategoriaId,
             @Param("pais") String pais,
             Pageable pageable);
+
+    List<Servicio> findByUsuarioAndEstadoPublicacion(Usuario usuario, String estadoPublicacion);
 
 }
 

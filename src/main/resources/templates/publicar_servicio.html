@@ -26,6 +26,22 @@
         </div>
 
         <form id="publicarDraftForm" class="publish-draft-form">
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="draftNombre">Tu nombre</label>
+                    <input type="text" id="draftNombre" class="form-control" placeholder="Ej: Marcela Rojas" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="draftEmail">Correo de verificacion</label>
+                    <input type="email" id="draftEmail" class="form-control" placeholder="tu@email.com" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="draftCiudad">Ciudad o comuna</label>
+                <input type="text" id="draftCiudad" class="form-control" placeholder="Ej: Puente Alto" required>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label" for="draftTitulo">Titulo del servicio</label>
                 <input type="text" id="draftTitulo" class="form-control" maxlength="120"
@@ -77,8 +93,8 @@
             </div>
 
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-success btn-lg">
-                    <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Continuar para publicar
+                <button type="submit" class="btn btn-success btn-lg" id="publicarPendienteButton">
+                    <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Enviar codigo y publicar
                 </button>
                 <a class="btn btn-outline-primary" th:if="${#authorization.expression('isAnonymous()')}" th:href="@{/login}">
                     <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>Ya tengo cuenta
@@ -149,13 +165,12 @@
 
 <script th:inline="javascript">
 document.addEventListener('DOMContentLoaded', function () {
-    const DRAFT_KEY = 'talentbridge_servicio_draft';
     const form = document.getElementById('publicarDraftForm');
+    const submitButton = document.getElementById('publicarPendienteButton');
     const categoria = document.getElementById('draftCategoria');
     const subcategoria = document.getElementById('draftSubcategoria');
     const tipoValorizacion = document.getElementById('draftTipoValorizacion');
     const valorReferencial = document.getElementById('draftValorReferencial');
-    const isAuthenticated = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
 
     const previewTitulo = document.getElementById('previewTitulo');
     const previewDescripcion = document.getElementById('previewDescripcion');
@@ -221,43 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizarPreview();
     }
 
-    function leerDraft() {
-        try {
-            return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
-        } catch (e) {
-            return null;
-        }
-    }
-
-    async function restaurarDraft() {
-        const draft = leerDraft();
-        if (!draft) return;
-        document.getElementById('draftTitulo').value = draft.titulo || '';
-        document.getElementById('draftDescripcion').value = draft.descripcion || '';
-        document.getElementById('draftNumeroMovil').value = draft.numeroMovil || '';
-        tipoValorizacion.value = draft.tipoValorizacion || 'A_CONVENIR';
-        valorReferencial.value = draft.valorReferencial || '';
-        categoria.value = draft.categoriaId || '';
-        actualizarValorReferencial();
-        await cargarSubcategorias(categoria.value, draft.subcategoriaId);
-        actualizarPreview();
-    }
-
-    function guardarDraft() {
-        const draft = {
-            titulo: document.getElementById('draftTitulo').value.trim(),
-            descripcion: document.getElementById('draftDescripcion').value.trim(),
-            numeroMovil: document.getElementById('draftNumeroMovil').value.trim(),
-            tipoValorizacion: tipoValorizacion.value,
-            valorReferencial: valorReferencial.disabled ? '' : valorReferencial.value.trim(),
-            categoriaId: categoria.value,
-            subcategoriaId: subcategoria.value,
-            creadoEn: new Date().toISOString()
-        };
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-        sessionStorage.setItem('talentbridge_continuar_borrador', '1');
-    }
-
     categoria.addEventListener('change', () => cargarSubcategorias(categoria.value));
     tipoValorizacion.addEventListener('change', () => {
         actualizarValorReferencial();
@@ -266,18 +244,51 @@ document.addEventListener('DOMContentLoaded', function () {
     form.querySelectorAll('input, textarea, select').forEach(el => el.addEventListener('input', actualizarPreview));
     subcategoria.addEventListener('change', actualizarPreview);
 
-    form.addEventListener('submit', function (event) {
+    form.addEventListener('submit', async function (event) {
         event.preventDefault();
         if (!form.checkValidity()) {
             form.classList.add('was-validated');
             return;
         }
-        guardarDraft();
-        window.location.href = isAuthenticated ? '/ofrecer' : '/registro';
+
+        const payload = {
+            nombre: document.getElementById('draftNombre').value.trim(),
+            email: document.getElementById('draftEmail').value.trim(),
+            ciudad: document.getElementById('draftCiudad').value.trim(),
+            titulo: document.getElementById('draftTitulo').value.trim(),
+            descripcion: document.getElementById('draftDescripcion').value.trim(),
+            numeroMovil: document.getElementById('draftNumeroMovil').value.trim(),
+            tipoValorizacion: tipoValorizacion.value,
+            valorReferencial: valorReferencial.disabled || !valorReferencial.value ? null : valorReferencial.value,
+            categoriaId: categoria.value,
+            subcategoriaId: subcategoria.value
+        };
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando codigo...';
+        try {
+            const response = await fetch('/api/publicaciones/pendiente', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                window.location.href = '/publicar/verificar?email=' + encodeURIComponent(payload.email);
+                return;
+            }
+
+            const text = await response.text();
+            Swal.fire('No pudimos crear tu aviso', text || 'Intenta nuevamente.', 'error');
+        } catch (error) {
+            Swal.fire('No pudimos crear tu aviso', error.message || 'Intenta nuevamente.', 'error');
+        } finally {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Enviar codigo y publicar';
+        }
     });
 
     actualizarValorReferencial();
-    restaurarDraft();
     actualizarPreview();
 });
 </script>
