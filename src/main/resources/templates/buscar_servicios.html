@@ -61,9 +61,23 @@
                     </div>
                 </div>
                 <div class="service-result-actions">
-                    <a th:if="${s.numeroMovil != null}" class="btn btn-primary btn-sm" th:href="'tel:' + ${s.numeroMovil}">
-                        <i class="bi bi-telephone" aria-hidden="true"></i>Contactar
-                    </a>
+                    <div th:if="${s.numeroMovil != null}" class="service-contact-actions">
+                        <a class="btn btn-success btn-sm service-whatsapp-link"
+                           href="#"
+                           target="_blank"
+                           rel="noopener"
+                           th:data-phone="${s.numeroMovil}"
+                           th:data-title="${s.titulo}">
+                            <i class="bi bi-whatsapp" aria-hidden="true"></i>WhatsApp
+                        </a>
+                        <a class="btn btn-outline-primary btn-sm" th:href="'tel:' + ${s.numeroMovil}">
+                            <i class="bi bi-telephone" aria-hidden="true"></i>Llamar
+                        </a>
+                        <span class="service-phone-number">
+                            <i class="bi bi-phone" aria-hidden="true"></i>
+                            <span th:text="${s.numeroMovil}">+56 9 1234 5678</span>
+                        </span>
+                    </div>
                     <button th:unless="${s.numeroMovil != null}" type="button" class="btn btn-outline-primary btn-sm" disabled>
                         <i class="bi bi-chat-dots" aria-hidden="true"></i>Mensaje pronto
                     </button>
@@ -179,6 +193,28 @@ document.addEventListener('DOMContentLoaded', function() {
         paisSelect.appendChild(opt);
     }
     cargarPaises();
+
+    function normalizarTelefonoChile(numero) {
+        if (!numero) return '';
+        let digits = String(numero).replace(/\D/g, '');
+        if (digits.startsWith('00')) digits = digits.substring(2);
+        if (digits.startsWith('56')) return digits;
+        if (digits.startsWith('9') && digits.length === 9) return '56' + digits;
+        if (digits.length === 8) return '569' + digits;
+        return digits;
+    }
+
+    document.querySelectorAll('.service-whatsapp-link').forEach(link => {
+        const phone = normalizarTelefonoChile(link.dataset.phone);
+        const title = link.dataset.title || 'tu servicio';
+        if (!phone) {
+            link.classList.add('disabled');
+            link.removeAttribute('href');
+            return;
+        }
+        const message = `Hola, vi tu aviso "${title}" en TalentBridge y quiero consultar por el servicio.`;
+        link.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    });
 
     document.querySelectorAll('.ver-imagenes').forEach(btn => {
         btn.addEventListener('click', async function(e) {
