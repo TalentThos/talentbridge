@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class RegistroServiceImpl implements RegistroService {
-    private static final String VERSION_POLITICAS = "2026-07-05";
+    private static final String VERSION_POLITICAS = "2026-08-01";
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;

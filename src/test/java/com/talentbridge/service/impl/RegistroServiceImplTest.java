@@ -94,7 +94,7 @@ class RegistroServiceImplTest {
         assertThat(usuarioInactivo.getAceptaPoliticaPrivacidad()).isTrue();
         assertThat(usuarioInactivo.getAceptaCondicionesUso()).isTrue();
         assertThat(usuarioInactivo.getFechaAceptacionPoliticas()).isNotNull();
-        assertThat(usuarioInactivo.getVersionPoliticas()).isEqualTo("2026-07-05");
+        assertThat(usuarioInactivo.getVersionPoliticas()).isEqualTo("2026-08-01");
         assertThat(codigoCaptor.getValue().getUsado()).isFalse();
     }
 

@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:replace="${_arg1}">TalentBridge</title>
+    <title th:text="${seoTitle}" th:replace="${_arg1}">TalentBridge</title>
+    <meta name="description" th:content="${seoDescription}">
+    <meta name="robots" th:content="${seoRobots}">
+    <link rel="canonical" th:href="${seoCanonicalUrl}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_CL">
+    <meta property="og:site_name" content="TalentBridge">
+    <meta property="og:title" th:content="${seoTitle}">
+    <meta property="og:description" th:content="${seoDescription}">
+    <meta property="og:url" th:content="${seoCanonicalUrl}">
+    <meta property="og:image" th:content="${seoSocialImageUrl}">
+    <meta property="og:image:alt" content="TalentBridge conecta talentos con necesidades reales">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" th:content="${seoTitle}">
+    <meta name="twitter:description" th:content="${seoDescription}">
+    <meta name="twitter:image" th:content="${seoSocialImageUrl}">
+    <script type="application/ld+json" th:utext="${seoStructuredData}"></script>
     <link rel="icon" type="image/png" sizes="64x64" th:href="@{/img/favicon.png}">
     <link rel="apple-touch-icon" th:href="@{/img/favicon.png}">
 
@@ -671,6 +687,39 @@
                 padding-right: 1rem;
             }
         }
+        .analytics-consent {
+            position: fixed;
+            z-index: 1080;
+            right: 1rem;
+            bottom: 1rem;
+            width: min(430px, calc(100% - 2rem));
+            padding: 1rem;
+            border: 1px solid #dce8f8;
+            border-radius: 0.75rem;
+            background: #ffffff;
+            box-shadow: 0 1rem 2.5rem rgba(15, 23, 42, 0.2);
+            text-align: left;
+        }
+        .analytics-consent[hidden] {
+            display: none;
+        }
+        .analytics-consent p {
+            margin-bottom: 0.75rem;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+        .analytics-consent-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .analytics-preferences {
+            padding: 0;
+            border: 0;
+            color: inherit;
+            background: transparent;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -719,7 +768,30 @@
 <!-- FOOTER -->
 <footer>
     TalentBridge &copy; [[${#dates.format(#dates.createNow(), 'yyyy')}]] - Conectamos talentos con necesidades reales
+    <span th:if="${googleAnalyticsEnabled}"> &middot;
+        <button id="analytics-preferences" class="analytics-preferences" type="button">Preferencias de privacidad</button>
+    </span>
 </footer>
+
+<aside th:if="${googleAnalyticsEnabled}" id="analytics-consent" class="analytics-consent" hidden
+       role="dialog" aria-live="polite" aria-label="Preferencias de medición">
+    <strong>Medici&oacute;n y privacidad</strong>
+    <p>
+        Con tu permiso, usamos Google Analytics para entender qu&eacute; secciones funcionan mejor.
+        No enviamos a Google los tel&eacute;fonos ni el texto que escribes en el buscador.
+        <a th:href="@{/politicas/privacidad}">M&aacute;s informaci&oacute;n</a>.
+    </p>
+    <div class="analytics-consent-actions">
+        <button id="analytics-consent-accept" class="btn btn-primary btn-sm" type="button">Aceptar medici&oacute;n</button>
+        <button id="analytics-consent-reject" class="btn btn-outline-secondary btn-sm" type="button">Rechazar</button>
+    </div>
+</aside>
+
+<script th:if="${googleAnalyticsEnabled}"
+        id="talentbridge-analytics"
+        th:src="@{/js/analytics.js}"
+        th:data-measurement-id="${googleAnalyticsMeasurementId}"
+        defer></script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

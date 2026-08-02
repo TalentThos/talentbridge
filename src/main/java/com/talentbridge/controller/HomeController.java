@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequiredArgsConstructor
@@ -13,8 +15,10 @@ public class HomeController {
     private final CategoriaService categoriaService;
 
     @GetMapping("/home")
-    public String mostrarHome() {
-        return "home";
+    public RedirectView mostrarHome() {
+        RedirectView redirect = new RedirectView("/");
+        redirect.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+        return redirect;
     }
 
     @GetMapping("/")

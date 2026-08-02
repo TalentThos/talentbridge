@@ -11,5 +11,6 @@ public interface ServicioService {
     List<String> obtenerImagenesBase64(Long servicioId);
     List<ServicioDTO> listarPorUsuario(String email);
     ServicioDTO obtenerPorId(Long id, String email);
+    ServicioDTO obtenerPublicadoPorId(Long id);
     void actualizarServicio(Long id, ServicioDTO dto, String email);
 }

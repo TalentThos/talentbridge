@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServicioRepository extends JpaRepository<Servicio, Long> {
     List<Servicio> findByTituloContainingIgnoreCaseOrDescripcionContainingIgnoreCase(String titulo, String descripcion);
@@ -63,6 +64,28 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
             Pageable pageable);
 
     List<Servicio> findByUsuarioAndEstadoPublicacion(Usuario usuario, String estadoPublicacion);
+
+    @Query("""
+        SELECT DISTINCT s FROM Servicio s
+        LEFT JOIN FETCH s.categoria
+        LEFT JOIN FETCH s.subcategoria
+        LEFT JOIN FETCH s.usuario
+        LEFT JOIN FETCH s.imagenes
+        WHERE s.id = :id
+        AND s.usuario IS NOT NULL
+        AND COALESCE(s.usuario.activo, false) = true
+        AND (s.estadoPublicacion IS NULL OR s.estadoPublicacion = 'PUBLICADO')
+        """)
+    Optional<Servicio> findPublicadoById(@Param("id") Long id);
+
+    @Query("""
+        SELECT s.id FROM Servicio s
+        WHERE s.usuario IS NOT NULL
+        AND COALESCE(s.usuario.activo, false) = true
+        AND (s.estadoPublicacion IS NULL OR s.estadoPublicacion = 'PUBLICADO')
+        ORDER BY s.id
+        """)
+    List<Long> findIdsPublicados();
 
 }
 

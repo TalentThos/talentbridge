@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="base :: base(~{::body}, ~{::title})">
 <head>
-    <title>Inicio</title>
+    <title>TalentBridge | Servicios y profesionales en Chile</title>
 </head>
 <body>
 <div class="page-hero text-center">
@@ -9,8 +9,8 @@
     <h1 class="mb-3">Busca servicios o publica <span class="bridge-color">tu talento</span></h1>
     <p class="mb-4 fs-5">TalentBridge conecta personas que necesitan ayuda con quienes ofrecen oficios, clases, reparaciones, eventos y servicios profesionales.</p>
     <div class="page-actions">
-        <a class="btn btn-primary btn-lg" th:href="@{/buscar}"><i class="bi bi-search-heart" aria-hidden="true"></i>Busco un servicio</a>
-        <a class="btn btn-success btn-lg" th:href="@{/publicar-servicio}"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar mi servicio</a>
+        <a class="btn btn-primary btn-lg" th:href="@{/buscar}" data-analytics-event="home_search_cta"><i class="bi bi-search-heart" aria-hidden="true"></i>Busco un servicio</a>
+        <a class="btn btn-success btn-lg" th:href="@{/publicar-servicio}" data-analytics-event="home_publish_cta"><i class="bi bi-megaphone" aria-hidden="true"></i>Quiero publicar mi servicio</a>
     </div>
     <div class="home-trust-list">
         <span><i class="bi bi-shield-check bridge-color" aria-hidden="true"></i>Correo verificado</span>

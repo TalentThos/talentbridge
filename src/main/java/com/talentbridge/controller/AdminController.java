@@ -95,7 +95,7 @@ public class AdminController {
             usuario.setAceptaPoliticaPrivacidad(true);
             usuario.setAceptaCondicionesUso(true);
             usuario.setFechaAceptacionPoliticas(LocalDateTime.now());
-            usuario.setVersionPoliticas("2026-07-05");
+            usuario.setVersionPoliticas("2026-08-01");
             usuarioRepository.save(usuario);
             model.addAttribute("mensaje", "Usuario creado o actualizado.");
         } catch (RuntimeException ex) {

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" th:replace="~{base :: base(~{::body}, ~{::title})}">
+<head>
+    <title th:text="${seoTitle}">Servicio | TalentBridge</title>
+</head>
+<body>
+<nav aria-label="Ruta de navegación" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/buscar}">Servicios</a></li>
+        <li class="breadcrumb-item active" aria-current="page" th:text="${servicio.titulo}">Servicio</li>
+    </ol>
+</nav>
+
+<article class="service-result-card bg-white p-3 p-md-4">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="service-result-tags">
+                <span th:if="${servicio.categoriaNombre}" th:text="${servicio.categoriaNombre}">Categor&iacute;a</span>
+                <span th:if="${servicio.subcategoriaNombre}" th:text="${servicio.subcategoriaNombre}">Subcategor&iacute;a</span>
+            </div>
+            <h1 class="mb-3" th:text="${servicio.titulo}">Servicio</h1>
+            <p class="fs-5 text-secondary" th:text="${servicio.descripcion}">Descripci&oacute;n del servicio</p>
+
+            <div class="service-result-price fs-5 my-3" th:if="${servicio.valorizacionTexto != null}">
+                <i class="bi bi-cash-coin" aria-hidden="true"></i>
+                <span th:text="${servicio.valorizacionTexto}">Valor a convenir</span>
+            </div>
+
+            <div class="service-result-provider mb-3">
+                <span class="service-result-avatar"
+                      th:text="${servicio.usuarioNombre != null and !#strings.isEmpty(servicio.usuarioNombre) ? #strings.substring(servicio.usuarioNombre, 0, 1) : 'T'}">T</span>
+                <div>
+                    <strong th:text="${servicio.usuarioNombre}">Oferente</strong>
+                    <small><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Correo verificado</small>
+                </div>
+            </div>
+
+            <div th:if="${servicio.numeroMovil != null}" class="d-flex flex-wrap gap-2">
+                <a class="btn btn-success service-whatsapp-link"
+                   href="#" target="_blank" rel="noopener"
+                   th:data-phone="${servicio.numeroMovil}"
+                   th:data-title="${servicio.titulo}"
+                   data-analytics-event="contact_whatsapp">
+                    <i class="bi bi-whatsapp" aria-hidden="true"></i>Consultar por WhatsApp
+                </a>
+                <a class="btn btn-outline-primary" th:href="'tel:' + ${servicio.numeroMovil}" data-analytics-event="contact_phone">
+                    <i class="bi bi-telephone" aria-hidden="true"></i>Llamar
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div th:if="${servicio.tieneImagenes and servicio.imagenesExistentes != null and !#lists.isEmpty(servicio.imagenesExistentes)}"
+                 id="serviceImages" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner rounded-3 bg-light">
+                    <div class="carousel-item" th:each="imagen, iter : ${servicio.imagenesExistentes}"
+                         th:classappend="${iter.first} ? 'active'">
+                        <img class="d-block w-100"
+                             th:src="|data:image/jpeg;base64,${imagen.datosBase64}|"
+                             th:alt="|Imagen de ${servicio.titulo}|">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#serviceImages" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#serviceImages" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+            <div th:unless="${servicio.tieneImagenes and servicio.imagenesExistentes != null and !#lists.isEmpty(servicio.imagenesExistentes)}"
+                 class="service-result-placeholder rounded-3" style="min-height: 280px;">
+                <i th:class="'bi ' + ${servicio.subcategoriaIcono}" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+</article>
+
+<script th:inline="javascript">
+document.addEventListener('DOMContentLoaded', function () {
+    const link = document.querySelector('.service-whatsapp-link');
+    if (!link) return;
+    let phone = String(link.dataset.phone || '').replace(/\D/g, '');
+    if (phone.startsWith('00')) phone = phone.substring(2);
+    if (!phone.startsWith('56') && phone.startsWith('9') && phone.length === 9) phone = '56' + phone;
+    if (!phone) {
+        link.classList.add('disabled');
+        link.removeAttribute('href');
+        return;
+    }
+    const message = `Hola, vi tu aviso "${link.dataset.title || 'tu servicio'}" en TalentBridge y quiero consultar por el servicio.`;
+    link.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+});
+</script>
+</body>
+</html>

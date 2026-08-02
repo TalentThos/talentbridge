@@ -150,6 +150,14 @@ public class ServicioServiceImpl implements ServicioService {
         return mapToDTO(servicio);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public ServicioDTO obtenerPublicadoPorId(Long id) {
+        Servicio servicio = servicioRepository.findPublicadoById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
+        return mapToDTO(servicio);
+    }
+
     @Transactional
     @Override
     public void actualizarServicio(Long id, ServicioDTO dto, String email) {

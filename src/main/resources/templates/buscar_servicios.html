@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: base(~{::body}, ~{::title})}">
 <head>
-    <title>Buscar servicios</title>
+    <title>Buscar servicios en Chile | TalentBridge</title>
 </head>
 <body>
 <h2 class="mb-4"><i class="bi bi-search-heart bridge-color me-2" aria-hidden="true"></i>Buscar servicios disponibles</h2>
-<form class="row search-filters mb-4" action="/buscar" method="get">
+<form class="row search-filters mb-4" action="/buscar" method="get" data-analytics-event="search_services">
     <div class="col-md-3 mb-2 mb-md-0">
         <input type="text" name="q" th:value="${termino}" class="form-control" placeholder="Ej: profesor guitarra, gasfiter, DJ...">
     </div>
@@ -47,7 +47,7 @@
                     <span th:if="${s.categoriaNombre}" th:text="${s.categoriaNombre}">Categor&iacute;a</span>
                     <span th:if="${s.subcategoriaNombre}" th:text="${s.subcategoriaNombre}">Subcategor&iacute;a</span>
                 </div>
-                <h5 th:text="${s.titulo}"></h5>
+                <h5><a class="text-decoration-none" th:href="@{/servicios/{id}(id=${s.id})}" th:text="${s.titulo}">Servicio</a></h5>
                 <p class="service-result-description" th:text="${s.descripcion}"></p>
                 <div class="service-result-price" th:if="${s.valorizacionTexto != null}">
                     <i class="bi bi-cash-coin" aria-hidden="true"></i>
@@ -66,11 +66,12 @@
                            href="#"
                            target="_blank"
                            rel="noopener"
+                           data-analytics-event="contact_whatsapp"
                            th:data-phone="${s.numeroMovil}"
                            th:data-title="${s.titulo}">
                             <i class="bi bi-whatsapp" aria-hidden="true"></i>WhatsApp
                         </a>
-                        <a class="btn btn-outline-primary btn-sm" th:href="'tel:' + ${s.numeroMovil}">
+                        <a class="btn btn-outline-primary btn-sm" th:href="'tel:' + ${s.numeroMovil}" data-analytics-event="contact_phone">
                             <i class="bi bi-telephone" aria-hidden="true"></i>Llamar
                         </a>
                         <span class="service-phone-number">
@@ -81,7 +82,7 @@
                     <button th:unless="${s.numeroMovil != null}" type="button" class="btn btn-outline-primary btn-sm" disabled>
                         <i class="bi bi-chat-dots" aria-hidden="true"></i>Mensaje pronto
                     </button>
-                    <a th:if="${s.tieneImagenes}" href="#" th:data-id="${s.id}" class="btn btn-sm btn-outline-secondary ver-imagenes">
+                    <a th:if="${s.tieneImagenes}" href="#" th:data-id="${s.id}" class="btn btn-sm btn-outline-secondary ver-imagenes" data-analytics-event="view_service_images">
                         <i class="bi bi-images" aria-hidden="true"></i>Ver im&aacute;genes
                     </a>
                 </div>
