@@ -56,6 +56,7 @@ public class SecurityConfig {
                                 "/home",
                                 "/robots.txt",
                                 "/sitemap.xml",
+                                "/blog",
                                 "/buscar",
                                 "/publicar-servicio",
                                 "/servicios/*",

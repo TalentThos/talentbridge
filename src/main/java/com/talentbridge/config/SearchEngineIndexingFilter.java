@@ -15,6 +15,7 @@ public class SearchEngineIndexingFilter extends OncePerRequestFilter {
 
     private static final Set<String> INDEXABLE_PATHS = Set.of(
             "/",
+            "/blog",
             "/buscar",
             "/publicar-servicio",
             "/politicas/privacidad",

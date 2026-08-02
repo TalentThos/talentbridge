@@ -29,6 +29,7 @@ class SeoControllerTest {
 
         assertThat(controller.sitemap())
                 .contains("<loc>https://www.talentbridge.cl/</loc>")
+                .contains("<loc>https://www.talentbridge.cl/blog</loc>")
                 .contains("<loc>https://www.talentbridge.cl/buscar</loc>")
                 .contains("<loc>https://www.talentbridge.cl/publicar-servicio</loc>")
                 .contains("<loc>https://www.talentbridge.cl/servicios/12</loc>")

@@ -26,6 +26,11 @@ public class HomeController {
         return "home";
     }
 
+    @GetMapping("/blog")
+    public String blog() {
+        return "blog";
+    }
+
     @GetMapping("/publicar-servicio")
     public String publicarServicio(Model model) {
         model.addAttribute("categorias", categoriaService.listarCategorias());

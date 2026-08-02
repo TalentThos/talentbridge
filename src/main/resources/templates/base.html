@@ -736,6 +736,7 @@
 
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/blog}"><i class="bi bi-journal-text" aria-hidden="true"></i>Consejos</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/buscar}"><i class="bi bi-search" aria-hidden="true"></i>Buscar servicios</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/publicar-servicio}"><i class="bi bi-stars" aria-hidden="true"></i>Ofrece tu talento</a></li>
                 <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">

@@ -13,6 +13,7 @@ public class SeoController {
 
     private static final List<String> INDEXABLE_PATHS = List.of(
             "/",
+            "/blog",
             "/buscar",
             "/publicar-servicio",
             "/politicas/privacidad",

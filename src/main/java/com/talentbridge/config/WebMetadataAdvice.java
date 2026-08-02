@@ -23,6 +23,9 @@ public class WebMetadataAdvice {
             "/", new PageMetadata(
                     "TalentBridge | Servicios y profesionales en Chile",
                     "Encuentra oficios, clases, reparaciones, eventos y servicios profesionales cerca de ti en Chile."),
+            "/blog", new PageMetadata(
+                    "Consejos sobre servicios y oficios en Chile | TalentBridge",
+                    "Guías y recomendaciones para contratar servicios, ofrecer tu talento y encontrar profesionales en Chile."),
             "/buscar", new PageMetadata(
                     "Buscar servicios en Chile | TalentBridge",
                     "Busca profesionales, técnicos y personas que ofrecen servicios en Chile por categoría y ubicación."),

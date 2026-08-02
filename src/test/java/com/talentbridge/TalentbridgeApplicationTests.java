@@ -67,6 +67,19 @@ class TalentbridgeApplicationTests {
 	}
 
 	@Test
+	void blogIsPublicIndexableAndLoadsSoroWidget() throws Exception {
+		mockMvc.perform(get("/blog"))
+				.andExpect(status().isOk())
+				.andExpect(header().doesNotExist("X-Robots-Tag"))
+				.andExpect(content().string(org.hamcrest.Matchers.containsString(
+						"<link rel=\"canonical\" href=\"https://www.talentbridge.cl/blog\"")))
+				.andExpect(content().string(org.hamcrest.Matchers.containsString(
+						"id=\"soro-blog\"")))
+				.andExpect(content().string(org.hamcrest.Matchers.containsString(
+						"https://app.trysoro.com/api/embed/d17c391e-f2e6-4445-84ae-77a70b6bb10b")));
+	}
+
+	@Test
 	@Transactional
 	void publishedServiceHasAnIndexablePublicPage() throws Exception {
 		Usuario usuario = new Usuario();
